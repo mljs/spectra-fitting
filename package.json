@@ -1,0 +1,36 @@
+{
+  "name": "ml-optimize-lorentzian",
+  "version": "0.0.1",
+  "description": "Optimize Lorentzian",
+  "main": "src/index.js",
+  "directories": {
+    "lib": "src",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --require should --reporter mocha-better-spec-reporter --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mljs/optimize-lorentzian.git"
+  },
+  "keywords": [
+    "Optimization",
+    "Loreztzian"
+  ],
+  "author": "Andres Castillo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mljs/optimize-lorentzian/issues"
+  },
+  "homepage": "https://github.com/mljs/optimize-lorentzian",
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "mocha-better-spec-reporter": "^2.1.1",
+    "should": "^7.0.2"
+  },
+  "dependencies": {
+    "curve-fitting": "0.0.2",
+    "ml-matrix": "^0.1.0"
+  }
+}
