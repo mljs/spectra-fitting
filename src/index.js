@@ -43,39 +43,147 @@ function singleLorentzian(t,p,c){
     return result;
 }
 
+/**
+ * Single  gaussian function
+ * @param t Ordinate values
+ * @param p Gaussian parameters [mean, std, height]
+ * @param c Constant parameters(Not used)
+ * @returns {*}
+ */
+function singleGaussian(t,p,c){
+    //var factor = 1/(p[1][0]*Math.sqrt(Math.PI*2));
+    var factor2 = 2*p[1][0]*p[1][0];
+    var rows = t.rows;
+    var result = new Matrix(t.rows, t.columns);
+    for(var i=0;i<rows;i++){
+        result[i][0]=p[2][0]*Math.exp(-(t[i][0]-p[0][0])*(t[i][0]-p[0][0])/factor2);
+    }
+    return result;
+}
 
-function optimizeSingleLorentzian(data) {
-    var nbPoints = data.length;
+/**
+ * * Fits a set of points to a Lorentzian function. Returns the center of the peak, the width at half height, and the height of the signal.
+ * @param data,[y]
+ * @returns {*[]}
+ */
+function optimizeSingleLorentzian(x,y) {
+
+    var nbPoints = x.length;
     var t = new Matrix(nbPoints,1);
-
     var y_data = new Matrix(nbPoints,1);
-
     var maxY = 0;
-    for(var i=0;i<nbPoints;i++){
-        t[i][0]=data[i][0];
-        y_data[i][0]=data[i][1];
-        if(data[i][1]>maxY)
-            maxY = data[i][1];
+
+    if(typeof y ==="undefined"){
+        for(var i=0;i<nbPoints;i++){
+            t[i][0]=x[i][0];
+            y_data[i][0]=x[i][1];
+            if(x[i][1]>maxY)
+                maxY = x[i][1];
+        }
+    }
+    else{
+        //x,y are column matrices
+        if(typeof x[0][0] === "number"){
+            for(var i=0;i<nbPoints;i++){
+                t[i][0]=x[i][0];
+                y_data[i][0]=y[i][0];
+                if(y[i][0]>maxY)
+                    maxY = y[i][0];
+            }
+        }
+        else{
+            //x,y are arrays
+            for(var i=0;i<nbPoints;i++){
+                t[i][0]=x[i];
+                y_data[i][0]=y[i];
+                if(y[i]>maxY)
+                    maxY = y[i];
+            }
+        }
     }
 
-
-    for(var i=0;i<nbPoints;i++){
+    /*for(var i=0;i<nbPoints;i++){
         y_data[i][0]/=maxY
-    }
+    }*/
+
     var weight = [nbPoints / Math.sqrt(y_data.dot(y_data))];
 
     var opts = [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ];
     var consts = [ ];                         // optional vector of constants
-
-    var p_init = new Matrix([[(t[0][0]+t[nbPoints-1][0])/2],[Math.abs(t[0][0]-t[nbPoints-1][0])/2],[1],[0]]);
+    var dx = -Math.abs(t[0][0]-t[1][0])/1000;
+    var p_init = new Matrix([[(t[0][0]+t[nbPoints-1][0])/2],[Math.abs(t[0][0]-t[nbPoints-1][0])/2],[maxY],[0]]);
     var p_min = new Matrix([[t[0][0]],[0.0],[0],[0]]);
-    var p_max = new Matrix([[t[nbPoints-1][0]],[Math.abs(t[0][0]-t[nbPoints-1][0])],[1.5],[0.5]]);
+    var p_max = new Matrix([[t[nbPoints-1][0]],[Math.abs(t[0][0]-t[nbPoints-1][0])],[1.5*maxY],[0.1*maxY]]);
 
-    var p_fit = LM.optimize(singleLorentzian,p_init,t,y_data,weight,-0.001,p_min,p_max,consts,opts);
+    var p_fit = LM.optimize(singleLorentzian,p_init,t,y_data,weight,dx,p_min,p_max,consts,opts);
 
-    return [p_fit[0][0],p_fit[2][0]*maxY,p_fit[1][0]*2];
+    return p_fit;
 
 }
+/**
+ * Fits a set of points to a gaussian bell. Returns the mean of the peak, the std and the height of the signal.
+ * @param data,[y]
+ * @returns {*[]}
+ */
+function optimizeSingleGaussian(x,y) {
+    var nbPoints = x.length;
+    var t = new Matrix(nbPoints,1);
+    var y_data = new Matrix(nbPoints,1);
+    var maxY = 0;
+
+    if(typeof y ==="undefined"){
+        for(var i=0;i<nbPoints;i++){
+            t[i][0]=x[i][0];
+            y_data[i][0]=x[i][1];
+            if(x[i][1]>maxY)
+                maxY = x[i][1];
+        }
+    }
+    else{
+        //x,y are column matrices
+        if(typeof x[0][0] === "number"){
+            for(var i=0;i<nbPoints;i++){
+                t[i][0]=x[i][0];
+                y_data[i][0]=y[i][0];
+                if(y[i][0]>maxY)
+                    maxY = y[i][0];
+            }
+        }
+        else{
+            //x,y are arrays
+            for(var i=0;i<nbPoints;i++){
+                t[i][0]=x[i];
+                y_data[i][0]=y[i];
+                if(y[i]>maxY)
+                    maxY = y[i];
+            }
+        }
+    }
+
+
+    /*for(var i=0;i<nbPoints;i++){
+        y_data[i][0]/=maxY
+    }*/
+    var weight = [nbPoints / Math.sqrt(y_data.dot(y_data))];
+
+    //console.log(t);
+    //console.log(y_data);
+    var opts = [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ];
+    var consts = [ ];                         // optional vector of constants
+    var dx = -Math.abs(t[0][0]-t[1][0])/1000;
+
+    var p_init = new Matrix([[(t[0][0]+t[nbPoints-1][0])/2],[Math.abs(t[0][0]-t[nbPoints-1][0])/4],[maxY]]);
+    var p_min = new Matrix([[t[0][0]],[0.0],[0.1*maxY]]);
+    var p_max = new Matrix([[t[nbPoints-1][0]],[Math.abs(t[0][0]-t[nbPoints-1][0])],[1.5*maxY]]);
+    //console.log("P init");
+    //console.log(p_init);
+    var p_fit = LM.optimize(singleGaussian,p_init,t,y_data,weight,dx,p_min,p_max,consts,opts);
+
+    return p_fit;
+    //return [[p_fit[0][0]],[p_fit[1][0]],[singleGaussian(new Matrix([p_fit[0]]),p_fit,consts)[0][0]]];
+}
+
+
 /**
  *
  * @param xy A two column matrix containing the x and y data to be fitted
@@ -132,5 +240,8 @@ function optimizeLorentzianSum(xy, group){
 
 }
 
-module.exports = optimizeSingleLorentzian;
-module.exports = optimizeLorentzianSum;
+module.exports.optimizeSingleLorentzian = optimizeSingleLorentzian;
+module.exports.optimizeLorentzianSum = optimizeLorentzianSum;
+module.exports.optimizeSingleGaussian = optimizeSingleGaussian;
+module.exports.singleGaussian = singleGaussian;
+module.exports.singleLorentzian = singleLorentzian;
