@@ -23,10 +23,10 @@ describe('Optimize 4 parameters Lorentzian', function () {
         var y = Opt.singleLorentzian(t, p_true, []);
         var result = Opt.optimizeSingleLorentzian(t,y);
 
-        result[0][0].should.approximately(p_true[0][0],1e6);
-        result[1][0].should.approximately(p_true[1][0],1e6);
-        result[2][0].should.approximately(p_true[2][0],1e6);
-        result[3][0].should.approximately(p_true[3][0],1e6);
+        result[0][0].should.approximately(p_true[0][0],1e-3);
+        result[1][0].should.approximately(p_true[1][0],1e-3);
+        result[2][0].should.approximately(p_true[2][0],1e-3);
+        result[3][0].should.approximately(p_true[3][0],1e-3);
 
         console.log(p_true);
         console.log(result);
@@ -40,9 +40,9 @@ describe('Optimize 3 parameters Gaussian', function () {
 
         var y = Opt.singleGaussian(t, p_true, []);
         var result = Opt.optimizeSingleGaussian(t,y);
-        result[0][0].should.approximately(p_true[0][0],1e6);
-        result[1][0].should.approximately(p_true[1][0],1e6);
-        result[2][0].should.approximately(p_true[2][0],1e6);
+        result[0][0].should.approximately(p_true[0][0],1e-3);
+        result[1][0].should.approximately(p_true[1][0],1e-3);
+        result[2][0].should.approximately(p_true[2][0],1e-3);
 
         console.log(p_true);
         console.log(result);
