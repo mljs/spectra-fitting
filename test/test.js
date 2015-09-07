@@ -18,15 +18,15 @@ describe('Optimize 4 parameters Lorentzian', function () {
 
     it('Should approximate the true parameters', function () {
         //[center,]
-        var p_true = new Matrix([[0],[tFactor*nbPoints/10],[10],[0.15]]);
-
+        var p_true = new Matrix([[0],[0.001],[tFactor*nbPoints/10]]);
+        //console.log(p_true);
         var y = Opt.singleLorentzian(t, p_true, []);
-        var result = Opt.optimizeSingleLorentzian(t,y);
+        //I moved the initial guess
+        var result = Opt.optimizeSingleLorentzian([t,y],{x:0.1,y:0.0009,width:tFactor*nbPoints/6});
 
         result[0][0].should.approximately(p_true[0][0],1e-3);
         result[1][0].should.approximately(p_true[1][0],1e-3);
         result[2][0].should.approximately(p_true[2][0],1e-3);
-        result[3][0].should.approximately(p_true[3][0],1e-3);
 
         console.log(p_true);
         console.log(result);
@@ -36,10 +36,11 @@ describe('Optimize 4 parameters Lorentzian', function () {
 describe('Optimize 3 parameters Gaussian', function () {
 
     it('Should approximate the true parameters', function () {
-        var p_true = new Matrix([[0],[tFactor*nbPoints/10],[234]]);
-
+        var p_true = new Matrix([[0],[0.001],[tFactor*nbPoints/10]]);
         var y = Opt.singleGaussian(t, p_true, []);
-        var result = Opt.optimizeSingleGaussian(t,y);
+        //I moved the initial guess
+        var result = Opt.optimizeSingleGaussian([t,y],{x:0.1,y:0.0009,width:tFactor*nbPoints/6});
+
         result[0][0].should.approximately(p_true[0][0],1e-3);
         result[1][0].should.approximately(p_true[1][0],1e-3);
         result[2][0].should.approximately(p_true[2][0],1e-3);
