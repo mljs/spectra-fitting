@@ -66,7 +66,7 @@ function singleGaussian(t,p,c){
  * @param data,[y]
  * @returns {*[]}
  */
-function optimizeSingleLorentzian(x,y) {
+function optimizeSingleLorentzian(x,y,opts) {
 
     var nbPoints = x.length;
     var t = new Matrix(nbPoints,1);
@@ -108,7 +108,8 @@ function optimizeSingleLorentzian(x,y) {
 
     var weight = [nbPoints / Math.sqrt(y_data.dot(y_data))];
 
-    var opts = [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ];
+    var opts=Object.create(opts || [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ]);
+    //var opts = [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ];
     var consts = [ ];                         // optional vector of constants
     var dx = -Math.abs(t[0][0]-t[1][0])/1000;
     var p_init = new Matrix([[(t[0][0]+t[nbPoints-1][0])/2],[Math.abs(t[0][0]-t[nbPoints-1][0])/2],[maxY],[0]]);
@@ -117,7 +118,7 @@ function optimizeSingleLorentzian(x,y) {
 
     var p_fit = LM.optimize(singleLorentzian,p_init,t,y_data,weight,dx,p_min,p_max,consts,opts);
 
-    return p_fit;
+    return p_fit.p;
 
 }
 /**
@@ -125,7 +126,7 @@ function optimizeSingleLorentzian(x,y) {
  * @param data,[y]
  * @returns {*[]}
  */
-function optimizeSingleGaussian(x,y) {
+function optimizeSingleGaussian(x,y,opts) {
     var nbPoints = x.length;
     var t = new Matrix(nbPoints,1);
     var y_data = new Matrix(nbPoints,1);
@@ -168,7 +169,8 @@ function optimizeSingleGaussian(x,y) {
 
     //console.log(t);
     //console.log(y_data);
-    var opts = [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ];
+    var opts=Object.create(opts || [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ]);
+    //var opts = [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ];
     var consts = [ ];                         // optional vector of constants
     var dx = -Math.abs(t[0][0]-t[1][0])/1000;
 
@@ -179,7 +181,7 @@ function optimizeSingleGaussian(x,y) {
     //console.log(p_init);
     var p_fit = LM.optimize(singleGaussian,p_init,t,y_data,weight,dx,p_min,p_max,consts,opts);
 
-    return p_fit;
+    return p_fit.p;
     //return [[p_fit[0][0]],[p_fit[1][0]],[singleGaussian(new Matrix([p_fit[0]]),p_fit,consts)[0][0]]];
 }
 
@@ -229,7 +231,7 @@ function optimizeLorentzianSum(xy, group){
     }
 
     var p_fit = LM.optimize(sumOfLorentzians,p_init,t,y_data,weight,-0.00005,p_min,p_max,consts,opts);
-
+    p_fit = p_fit.p;
     //Put back the result in the correct format
     var result = new Array(nL);
     for( i=0;i<nL;i++){

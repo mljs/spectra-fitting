@@ -30,7 +30,7 @@
     "should": "^7.0.2"
   },
   "dependencies": {
-    "curve-fitting": "0.0.2",
+    "curve-fitting": "0.0.5",
     "ml-matrix": "^0.1.0"
   }
 }
