@@ -326,7 +326,7 @@ function parseData(xy){
 }
 
 function sizeException(nbPoints) {
-    return new RangeError("Not enought points to perform the optmization: "+nbPoints +"< 3");
+    return new RangeError("Not enough points to perform the optimization: "+nbPoints +"< 3");
 }
 
 module.exports.optimizeSingleLorentzian = optimizeSingleLorentzian;
