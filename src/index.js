@@ -1,6 +1,6 @@
 'use strict';
 
-var LM = require('curve-fitting');
+var LM = require('ml-curve-fitting');
 var math = LM.Matrix.algebra;
 var Matrix = require('ml-matrix');
 
