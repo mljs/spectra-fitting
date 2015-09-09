@@ -1,6 +1,7 @@
 'use strict';
 
 var LM = require('curve-fitting');
+var math = LM.Matrix.algebra;
 var Matrix = require('ml-matrix');
 
 /**
@@ -29,7 +30,7 @@ function sumOfLorentzians(t,p,c){
  * This function calculates the spectrum as a sum of gaussian functions. The Gaussian
  * parameters are divided in 3 batches. 1st: centers; 2nd: height; 3th: std's;
  * @param t Ordinate values
- * @param p Lorentzian parameters
+ * @param p Gaussian parameters
  * @param c Constant parameters(Not used)
  * @returns {*}
  */
@@ -95,11 +96,12 @@ function optimizeSingleLorentzian(xy, peak, opts) {
 
     var opts=Object.create(opts || [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ]);
     //var opts = [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ];
-    var consts = [ ];                         // optional vector of constants
-    var dx = -Math.abs(t[0][0]-t[1][0])/100;
+    var consts = [ ];
+    var dt = Math.abs(t[0][0]-t[1][0]);// optional vector of constants
+    var dx = new Matrix([[-dt/10000],[-1e-3],[-dt/10000]]);//-Math.abs(t[0][0]-t[1][0])/100;
     var p_init = new Matrix([[peak.x],[1],[peak.width]]);
-    var p_min = new Matrix([[peak.x-peak.width/4],[0.5],[peak.width/4]]);
-    var p_max = new Matrix([[peak.x+peak.width/4],[1.5],[peak.width*2]]);
+    var p_min = new Matrix([[peak.x-dt],[0.75],[peak.width/4]]);
+    var p_max = new Matrix([[peak.x+dt],[1.25],[peak.width*4]]);
 
     var p_fit = LM.optimize(singleLorentzian,p_init,t,y_data,weight,dx,p_min,p_max,consts,opts);
 
@@ -127,16 +129,19 @@ function optimizeSingleGaussian(xy, peak, opts) {
     var opts=Object.create(opts || [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ]);
     //var opts = [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ];
     var consts = [ ];                         // optional vector of constants
-    var dx = -Math.abs(t[0][0]-t[1][0])/100;
+    var dt = Math.abs(t[0][0]-t[1][0]);
+    var dx = new Matrix([[-dt/10000],[-1e-3],[-dt/10000]]);//-Math.abs(t[0][0]-t[1][0])/100;
 
+    var dx = new Matrix([[-Math.abs(t[0][0]-t[1][0])/1000],[-1e-3],[-peak.width/1000]]);
     var p_init = new Matrix([[peak.x],[1],[peak.width]]);
-    var p_min = new Matrix([[peak.x-peak.width/4],[0.5],[peak.width/4]]);
-    var p_max = new Matrix([[peak.x+peak.width/4],[1.5],[peak.width*2]]);
+    var p_min = new Matrix([[peak.x-dt],[0.75],[peak.width/4]]);
+    var p_max = new Matrix([[peak.x+dt],[1.25],[peak.width*4]]);
+    //var p_min = new Matrix([[peak.x-peak.width/4],[0.75],[peak.width/3]]);
+    //var p_max = new Matrix([[peak.x+peak.width/4],[1.25],[peak.width*3]]);
 
     var p_fit = LM.optimize(singleGaussian,p_init,t,y_data,weight,dx,p_min,p_max,consts,opts);
     p_fit = p_fit.p;
     return [p_fit[0],[p_fit[1][0]*maxY],p_fit[2]];
-    //return [[p_fit[0][0]],[p_fit[1][0]],[singleGaussian(new Matrix([p_fit[0]]),p_fit,consts)[0][0]]];
 }
 
 
@@ -161,19 +166,24 @@ function optimizeLorentzianSum(xy, group, opts){
     var p_init = new Matrix(nL*3,1);
     var p_min =  new Matrix(nL*3,1);
     var p_max =  new Matrix(nL*3,1);
-
+    var dx = new Matrix(nL*3,1);
+    var dt = Math.abs(t[0][0]-t[1][0]);
     for( i=0;i<nL;i++){
         p_init[i][0] = group[i].x;
         p_init[i+nL][0] = 1;
         p_init[i+2*nL][0] = group[i].width;
 
-        p_min[i][0] = group[i].x-group[i].width/4;
+        p_min[i][0] = group[i].x-dt;//-group[i].width/4;
         p_min[i+nL][0] = 0;
         p_min[i+2*nL][0] = group[i].width/4;
 
-        p_max[i][0] = group[i].x+group[i].width/4;
+        p_max[i][0] = group[i].x+dt;//+group[i].width/4;
         p_max[i+nL][0] = 1.5;
         p_max[i+2*nL][0] = group[i].width*4;
+
+        dx[i][0] = -dt/1000;
+        dx[i+nL][0] = -1e-3;
+        dx[i+2*nL][0] = -dt/1000;
     }
 
     var dx = -Math.abs(t[0][0]-t[1][0])/10000;
@@ -200,31 +210,43 @@ function optimizeGaussianSum(xy, group, opts){
     var t = xy2[0];
     var y_data = xy2[1];
     var maxY = xy2[2];
-    var nbPoints = t.columns,i;
+    var nbPoints = t.rows,i;
 
-    var weight = [nbPoints / math.sqrt(y_data.dot(y_data))];
+    var weight = new Matrix(nbPoints,1);//[nbPoints / math.sqrt(y_data.dot(y_data))];
+    var k = nbPoints / math.sqrt(y_data.dot(y_data));
+    for(i=0;i<nbPoints;i++){
+        weight[i][0]=k;///(y_data[i][0]);
+        //weight[i][0]=k*(2-y_data[i][0]);
+    }
 
-    var opts=Object.create(opts || [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        1 ]);
+    var opts=Object.create(opts || [  3,    100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2,    11,    9,        2 ]);
+    //var opts=[  3,    100, 1e-5, 1e-6, 1e-6, 1e-6, 1e-6,    11,    9,        1 ];
     var consts = [ ];// optional vector of constants
 
     var nL = group.length;
     var p_init = new Matrix(nL*3,1);
     var p_min =  new Matrix(nL*3,1);
     var p_max =  new Matrix(nL*3,1);
+    var dx = new Matrix(nL*3,1);
+    var dt = Math.abs(t[0][0]-t[1][0]);
     for( i=0;i<nL;i++){
         p_init[i][0] = group[i].x;
-        p_init[i+nL][0] = 1;
+        p_init[i+nL][0] = group[i].y/maxY;
         p_init[i+2*nL][0] = group[i].width;
 
-        p_min[i][0] = group[i].x-group[i].width/4;
-        p_min[i+nL][0] = 0;
-        p_min[i+2*nL][0] = group[i].width/4;
+        p_min[i][0] = group[i].x-dt;
+        p_min[i+nL][0] = group[i].y*0.8/maxY;
+        p_min[i+2*nL][0] = group[i].width/2;
 
-        p_max[i][0] = group[i].x+group[i].width/4;
-        p_max[i+nL][0] = 1.5;
-        p_max[i+2*nL][0] = group[i].width*4;
+        p_max[i][0] = group[i].x+dt;
+        p_max[i+nL][0] = group[i].y*1.2/maxY;
+        p_max[i+2*nL][0] = group[i].width*2;
+
+        dx[i][0] = -dt/1000;
+        dx[i+nL][0] = -1e-3;
+        dx[i+2*nL][0] = -dt/1000;
     }
-    var dx = -Math.abs(t[0][0]-t[1][0])/10000;
+    //console.log(t);
     var p_fit = LM.optimize(sumOfLorentzians,p_init,t,y_data,weight,dx,p_min,p_max,consts,opts);
     p_fit = p_fit.p;
     //Put back the result in the correct format
@@ -238,7 +260,7 @@ function optimizeGaussianSum(xy, group, opts){
 }
 /**
  *
- * Converts the given input the required x, y column matrices. y data is normalized to max(y)=1
+ * Converts the given input to the required x, y column matrices. y data is normalized to max(y)=1
  * @param xy
  * @returns {*[]}
  */
@@ -303,13 +325,13 @@ function parseData(xy){
     return [t,y_data,maxY];
 }
 
-function SizeException(nbPoints) {
-    this.message = "Not enought points to perform the optmization: "+nbPoints +"< 3";
-    this.name = "SizeException";
+function sizeException(nbPoints) {
+    return new RangeError("Not enought points to perform the optmization: "+nbPoints +"< 3");
 }
 
 module.exports.optimizeSingleLorentzian = optimizeSingleLorentzian;
 module.exports.optimizeLorentzianSum = optimizeLorentzianSum;
 module.exports.optimizeSingleGaussian = optimizeSingleGaussian;
+module.exports.optimizeGaussianSum = optimizeGaussianSum;
 module.exports.singleGaussian = singleGaussian;
 module.exports.singleLorentzian = singleLorentzian;
