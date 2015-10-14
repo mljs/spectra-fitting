@@ -1,5 +1,3 @@
-
-
 # ml-optimize-lorentzian
 
   [![NPM version][npm-image]][npm-url]
