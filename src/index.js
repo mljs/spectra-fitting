@@ -177,10 +177,10 @@ function optimizeLorentzianTrain(xy, group, opts){
     var tI, yI, maxY;
     var result=[], current;
     for(var i=0; i<group.length;i++){
-        nextX = group[i].x-group[i].width*2;
+        nextX = group[i].x-group[i].width*1.5;
         //console.log(group[i]);
         while(t[currentIndex++]<nextX&&currentIndex<nbPoints);
-        nextX = group[i].x+group[i].width*2;
+        nextX = group[i].x+group[i].width*1.5;
         tI = [];
         yI = [];
         while(t[currentIndex]<=nextX&&currentIndex<nbPoints){
@@ -218,10 +218,10 @@ function optimizeGaussianTrain(xy, group, opts){
     var tI, yI, maxY;
     var result=[], current;
     for(var i=0; i<group.length;i++){
-        nextX = group[i].x-group[i].width*2;
+        nextX = group[i].x-group[i].width*1.5;
         //console.log(group[i]);
         while(t[currentIndex++]<nextX&&currentIndex<nbPoints);
-        nextX = group[i].x+group[i].width*2;
+        nextX = group[i].x+group[i].width*1.5;
         tI = [];
         yI = [];
         while(t[currentIndex]<=nextX&&currentIndex<nbPoints){
