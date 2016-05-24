@@ -17,7 +17,8 @@
   },
   "keywords": [
     "Optimization",
-    "Loreztzian"
+    "Lorentzian",
+    "Guassian"
   ],
   "author": "Andres Castillo",
   "license": "MIT",
