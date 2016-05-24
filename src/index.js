@@ -421,17 +421,16 @@ function parseData(xy, threshold){
         t = new Array(nbPoints);//new Matrix(nbPoints, 1);
         y_data = new Array(nbPoints);//new Matrix(nbPoints, 1);
         for (i = 0; i < nbPoints; i++) {
-            t[i][0] = xy[i][0];
-            y_data[i][0] = xy[i][1];
-            if(y_data[i][0]>maxY)
-                maxY = y_data[i][0];
+            t[i] = xy[i][0];
+            y_data[i] = xy[i][1];
+            if(y_data[i]>maxY)
+                maxY = y_data[i];
         }
         //}
     }
     for (i = 0; i < nbPoints; i++) {
         y_data[i]/=maxY;
     }
-
     if(threshold){
         for (i = nbPoints-1; i >=0; i--) {
             if(y_data[i]<threshold) {
