@@ -28,9 +28,9 @@
   "homepage": "https://github.com/mljs/optimize-lorentzian",
   "devDependencies": {
     "cheminfo-tools": "^1.0.2",
-    "mocha-better-spec-reporter": "^3.0.1",
-    "mocha": "2.4.5",
-    "should": "^8.2.2"
+    "mocha": "^3.0.2",
+    "mocha-better-spec-reporter": "^3.0.2",
+    "should": "^11.1.0"
   },
   "dependencies": {
     "ml-curve-fitting": "0.0.6",
