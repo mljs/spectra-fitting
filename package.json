@@ -34,6 +34,6 @@
   },
   "dependencies": {
     "ml-curve-fitting": "0.0.6",
-    "ml-matrix": "^0.1.0"
+    "ml-matrix": "^2.0.0"
   }
 }
