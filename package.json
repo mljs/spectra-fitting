@@ -1,6 +1,6 @@
 {
   "name": "ml-optimize-lorentzian",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Optimize Lorentzian",
   "main": "src/index.js",
   "directories": {
