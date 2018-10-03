@@ -27,11 +27,11 @@ function sumOfLorentzians(t,p,c){
 }
 
 function sumOfGaussianLorentzians(t, p, c) {
-    var nL = p.length/4, factorG, factorG2, factorL, cols = t.rows;
+    var nL = p.length/4, factorG1, factorG2, factorL, cols = t.rows, p2;
     var result = Matrix.zeros(t.length, 1);
-    var xG = p[i + nL * 3][0];
-    var xL = 1 - xG;
     for(let i = 0; i < nL; i++) {
+        var xG = p[i + nL * 3][0];
+        var xL = 1 - xG;
         p2 = Math.pow(p[i+nL*2][0]/2,2);
         factorL = xL * p[i+nL][0] * p2;
         factorG1 = p[i+nL*2][0]*p[i+nL*2][0]/2;
@@ -304,7 +304,7 @@ function optimizeGaussianLorentzianSum(xy, group, options = {}) {
         dx[i][0] = -dt/1000;
         dx[i+nL][0] = -1e-3;
         dx[i+2*nL][0] = -dt/1000;
-        dx[i + 3 * nL][0] = 1e-3;
+        dx[i + 3 * nL][0] = 0.01;
     }
     var dx = -Math.abs(t[0][0]-t[1][0])/10000;
     var pFit = LM.optimize(sumOfGaussianLorentzians, pInit, t, yData, weight, dx, pMin, pMax, consts, LMOptions);
@@ -312,7 +312,7 @@ function optimizeGaussianLorentzianSum(xy, group, options = {}) {
     //Put back the result in the correct format
     var result = new Array(nL);
     for(let i = 0; i < nL; i++) {
-        result[i] = [pFit[i], [pFit[i + nL][0] * maxY], pFit[i + 2 * nL]];
+        result[i] = [pFit[i], [pFit[i + nL][0] * maxY], pFit[i + 2 * nL], pFit[i + 3 * nL]];
     }
 
     return result;
@@ -529,5 +529,6 @@ module.exports.optimizeGaussianSum = optimizeGaussianSum;
 module.exports.optimizeGaussianLorentzianSum = optimizeGaussianLorentzianSum;
 module.exports.singleGaussian = singleGaussian;
 module.exports.singleLorentzian = singleLorentzian;
+module.exports.sumOfGaussianLorentzians = sumOfGaussianLorentzians;
 module.exports.optimizeGaussianTrain = optimizeGaussianTrain;
 module.exports.optimizeLorentzianTrain = optimizeLorentzianTrain;
