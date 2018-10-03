@@ -40,6 +40,7 @@ function sumOfGaussianLorentzians(t, p, c) {
             result[j][0] +=  factorG2 * Math.exp(-(t[i][0]-p[i][0])*(t[i][0]-p[i][0])/factorG1) +  factorL/(Math.pow(t[j][0]-p[i][0],2)+p2);
         }
     }
+    return result;
 }
 
 /**
@@ -62,7 +63,6 @@ function sumOfGaussians(t,p,c){
     }
     return result;
 }
-
 
 /**
  * Single 4 parameter lorentzian function
@@ -261,28 +261,28 @@ function optimizeGaussianTrain(xy, group, opts){
 }
 
 function optimizeGaussianLorentzianSum(xy, group, options = {}) {
-    var xy2 = parseData(xy, opts.percentage||0);
     var {
         percentage = 0,
         LMOptions = [  3, 100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2, 11, 9, 1 ],
     } = options;
 
-    if(xy2===null||xy2[0].rows<3){
+    var xy2 = parseData(xy, percentage||0);
+    if(xy2 === null || xy2[0].rows < 3) {
         return null; //Cannot run an optimization with less than 3 points
     }
 
     var t = xy2[0];
-    var y_data = xy2[1];
+    var yData = xy2[1];
     var maxY = xy2[2];
     var nbPoints = t.rows;
 
-    var weight = [nbPoints / Math.sqrt(y_data.dot(y_data))];
+    var weight = [nbPoints / Math.sqrt(yData.dot(yData))];
     var consts = [ ];// optional vector of constants
     var nL = group.length;
-    var pInit = new Matrix(nL*5,1);
-    var pMin =  new Matrix(nL*5,1);
-    var pMax =  new Matrix(nL*5,1);
-    var dx = new Matrix(nL*5,1);
+    var pInit = new Matrix(nL*4,1);
+    var pMin =  new Matrix(nL*4,1);
+    var pMax =  new Matrix(nL*4,1);
+    var dx = new Matrix(nL*4,1);
     var dt = Math.abs(t[0][0]-t[1][0]);
 
     for(let i = 0; i < nL; i++) {
@@ -306,6 +306,16 @@ function optimizeGaussianLorentzianSum(xy, group, options = {}) {
         dx[i+2*nL][0] = -dt/1000;
         dx[i + 3 * nL][0] = 1e-3;
     }
+    var dx = -Math.abs(t[0][0]-t[1][0])/10000;
+    var pFit = LM.optimize(sumOfGaussianLorentzians, pInit, t, yData, weight, dx, pMin, pMax, consts, LMOptions);
+    pFit = pFit.p;
+    //Put back the result in the correct format
+    var result = new Array(nL);
+    for(let i = 0; i < nL; i++) {
+        result[i] = [pFit[i], [pFit[i + nL][0] * maxY], pFit[i + 2 * nL]];
+    }
+
+    return result;
 }
 
 /**
@@ -420,7 +430,7 @@ function optimizeGaussianSum(xy, group, opts){
         dx[i+2*nL][0] = -dt/1000;
     }
     //console.log(t);
-    var p_fit = LM.optimize(sumOfLorentzians,p_init,t,y_data,weight,dx,p_min,p_max,consts,opts);
+    var p_fit = LM.optimize(sumOfGaussians,p_init,t,y_data,weight,dx,p_min,p_max,consts,opts);
     p_fit = p_fit.p;
     //Put back the result in the correct format
     var result = new Array(nL);
@@ -516,6 +526,7 @@ module.exports.optimizeSingleLorentzian = optimizeSingleLorentzian;
 module.exports.optimizeLorentzianSum = optimizeLorentzianSum;
 module.exports.optimizeSingleGaussian = optimizeSingleGaussian;
 module.exports.optimizeGaussianSum = optimizeGaussianSum;
+module.exports.optimizeGaussianLorentzianSum = optimizeGaussianLorentzianSum;
 module.exports.singleGaussian = singleGaussian;
 module.exports.singleLorentzian = singleLorentzian;
 module.exports.optimizeGaussianTrain = optimizeGaussianTrain;
