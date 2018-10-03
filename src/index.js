@@ -16,7 +16,7 @@ function sumOfLorentzians(t,p,c){
     var nL = p.length/3,factor,i, j,p2, cols = t.rows;
     var result = Matrix.zeros(t.length,1);
 
-    for(i=0;i<nL;i++){
+    for(let i = 0; i < nL; i++) {
         p2 = Math.pow(p[i+nL*2][0]/2,2);
         factor = p[i+nL][0]*p2;
         for(j=0;j<cols;j++){
@@ -24,6 +24,22 @@ function sumOfLorentzians(t,p,c){
         }
     }
     return result;
+}
+
+function sumOfGaussianLorentzians(t, p, c) {
+    var nL = p.length/4, factorG, factorG2, factorL, cols = t.rows;
+    var result = Matrix.zeros(t.length, 1);
+    var xG = p[i + nL * 3][0];
+    var xL = 1 - xG;
+    for(let i = 0; i < nL; i++) {
+        p2 = Math.pow(p[i+nL*2][0]/2,2);
+        factorL = xL * p[i+nL][0] * p2;
+        factorG1 = p[i+nL*2][0]*p[i+nL*2][0]/2;
+        factorG2 = xG * p[i+nL][0];
+        for(let j = 0; j < cols; j++) {
+            result[j][0] +=  factorG2 * Math.exp(-(t[i][0]-p[i][0])*(t[i][0]-p[i][0])/factorG1) +  factorL/(Math.pow(t[j][0]-p[i][0],2)+p2);
+        }
+    }
 }
 
 /**
@@ -46,6 +62,8 @@ function sumOfGaussians(t,p,c){
     }
     return result;
 }
+
+
 /**
  * Single 4 parameter lorentzian function
  * @param t Ordinate values
@@ -242,7 +260,53 @@ function optimizeGaussianTrain(xy, group, opts){
     return result;
 }
 
+function optimizeGaussianLorentzianSum(xy, group, options = {}) {
+    var xy2 = parseData(xy, opts.percentage||0);
+    var {
+        percentage = 0,
+        LMOptions = [  3, 100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2, 11, 9, 1 ],
+    } = options;
 
+    if(xy2===null||xy2[0].rows<3){
+        return null; //Cannot run an optimization with less than 3 points
+    }
+
+    var t = xy2[0];
+    var y_data = xy2[1];
+    var maxY = xy2[2];
+    var nbPoints = t.rows;
+
+    var weight = [nbPoints / Math.sqrt(y_data.dot(y_data))];
+    var consts = [ ];// optional vector of constants
+    var nL = group.length;
+    var pInit = new Matrix(nL*5,1);
+    var pMin =  new Matrix(nL*5,1);
+    var pMax =  new Matrix(nL*5,1);
+    var dx = new Matrix(nL*5,1);
+    var dt = Math.abs(t[0][0]-t[1][0]);
+
+    for(let i = 0; i < nL; i++) {
+        pInit[i][0] = group[i].x;
+        pInit[i+nL][0] = 1;
+        pInit[i+2*nL][0] = group[i].width;
+        pInit[i + 3*nL][0] = 0.5;
+
+        pMin[i][0] = group[i].x-dt;
+        pMin[i+nL][0] = 0;
+        pMin[i+2*nL][0] = group[i].width/4;
+        pMin[i + 3 * nL][0] = 0;
+
+        pMax[i][0] = group[i].x+dt;
+        pMax[i+nL][0] = 1.5;
+        pMax[i+2*nL][0] = group[i].width*4;
+        pMax[i + 3 * nL][0] = 1;
+
+        dx[i][0] = -dt/1000;
+        dx[i+nL][0] = -1e-3;
+        dx[i+2*nL][0] = -dt/1000;
+        dx[i + 3 * nL][0] = 1e-3;
+    }
+}
 
 /**
  *
@@ -272,7 +336,7 @@ function optimizeLorentzianSum(xy, group, opts){
     var p_max =  new Matrix(nL*3,1);
     var dx = new Matrix(nL*3,1);
     var dt = Math.abs(t[0][0]-t[1][0]);
-    for( i=0;i<nL;i++){
+    for( i=0;i<nL;i++ ){
         p_init[i][0] = group[i].x;
         p_init[i+nL][0] = 1;
         p_init[i+2*nL][0] = group[i].width;
