@@ -34,10 +34,10 @@ function sumOfGaussianLorentzians(t, p, c) {
         var xL = 1 - xG;
         p2 = Math.pow(p[i+nL*2][0]/2,2);
         factorL = xL * p[i+nL][0] * p2;
-        factorG1 = p[i+nL*2][0]*p[i+nL*2][0]/2;
+        factorG1 = p[i+nL*2][0]*p[i+nL*2][0]*2;
         factorG2 = xG * p[i+nL][0];
         for(let j = 0; j < cols; j++) {
-            result[j][0] +=  factorG2 * Math.exp(-(t[i][0]-p[i][0])*(t[i][0]-p[i][0])/factorG1) +  factorL/(Math.pow(t[j][0]-p[i][0],2)+p2);
+            result[j][0] +=  factorG2 * Math.exp(-Math.pow(t[j][0]-p[i][0], 2)/factorG1) +  factorL/(Math.pow(t[j][0]-p[i][0],2)+p2);
         }
     }
     return result;
@@ -52,13 +52,12 @@ function sumOfGaussianLorentzians(t, p, c) {
  * @returns {*}
  */
 function sumOfGaussians(t,p,c){
-    var nL = p.length/3,factor,i, j, cols = t.rows;
+    var nL = p.length/3,factor, cols = t.rows;
     var result = Matrix.zeros(t.length,1);
-
-    for(i=0;i<nL;i++){
-        factor = p[i+nL*2][0]*p[i+nL*2][0]/2;
-        for(j=0;j<cols;j++){
-            result[j][0]+=p[i+nL][0]*Math.exp(-(t[i][0]-p[i][0])*(t[i][0]-p[i][0])/factor);
+    for(let i = 0; i < nL; i++) {
+        factor = Math.pow(p[i+nL*2][0],2)*2;
+        for(let j = 0; j < cols; j++) {
+            result[j][0]+=p[i+nL][0]*Math.exp(-Math.pow(t[j][0]-p[i][0], 2)/factor);
         }
     }
     return result;
