@@ -180,7 +180,7 @@ function optimizeSingleGaussian(xy, peak, opts) {
  */
 function optimizeLorentzianTrain(xy, group, opts){
     var xy2 = parseData(xy);
-    //console.log(xy2[0].rows);
+    
     if(xy2===null||xy2[0].rows<3){
         return null; //Cannot run an optimization with less than 3 points
     }
@@ -195,7 +195,6 @@ function optimizeLorentzianTrain(xy, group, opts){
     var result=[], current;
     for(var i=0; i<group.length;i++){
         nextX = group[i].x-group[i].width*1.5;
-        //console.log(group[i]);
         while(t[currentIndex++]<nextX&&currentIndex<nbPoints);
         nextX = group[i].x+group[i].width*1.5;
         tI = [];
@@ -221,7 +220,7 @@ function optimizeLorentzianTrain(xy, group, opts){
 
 function optimizeGaussianTrain(xy, group, opts){
     var xy2 = parseData(xy);
-    //console.log(xy2[0].rows);
+
     if(xy2===null||xy2[0].rows<3){
         return null; //Cannot run an optimization with less than 3 points
     }
@@ -236,7 +235,6 @@ function optimizeGaussianTrain(xy, group, opts){
     var result=[], current;
     for(var i=0; i<group.length;i++){
         nextX = group[i].x-group[i].width*1.5;
-        //console.log(group[i]);
         while(t[currentIndex++]<nextX&&currentIndex<nbPoints);
         nextX = group[i].x+group[i].width*1.5;
         tI = [];
@@ -303,9 +301,9 @@ function optimizeGaussianLorentzianSum(xy, group, options = {}) {
         dx[i][0] = -dt/1000;
         dx[i+nL][0] = -1e-3;
         dx[i+2*nL][0] = -dt/1000;
-        dx[i + 3 * nL][0] = 0.01;
+        dx[i + 3 * nL][0] = 0.0001;
     }
-    var dx = -Math.abs(t[0][0]-t[1][0])/10000;
+    // var dx = -Math.abs(t[0][0]-t[1][0])/10000;
     var pFit = LM.optimize(sumOfGaussianLorentzians, pInit, t, yData, weight, dx, pMin, pMax, consts, LMOptions);
     pFit = pFit.p;
     //Put back the result in the correct format
@@ -428,7 +426,7 @@ function optimizeGaussianSum(xy, group, opts){
         dx[i+nL][0] = -1e-3;
         dx[i+2*nL][0] = -dt/1000;
     }
-    //console.log(t);
+
     var p_fit = LM.optimize(sumOfGaussians,p_init,t,y_data,weight,dx,p_min,p_max,consts,opts);
     p_fit = p_fit.p;
     //Put back the result in the correct format
