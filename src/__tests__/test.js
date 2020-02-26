@@ -1,6 +1,6 @@
 import Matrix from "ml-matrix";
 
-import Opt from "..";
+import * as Opt from "..";
 
 //console.log(Opt);
 

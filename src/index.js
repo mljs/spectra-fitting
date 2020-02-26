@@ -31,7 +31,7 @@ function sumOfLorentzians(t, p, c) {
   return result;
 }
 
-function sumOfGaussianLorentzians(t, p, c) {
+export function sumOfGaussianLorentzians(t, p, c) {
   let nL = p.length / 4;
   let factorG1;
   let factorG2;
@@ -87,7 +87,7 @@ function sumOfGaussians(t, p, c) {
  * @param c Constant parameters(Not used)
  * @returns {*}
  */
-function singleLorentzian(t, p, c) {
+export function singleLorentzian(t, p, c) {
   let factor = p[1][0] * Math.pow(p[2][0] / 2, 2);
   let rows = t.rows;
   let result = new Matrix(t.rows, t.columns);
@@ -105,7 +105,7 @@ function singleLorentzian(t, p, c) {
  * @param c Constant parameters(Not used)
  * @returns {*}
  */
-function singleGaussian(t, p, c) {
+export function singleGaussian(t, p, c) {
   let factor2 = (p[2][0] * p[2][0]) / 2;
   let rows = t.rows;
   let result = new Matrix(t.rows, t.columns);
@@ -122,7 +122,7 @@ function singleGaussian(t, p, c) {
  * @param data,[y]
  * @returns {*[]}
  */
-function optimizeSingleLorentzian(xy, peak, opts) {
+export function optimizeSingleLorentzian(xy, peak, opts) {
   opts = opts || {};
   let xy2 = parseData(xy, opts.percentage || 0);
 
@@ -172,7 +172,7 @@ function optimizeSingleLorentzian(xy, peak, opts) {
  * @param data,[y]
  * @returns {*[]}
  */
-function optimizeSingleGaussian(xy, peak, opts) {
+export function optimizeSingleGaussian(xy, peak, opts) {
   opts = opts || {};
   let xy2 = parseData(xy, opts.percentage || 0);
 
@@ -228,7 +228,7 @@ function optimizeSingleGaussian(xy, peak, opts) {
 /*
  peaks on group should sorted
  */
-function optimizeLorentzianTrain(xy, group, opts) {
+export function optimizeLorentzianTrain(xy, group, opts) {
   let xy2 = parseData(xy);
 
   if (xy2 === null || xy2[0].rows < 3) {
@@ -278,7 +278,7 @@ function optimizeLorentzianTrain(xy, group, opts) {
   return result;
 }
 
-function optimizeGaussianTrain(xy, group, opts) {
+export function optimizeGaussianTrain(xy, group, opts) {
   let xy2 = parseData(xy);
 
   if (xy2 === null || xy2[0].rows < 3) {
@@ -328,7 +328,7 @@ function optimizeGaussianTrain(xy, group, opts) {
   return result;
 }
 
-function optimizeGaussianLorentzianSum(xy, group, options = {}) {
+export function optimizeGaussianLorentzianSum(xy, group, options = {}) {
   let {
     percentage = 0,
     LMOptions = [3, 100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2, 11, 9, 1]
@@ -408,7 +408,7 @@ function optimizeGaussianLorentzianSum(xy, group, options = {}) {
  * @param group A set of initial lorentzian parameters to be optimized [center, heigth, half_width_at_half_height]
  * @returns {Array} A set of final lorentzian parameters [center, heigth, hwhh*2]
  */
-function optimizeLorentzianSum(xy, group, opts) {
+export function optimizeLorentzianSum(xy, group, opts) {
   let xy2 = parseData(xy);
 
   if (xy2 === null || xy2[0].rows < 3) {
@@ -481,7 +481,7 @@ function optimizeLorentzianSum(xy, group, opts) {
  * @param group A set of initial lorentzian parameters to be optimized [center, heigth, half_width_at_half_height]
  * @returns {Array} A set of final lorentzian parameters [center, heigth, hwhh*2]
  */
-function optimizeGaussianSum(xy, group, opts) {
+export function optimizeGaussianSum(xy, group, opts) {
   let xy2 = parseData(xy);
 
   if (xy2 === null || xy2[0].rows < 3) {
@@ -643,14 +643,3 @@ function sizeException(nbPoints) {
     `Not enough points to perform the optimization: ${nbPoints}< 3`
   );
 }
-
-module.exports.optimizeSingleLorentzian = optimizeSingleLorentzian;
-module.exports.optimizeLorentzianSum = optimizeLorentzianSum;
-module.exports.optimizeSingleGaussian = optimizeSingleGaussian;
-module.exports.optimizeGaussianSum = optimizeGaussianSum;
-module.exports.optimizeGaussianLorentzianSum = optimizeGaussianLorentzianSum;
-module.exports.singleGaussian = singleGaussian;
-module.exports.singleLorentzian = singleLorentzian;
-module.exports.sumOfGaussianLorentzians = sumOfGaussianLorentzians;
-module.exports.optimizeGaussianTrain = optimizeGaussianTrain;
-module.exports.optimizeLorentzianTrain = optimizeLorentzianTrain;
