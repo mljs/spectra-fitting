@@ -1,8 +1,11 @@
 import Matrix from 'ml-matrix';
 
-import * as Opt from '..';
-
-//console.log(Opt);
+import { sumOfGaussianLorentzians } from '../sumOfGaussianLorentzians';
+import { optimizeGaussianLorentzianSum } from '../optimizeGaussianLorentzianSum';
+import { singleLorentzian } from '../singleLorentzian';
+import { optimizeSingleLorentzian } from '../optimizeSingleLorentzian';
+import { singleGaussian } from '../singleGaussian';
+import { optimizeSingleGaussian } from '../optimizeSingleGaussian';
 
 let nbPoints = 31;
 let tFactor = 0.1;
@@ -24,8 +27,8 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
       [0.5],
       [0.1],
     ]);
-    let yData = Opt.sumOfGaussianLorentzians(t, pTrue);
-    let result = Opt.optimizeGaussianLorentzianSum(
+    let yData = sumOfGaussianLorentzians(t, pTrue);
+    let result = optimizeGaussianLorentzianSum(
       [t, yData],
       [
         { x: -0.51, y: 0.0009, width: (tFactor * nbPoints) / 6 },
@@ -46,9 +49,9 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
 describe('Optimize 4 parameters Lorentzian', function() {
   it('Should approximate the true parameters', function() {
     let pTrue = new Matrix([[0], [0.001], [(tFactor * nbPoints) / 10]]);
-    let y = Opt.singleLorentzian(t, pTrue, []);
+    let y = singleLorentzian(t, pTrue, []);
     //I moved the initial guess
-    let result = Opt.optimizeSingleLorentzian([t, y], {
+    let result = optimizeSingleLorentzian([t, y], {
       x: 0.1,
       y: 0.0009,
       width: (tFactor * nbPoints) / 6,
@@ -62,9 +65,9 @@ describe('Optimize 4 parameters Lorentzian', function() {
 describe('Optimize 3 parameters Gaussian', function() {
   it('Should approximate the true parameters', function() {
     let pTrue = new Matrix([[0], [0.001], [(tFactor * nbPoints) / 10]]);
-    let y = Opt.singleGaussian(t, pTrue, []);
+    let y = singleGaussian(t, pTrue, []);
     //I moved the initial guess
-    let result = Opt.optimizeSingleGaussian([t, y], {
+    let result = optimizeSingleGaussian([t, y], {
       x: 0.1,
       y: 0.0009,
       width: (tFactor * nbPoints) / 6,
