@@ -14,7 +14,6 @@ export function parseData(xy, threshold) {
   let y;
   let maxY = 0;
   let nbPoints;
-
   if (nbSeries === 2) {
     nbPoints = xy[0].length;
     t = new Array(nbPoints);
@@ -33,8 +32,8 @@ export function parseData(xy, threshold) {
       if (typeof x[0] === 'object') {
         for (let i = 0; i < nbPoints; i++) {
           t[i] = x[i][0];
-          yData[i] = y[i][0];
-          if (y[i][0] > maxY) {
+          yData[i] = y[i];
+          if (y[i] > maxY) {
             maxY = y[i][0];
           }
         }
