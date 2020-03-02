@@ -12,7 +12,7 @@ import { sumOfGaussianLorentzians } from './sumOfGaussianLorentzians';
 import { sumOfGaussians } from './sumOfGaussians';
 import { sumOfLorentzians } from './sumOfLorentzians';
 
-export const optimizeLG = {
+export {
   optimizeGaussianLorentzianSum,
   optimizeGaussianTrain,
   optimizeGaussianSum,
