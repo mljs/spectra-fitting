@@ -1,4 +1,3 @@
-import Matrix from 'ml-matrix';
 import LM from 'ml-levenberg-marquardt';
 
 import { parseData } from './parseData';
@@ -16,17 +15,9 @@ export function optimizeGaussianSum(xy, group) {
   if (xy2 === null || xy2[0].rows < 3) {
     return null; // Cannot run an optimization with less than 3 points
   }
-
   let t = xy2[0];
   let yData = xy2[1];
   let maxY = xy2[2];
-  let nbPoints = t.length;
-  let weight = new Matrix(nbPoints, 1);
-  let k = nbPoints / Math.sqrt(yData.dot(yData));
-  for (let i = 0; i < nbPoints; i++) {
-    weight[i][0] = k;
-  }
-
   let nL = group.length;
   let pInit = [];
   let pMin = [];
@@ -51,8 +42,8 @@ export function optimizeGaussianSum(xy, group) {
     dx[i + 2 * nL] = -dt / 1000;
   }
   let data = {
-    x: Array.from(t),
-    y: Array.from(yData),
+    x: t,
+    y: yData,
   };
   let lmOptions = {
     damping: 1.5,
@@ -63,6 +54,7 @@ export function optimizeGaussianSum(xy, group) {
     maxIterations: 100,
     errorTolerance: 10e-3,
   };
+
   let pFit = LM(data, sumOfGaussians, lmOptions);
   pFit = pFit.parameterValues;
 

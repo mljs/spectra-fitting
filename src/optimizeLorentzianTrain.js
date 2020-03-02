@@ -36,9 +36,9 @@ export function optimizeLorentzianTrain(xy, group, opts) {
     current = optimizeSingleLorentzian([tI, yI], group[i], opts);
     if (current) {
       result.push({
-        x: current[0][0],
-        y: current[1][0],
-        width: current[2][0],
+        x: current[0],
+        y: current[1],
+        width: current[2],
         opt: true,
       });
     } else {

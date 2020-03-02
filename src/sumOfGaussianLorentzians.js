@@ -8,7 +8,6 @@
 
 export function sumOfGaussianLorentzians(p) {
   return function(t) {
-    //console.log(t, p);
     let nL = p.length / 4;
     let factorG1;
     let factorG2;
@@ -27,7 +26,6 @@ export function sumOfGaussianLorentzians(p) {
         result[j] +=
           factorG2 * Math.exp(-Math.pow(t[j] - p[i], 2) / factorG1) +
           factorL / (Math.pow(t[j] - p[i], 2) + p2);
-        //console.log(result[j]);
       }
     }
     return result;

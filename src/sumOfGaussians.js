@@ -8,7 +8,7 @@
  */
 export function sumOfGaussians(p) {
   return function(t) {
-    let nL = p.length / 4;
+    let nL = p.length / 3;
     let factor;
     let cols = t.length;
     let result = new Array(cols).fill(0);

@@ -16,15 +16,11 @@ export function optimizeGaussianLorentzianSum(xy, group, options = {}) {
   let yData = xy2[1];
   let maxY = xy2[2];
 
-  // let nbPoints = t.rows;
-  // let weight = [nbPoints / Math.sqrt(yData.dot(yData))];
-  // let consts = [];
-
   let nL = group.length;
-  let pInit = []; // new Array(nL * 4, 1);
-  let pMin = []; // new Array(nL * 4, 1);
-  let pMax = []; // new Array(nL * 4, 1);
-  let dx = []; //new Array(nL * 4, 1);
+  let pInit = [];
+  let pMin = [];
+  let pMax = [];
+  let dx = [];
   let dt = Math.abs(t[0] - t[1]);
 
   for (let i = 0; i < nL; i++) {
@@ -62,6 +58,7 @@ export function optimizeGaussianLorentzianSum(xy, group, options = {}) {
     maxIterations: 100,
     errorTolerance: 10e-3,
   };
+
   let pFit = LM(data, sumOfGaussianLorentzians, lmOptions);
   pFit = pFit.parameterValues;
   let result = new Array(nL);
