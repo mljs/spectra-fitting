@@ -8,8 +8,7 @@ import { parseData } from './parseData';
  * @param data,[y]
  * @returns {*[]}
  */
-export function optimizeSingleGaussian(xy, peak, opts) {
-  opts = opts || {};
+export function optimizeSingleGaussian(xy, peak, opts = {}) {
   let xy2 = parseData(xy, opts.percentage || 0);
 
   if (xy2 === null || xy2[0].rows < 3) {
@@ -20,7 +19,6 @@ export function optimizeSingleGaussian(xy, peak, opts) {
   let yData = xy2[1];
   let maxY = xy2[2];
   let dt = Math.abs(t[0] - t[1]);
-
   let pInit = [peak.x, 1, peak.width];
   let pMin = [peak.x - dt, 0.75, peak.width / 4];
   let pMax = [peak.x + dt, 1.25, peak.width * 4];
@@ -38,7 +36,10 @@ export function optimizeSingleGaussian(xy, peak, opts) {
     maxIterations: 100,
     errorTolerance: 10e-3,
   };
-  let pFit = LM(data, singleGaussian, lmOptions);
+
+  opts = Object.assign({}, opts, lmOptions);
+
+  let pFit = LM(data, singleGaussian, opts);
   pFit = pFit.parameterValues;
   return [pFit[0], pFit[1] * maxY, pFit[2]];
 }

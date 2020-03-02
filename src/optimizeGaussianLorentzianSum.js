@@ -3,12 +3,8 @@ import LM from 'ml-levenberg-marquardt';
 import { sumOfGaussianLorentzians } from './sumOfGaussianLorentzians';
 import { parseData } from './parseData';
 
-export function optimizeGaussianLorentzianSum(xy, group, options = {}) {
-  let {
-    percentage = 0,
-    // LMOptions = [3, 100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2, 11, 9, 1],
-  } = options;
-  let xy2 = parseData(xy, percentage || 0);
+export function optimizeGaussianLorentzianSum(xy, group, opts = {}) {
+  let xy2 = parseData(xy, opts.percentage || 0);
   if (xy2 === null || xy2[0].rows < 3) {
     return null;
   }
@@ -59,7 +55,9 @@ export function optimizeGaussianLorentzianSum(xy, group, options = {}) {
     errorTolerance: 10e-3,
   };
 
-  let pFit = LM(data, sumOfGaussianLorentzians, lmOptions);
+  opts = Object.assign({}, opts, lmOptions);
+
+  let pFit = LM(data, sumOfGaussianLorentzians, opts);
   pFit = pFit.parameterValues;
   let result = new Array(nL);
   for (let i = 0; i < nL; i++) {

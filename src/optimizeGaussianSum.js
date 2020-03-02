@@ -9,12 +9,12 @@ import { sumOfGaussians } from './sumOfGaussians';
  * @param group A set of initial lorentzian parameters to be optimized [center, heigth, half_width_at_half_height]
  * @returns {Array} A set of final lorentzian parameters [center, heigth, hwhh*2]
  */
-export function optimizeGaussianSum(xy, group) {
-  let xy2 = parseData(xy);
-
+export function optimizeGaussianSum(xy, group, opts = {}) {
+  let xy2 = parseData(xy, opts.percentage || 0);
   if (xy2 === null || xy2[0].rows < 3) {
     return null; // Cannot run an optimization with less than 3 points
   }
+
   let t = xy2[0];
   let yData = xy2[1];
   let maxY = xy2[2];
@@ -41,6 +41,7 @@ export function optimizeGaussianSum(xy, group) {
     dx[i + nL] = -1e-3;
     dx[i + 2 * nL] = -dt / 1000;
   }
+
   let data = {
     x: t,
     y: yData,
@@ -55,9 +56,10 @@ export function optimizeGaussianSum(xy, group) {
     errorTolerance: 10e-3,
   };
 
-  let pFit = LM(data, sumOfGaussians, lmOptions);
-  pFit = pFit.parameterValues;
+  opts = Object.assign({}, opts, lmOptions);
 
+  let pFit = LM(data, sumOfGaussians, opts);
+  pFit = pFit.parameterValues;
   let result = new Array(nL);
   for (let i = 0; i < nL; i++) {
     result[i] = [pFit[i], pFit[i + nL] * maxY, pFit[i + 2 * nL]];

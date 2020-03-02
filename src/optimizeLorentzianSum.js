@@ -9,16 +9,16 @@ import { sumOfLorentzians } from './sumOfLorentzians';
  * @param group A set of initial lorentzian parameters to be optimized [center, heigth, half_width_at_half_height]
  * @returns {Array} A set of final lorentzian parameters [center, heigth, hwhh*2]
  */
-export function optimizeLorentzianSum(xy, group) {
-  let xy2 = parseData(xy);
+export function optimizeLorentzianSum(xy, group, opts = {}) {
+  let xy2 = parseData(xy, opts.percentage || 0);
 
   if (xy2 === null || xy2[0].rows < 3) {
     return null;
   }
+
   let t = xy2[0];
   let yData = xy2[1];
   let maxY = xy2[2];
-
   let nL = group.length;
   let pInit = [];
   let pMin = [];
@@ -56,7 +56,10 @@ export function optimizeLorentzianSum(xy, group) {
     maxIterations: 100,
     errorTolerance: 10e-3,
   };
-  let pFit = LM(data, sumOfLorentzians, lmOptions);
+
+  opts = Object.assign({}, opts, lmOptions);
+
+  let pFit = LM(data, sumOfLorentzians, opts);
   pFit = pFit.parameterValues;
   let result = new Array(nL);
   for (let i = 0; i < nL; i++) {

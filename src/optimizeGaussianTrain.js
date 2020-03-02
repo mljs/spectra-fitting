@@ -4,9 +4,8 @@ import { parseData } from './parseData';
 /*
  peaks on group should sorted
  */
-
-export function optimizeGaussianTrain(xy, group, opts) {
-  let xy2 = parseData(xy);
+export function optimizeGaussianTrain(xy, group, opts = {}) {
+  let xy2 = parseData(xy, opts.percentage || 0);
 
   if (xy2 === null || xy2[0].rows < 3) {
     return null;

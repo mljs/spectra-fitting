@@ -4,13 +4,12 @@ import { parseData } from './parseData';
 /*
  peaks on group should sorted
  */
-export function optimizeLorentzianTrain(xy, group, opts) {
-  let xy2 = parseData(xy);
+export function optimizeLorentzianTrain(xy, group, opts = {}) {
+  let xy2 = parseData(xy, opts.percentage || 0);
 
   if (xy2 === null || xy2[0].rows < 3) {
     return null;
   }
-
   let t = xy2[0];
   let yData = xy2[1];
   let maxY = xy2[2];
@@ -32,7 +31,6 @@ export function optimizeLorentzianTrain(xy, group, opts) {
       yI.push(yData[currentIndex][0] * maxY);
       currentIndex++;
     }
-
     current = optimizeSingleLorentzian([tI, yI], group[i], opts);
     if (current) {
       result.push({
@@ -50,6 +48,5 @@ export function optimizeLorentzianTrain(xy, group, opts) {
       });
     }
   }
-
   return result;
 }
