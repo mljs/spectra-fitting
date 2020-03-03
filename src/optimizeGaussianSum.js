@@ -1,6 +1,5 @@
 import LM from 'ml-levenberg-marquardt';
 
-import { parseData } from './parseData';
 import { sumOfGaussians } from './sumOfGaussians';
 
 /**
@@ -10,14 +9,10 @@ import { sumOfGaussians } from './sumOfGaussians';
  * @returns {Array} A set of final lorentzian parameters [center, heigth, hwhh*2]
  */
 export function optimizeGaussianSum(xy, group, opts = {}) {
-  let xy2 = parseData(xy, opts.percentage || 0);
-  if (xy2 === null || xy2[0].rows < 3) {
-    return null; // Cannot run an optimization with less than 3 points
-  }
-
-  let t = xy2[0];
-  let yData = xy2[1];
-  let maxY = xy2[2];
+  let t = xy[0];
+  let yData = xy[1];
+  let maxY = Math.max(...yData);
+  yData.forEach((x, i, arr) => (arr[i] /= maxY));
   let nL = group.length;
   let pInit = [];
   let pMin = [];
@@ -55,9 +50,7 @@ export function optimizeGaussianSum(xy, group, opts = {}) {
     maxIterations: 100,
     errorTolerance: 10e-3,
   };
-
   opts = Object.assign({}, opts, lmOptions);
-
   let pFit = LM(data, sumOfGaussians, opts);
   pFit = pFit.parameterValues;
   let result = new Array(nL);

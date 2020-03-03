@@ -5,6 +5,7 @@
  * @param c Constant parameters(Not used)
  * @returns {*}
  */
+
 export function singleGaussian(p) {
   return function(t) {
     let factor2 = (p[2] * p[2]) / 2;

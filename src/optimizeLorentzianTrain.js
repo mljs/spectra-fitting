@@ -1,24 +1,18 @@
 import { optimizeSingleLorentzian } from './optimizeSingleLorentzian';
-import { parseData } from './parseData';
 
 /*
  peaks on group should sorted
  */
 export function optimizeLorentzianTrain(xy, group, opts = {}) {
-  let xy2 = parseData(xy, opts.percentage || 0);
-
-  if (xy2 === null || xy2[0].rows < 3) {
-    return null;
-  }
-  let t = xy2[0];
-  let yData = xy2[1];
-  let maxY = xy2[2];
+  let t = xy[0];
+  let yData = xy[1];
+  let maxY = Math.max(...yData);
+  yData.forEach((x, i, arr) => (arr[i] /= maxY));
   let currentIndex = 0;
   let nbPoints = t.length;
   let nextX;
   let tI, yI;
   let result = [];
-
   let current;
   for (let i = 0; i < group.length; i++) {
     nextX = group[i].x - group[i].width * 1.5;
@@ -27,8 +21,8 @@ export function optimizeLorentzianTrain(xy, group, opts = {}) {
     tI = [];
     yI = [];
     while (t[currentIndex] <= nextX && currentIndex < nbPoints) {
-      tI.push(t[currentIndex][0]);
-      yI.push(yData[currentIndex][0] * maxY);
+      tI.push(t[currentIndex]);
+      yI.push(yData[currentIndex] * maxY);
       currentIndex++;
     }
     current = optimizeSingleLorentzian([tI, yI], group[i], opts);

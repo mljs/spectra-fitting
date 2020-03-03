@@ -45,6 +45,6 @@
   },
   "dependencies": {
     "ml-levenberg-marquardt": "^2.0.0",
-    "ml-matrix": "^6.0.0"
+    "ml-matrix": "^2.3.0"
   }
 }

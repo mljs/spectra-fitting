@@ -13,7 +13,7 @@ describe('Optimize lorentzian train', function() {
     let yData = singleLorentzian(pTrue);
     let groups = [
       {
-        x: 0.1,
+        x: 0.001,
         y: 0.0009,
         width: (tFactor * nbPoints) / 6,
       },

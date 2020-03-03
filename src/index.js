@@ -5,7 +5,6 @@ import { optimizeLorentzianTrain } from './optimizeLorentzianTrain';
 import { optimizeLorentzianSum } from './optimizeLorentzianSum';
 import { optimizeSingleGaussian } from './optimizeSingleGaussian';
 import { optimizeSingleLorentzian } from './optimizeSingleLorentzian';
-import { parseData } from './parseData';
 import { singleGaussian } from './singleGaussian';
 import { singleLorentzian } from './singleLorentzian';
 import { sumOfGaussianLorentzians } from './sumOfGaussianLorentzians';
@@ -20,7 +19,6 @@ export {
   optimizeLorentzianTrain,
   optimizeSingleGaussian,
   optimizeSingleLorentzian,
-  parseData,
   singleGaussian,
   singleLorentzian,
   sumOfGaussianLorentzians,

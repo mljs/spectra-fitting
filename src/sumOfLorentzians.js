@@ -5,6 +5,7 @@
  * @param p Lorentzian parameters
  * @returns {*}
  */
+
 export function sumOfLorentzians(p) {
   return function(t) {
     let nL = p.length / 3;

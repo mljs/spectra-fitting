@@ -13,11 +13,12 @@ describe('Optimize gaussian train', function() {
     let yData = singleGaussian(pTrue);
     let groups = [
       {
-        x: 0.1,
+        x: 0.001,
         y: 0.0009,
         width: (tFactor * nbPoints) / 6,
       },
     ];
+    // console.log('---------------------->', pTrue);
     let result = optimizeGaussianTrain([t, yData(t)], groups);
     let nL = pTrue.length / 3;
     for (let i = 0; i < nL; i++) {
