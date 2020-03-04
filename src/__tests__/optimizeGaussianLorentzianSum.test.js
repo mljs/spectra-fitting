@@ -21,6 +21,7 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
         { x: 0.52, y: 0.0009, width: (tFactor * nbPoints) / 6 },
       ],
     );
+    console.log('---------------------->', pTrue, result);
     let nL = pTrue.length / 4;
     for (let i = 0; i < nL; i++) {
       let pFit = result[i];

@@ -7,14 +7,18 @@
  * @returns {*}
  */
 export function sumOfGaussians(p) {
+  //console.log(p);
   return function(t) {
     let nL = p.length / 3;
     let factor;
-    let cols = t.length;
-    let result = new Array(cols).fill(0);
+    let rows = t.length;
+    let result = new Array(rows).fill(0);
     for (let i = 0; i < nL; i++) {
       factor = Math.pow(p[i + nL * 2], 2) * 2;
-      for (let j = 0; j < cols; j++) {
+      if (rows === undefined) {
+        return p[i + nL] * Math.exp(-Math.pow(t - p[i], 2) / factor);
+      }
+      for (let j = 0; j < rows; j++) {
         result[j] += p[i + nL] * Math.exp(-Math.pow(t[j] - p[i], 2) / factor);
       }
     }

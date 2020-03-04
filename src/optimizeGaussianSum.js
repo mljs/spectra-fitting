@@ -12,6 +12,7 @@ export function optimizeGaussianSum(xy, group, opts = {}) {
   let t = xy[0];
   let yData = xy[1];
   let maxY = Math.max(...yData);
+  // let norm = Math.sqrt(yData.reduce((a, b) => a + Math.pow(b, 2), 0));
   yData.forEach((x, i, arr) => (arr[i] /= maxY));
   let nL = group.length;
   let pInit = [];

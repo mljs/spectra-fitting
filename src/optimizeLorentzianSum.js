@@ -13,6 +13,7 @@ export function optimizeLorentzianSum(xy, group, opts = {}) {
   let yData = xy[1];
   let maxY = Math.max(...yData);
   yData.forEach((x, i, arr) => (arr[i] /= maxY));
+
   let nL = group.length;
   let pInit = [];
   let pMin = [];
@@ -41,6 +42,7 @@ export function optimizeLorentzianSum(xy, group, opts = {}) {
     x: t,
     y: yData,
   };
+
   let lmOptions = {
     damping: 1.5,
     initialValues: pInit,
@@ -50,12 +52,15 @@ export function optimizeLorentzianSum(xy, group, opts = {}) {
     maxIterations: 100,
     errorTolerance: 10e-3,
   };
+
   opts = Object.assign({}, opts, lmOptions);
   let pFit = LM(data, sumOfLorentzians, opts);
+  console.log(pFit);
   pFit = pFit.parameterValues;
   let result = new Array(nL);
   for (let i = 0; i < nL; i++) {
     result[i] = [pFit[i], pFit[i + nL] * maxY, pFit[i + 2 * nL]];
   }
+  console.log(result);
   return result;
 }

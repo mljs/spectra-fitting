@@ -3,7 +3,7 @@
   "version": "0.1.4",
   "description": "Optimize Lorentzian",
   "main": "lib/index.js",
-  "module": "src/index.js",
+  "modufle": "src/index.js",
   "files": [
     "lib",
     "src"
@@ -14,7 +14,8 @@
     "prepublishOnly": "rollup -c",
     "test": "npm run test-coverage && npm run eslint",
     "test-coverage": "jest --coverage",
-    "test-only": "jest"
+    "test-only": "jest",
+    "debug": "npm run prepublishOnly && node src/debug.js"
   },
   "repository": {
     "type": "git",
@@ -46,5 +47,6 @@
   "dependencies": {
     "ml-levenberg-marquardt": "^2.0.0",
     "ml-matrix": "^2.3.0"
-  }
+  },
+  "type": "module"
 }

@@ -12,9 +12,9 @@ export function sumOfGaussianLorentzians(p) {
     let factorG1;
     let factorG2;
     let factorL;
-    let cols = t.length;
+    let rows = t.length;
     let p2;
-    let result = new Array(cols).fill(0);
+    let result = new Array(rows).fill(0);
     for (let i = 0; i < nL; i++) {
       let xG = p[i + nL * 3];
       let xL = 1 - xG;
@@ -22,12 +22,19 @@ export function sumOfGaussianLorentzians(p) {
       factorL = xL * p[i + nL] * p2;
       factorG1 = p[i + nL * 2] * p[i + nL * 2] * 2;
       factorG2 = xG * p[i + nL];
-      for (let j = 0; j < cols; j++) {
+      if (!rows) {
+        return (
+          factorG2 * Math.exp(-Math.pow(t - p[i], 2) / factorG1) +
+          factorL / (Math.pow(t - p[i], 2) + p2)
+        );
+      }
+      for (let j = 0; j < rows; j++) {
         result[j] +=
           factorG2 * Math.exp(-Math.pow(t[j] - p[i], 2) / factorG1) +
           factorL / (Math.pow(t[j] - p[i], 2) + p2);
       }
     }
+    console.log(result);
     return result;
   };
 }

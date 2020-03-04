@@ -17,6 +17,7 @@ describe('Optimize sum of Lorentzian', function() {
         { x: 0.52, y: 0.0009, width: (tFactor * nbPoints) / 6 },
       ],
     );
+    console.log('---------------------->', pTrue, result);
     let nL = pTrue.length / 3;
     for (let i = 0; i < nL; i++) {
       let pFit = result[i];

@@ -4,9 +4,11 @@ import { optimizeSingleLorentzian } from './optimizeSingleLorentzian';
  peaks on group should sorted
  */
 export function optimizeLorentzianTrain(xy, group, opts = {}) {
+  console.log('-----> ', group, group.length);
   let t = xy[0];
   let yData = xy[1];
   let maxY = Math.max(...yData);
+  //let norm = Math.sqrt(yData.reduce((a, b) => a + Math.pow(b, 2)));
   yData.forEach((x, i, arr) => (arr[i] /= maxY));
   let currentIndex = 0;
   let nbPoints = t.length;
@@ -25,6 +27,7 @@ export function optimizeLorentzianTrain(xy, group, opts = {}) {
       yI.push(yData[currentIndex] * maxY);
       currentIndex++;
     }
+    console.log('------------>', [tI, yI], group[i], opts);
     current = optimizeSingleLorentzian([tI, yI], group[i], opts);
     if (current) {
       result.push({

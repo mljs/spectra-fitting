@@ -11,12 +11,15 @@ export function sumOfLorentzians(p) {
     let nL = p.length / 3;
     let factor;
     let p2;
-    let cols = t.length;
-    let result = new Array(cols).fill(0);
+    let rows = t.length;
+    let result = new Array(rows).fill(0);
     for (let i = 0; i < nL; i++) {
       p2 = Math.pow(p[i + nL * 2] / 2, 2);
       factor = p[i + nL] * p2;
-      for (let j = 0; j < cols; j++) {
+      if (!rows) {
+        return factor / (Math.pow(t - p[i], 2) + p2);
+      }
+      for (let j = 0; j < rows; j++) {
         result[j] += factor / (Math.pow(t[j] - p[i], 2) + p2);
       }
     }

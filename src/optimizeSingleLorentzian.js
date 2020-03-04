@@ -32,6 +32,7 @@ export function optimizeSingleLorentzian(xy, peak, opts = {}) {
   };
   opts = Object.assign({}, opts, lmOptions);
   let pFit = LM(data, singleLorentzian, opts);
+  console.log(pFit);
   pFit = pFit.parameterValues;
   return [pFit[0], pFit[1] * maxY, pFit[2]];
 }

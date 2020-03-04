@@ -13,12 +13,13 @@ describe('Optimize lorentzian train', function() {
     let yData = singleLorentzian(pTrue);
     let groups = [
       {
-        x: 0.001,
+        x: 0.1,
         y: 0.0009,
         width: (tFactor * nbPoints) / 6,
       },
     ];
     let result = optimizeLorentzianTrain([t, yData(t)], groups);
+    console.log(result);
     let nL = pTrue.length / 3;
     for (let i = 0; i < nL; i++) {
       let pFit = result[i];
