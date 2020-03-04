@@ -55,12 +55,10 @@ export function optimizeLorentzianSum(xy, group, opts = {}) {
 
   opts = Object.assign({}, opts, lmOptions);
   let pFit = LM(data, sumOfLorentzians, opts);
-  console.log(pFit);
   pFit = pFit.parameterValues;
   let result = new Array(nL);
   for (let i = 0; i < nL; i++) {
     result[i] = [pFit[i], pFit[i + nL] * maxY, pFit[i + 2 * nL]];
   }
-  console.log(result);
   return result;
 }

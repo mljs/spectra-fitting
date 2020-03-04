@@ -10,8 +10,6 @@ describe('Optimize sum of Gaussians', function() {
   it('group of two GL', function() {
     let pTrue = [-0.5, 0.5, 0.001, 0.001, 0.31, 0.31];
     let yData = sumOfGaussians(pTrue);
-    console.log(yData(t));
-    console.log('------ pass ---------');
 
     let result = optimizeGaussianSum(
       [t, yData(t)],
@@ -20,7 +18,6 @@ describe('Optimize sum of Gaussians', function() {
         { x: 0.52, y: 0.0009, width: (tFactor * nbPoints) / 6 },
       ],
     );
-    console.log('---------------------->', pTrue, result);
     let nL = pTrue.length / 3;
     for (let i = 0; i < nL; i++) {
       let pFit = result[i];

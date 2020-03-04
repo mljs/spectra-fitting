@@ -25,9 +25,7 @@ export function optimizeGaussianTrain(xy, group, opts = {}) {
       yI.push(yData[currentIndex] * maxY);
       currentIndex++;
     }
-    // console.log(tI, yI);
     current = optimizeSingleGaussian([tI, yI], group[i], opts);
-    // console.log(current);
     if (current) {
       result.push({
         x: current[0],

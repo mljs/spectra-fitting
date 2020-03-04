@@ -19,7 +19,6 @@ describe('Optimize lorentzian train', function() {
       },
     ];
     let result = optimizeLorentzianTrain([t, yData(t)], groups);
-    console.log(result);
     let nL = pTrue.length / 3;
     for (let i = 0; i < nL; i++) {
       let pFit = result[i];

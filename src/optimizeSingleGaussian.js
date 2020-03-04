@@ -32,7 +32,6 @@ export function optimizeSingleGaussian(xy, peak, opts = {}) {
   };
 
   opts = Object.assign({}, opts, lmOptions);
-  // console.log(data, singleGaussian, opts);
   let pFit = LM(data, singleGaussian, opts);
   pFit = pFit.parameterValues;
   return [pFit[0], pFit[1] * maxY, pFit[2]];

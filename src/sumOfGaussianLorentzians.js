@@ -34,7 +34,6 @@ export function sumOfGaussianLorentzians(p) {
           factorL / (Math.pow(t[j] - p[i], 2) + p2);
       }
     }
-    console.log(result);
     return result;
   };
 }
