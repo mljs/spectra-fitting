@@ -3,7 +3,7 @@
   "version": "0.1.4",
   "description": "Optimize Lorentzian",
   "main": "lib/index.js",
-  "module": "src/index.js",
+  "modufle": "src/index.js",
   "files": [
     "lib",
     "src"
@@ -12,9 +12,10 @@
     "eslint": "eslint src",
     "eslint-fix": "npm run eslint -- --fix",
     "prepublishOnly": "rollup -c",
-    "test": "npm run test-only && npm run eslint",
-    "test-travis": "eslint src && jest --coverage && codecov",
-    "test-only": "jest"
+    "test": "npm run test-coverage && npm run eslint",
+    "test-coverage": "jest --coverage",
+    "test-only": "jest",
+    "debug": "npm run prepublishOnly && node src/debug.js"
   },
   "repository": {
     "type": "git",
@@ -44,7 +45,7 @@
     "rollup": "^1.31.1"
   },
   "dependencies": {
-    "ml-curve-fitting": "0.0.7",
-    "ml-matrix": "^6.0.0"
-  }
+    "ml-levenberg-marquardt": "^2.1.0"
+  },
+  "type": "module"
 }
