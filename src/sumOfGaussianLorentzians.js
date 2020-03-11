@@ -34,6 +34,7 @@ export function sumOfGaussianLorentzians(p) {
         }
       }
     }
+    // console.log(result);
     return result;
   };
 }

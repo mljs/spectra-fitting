@@ -51,7 +51,7 @@ export function optimizeGaussianSum(xy, group, opts = {}) {
     maxValues: pMax,
     gradientDifference: 10e-2,
     maxIterations: 100,
-    errorTolerance: 10e-3,
+    errorTolerance: 10e-5,
   };
 
   opts = Object.assign({}, opts, lmOptions);
