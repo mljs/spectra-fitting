@@ -1,76 +1,70 @@
-import LM from 'ml-curve-fitting';
-import Matrix from 'ml-matrix';
+import LM from 'ml-levenberg-marquardt';
 
 import { sumOfGaussianLorentzians } from './sumOfGaussianLorentzians';
-import { parseData } from './parseData';
 
-export function optimizeGaussianLorentzianSum(xy, group, options = {}) {
-  let {
-    percentage = 0,
-    LMOptions = [3, 100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2, 11, 9, 1],
-  } = options;
-
-  let xy2 = parseData(xy, percentage || 0);
-  if (xy2 === null || xy2[0].rows < 3) {
-    return null;
-  }
-
-  let t = xy2[0];
-  let yData = xy2[1];
-  let maxY = xy2[2];
-  let nbPoints = t.rows;
-
-  let weight = [nbPoints / Math.sqrt(yData.dot(yData))];
-  let consts = [];
+export function optimizeGaussianLorentzianSum(xy, group, opts = {}) {
+  let t = xy[0];
+  let yData = xy[1];
+  let maxY = Math.max(...yData);
+  yData.forEach((x, i, arr) => (arr[i] /= maxY));
   let nL = group.length;
-  let pInit = new Matrix(nL * 4, 1);
-  let pMin = new Matrix(nL * 4, 1);
-  let pMax = new Matrix(nL * 4, 1);
-  let dx = new Matrix(nL * 4, 1);
-  let dt = Math.abs(t[0][0] - t[1][0]);
+  let pInit = new Float64Array(nL * 4);
+  let pMin = new Float64Array(nL * 4);
+  let pMax = new Float64Array(nL * 4);
+  let dt = Math.abs(t[0] - t[1]);
 
-  for (let i = 0; i < nL; i++) {
-    pInit[i][0] = group[i].x;
-    pInit[i + nL][0] = 1;
-    pInit[i + 2 * nL][0] = group[i].width;
-    pInit[i + 3 * nL][0] = 0.5;
-
-    pMin[i][0] = group[i].x - dt;
-    pMin[i + nL][0] = 0;
-    pMin[i + 2 * nL][0] = group[i].width / 4;
-    pMin[i + 3 * nL][0] = 0;
-
-    pMax[i][0] = group[i].x + dt;
-    pMax[i + nL][0] = 1.5;
-    pMax[i + 2 * nL][0] = group[i].width * 4;
-    pMax[i + 3 * nL][0] = 1;
-
-    dx[i][0] = -dt / 1000;
-    dx[i + nL][0] = -1e-3;
-    dx[i + 2 * nL][0] = -dt / 1000;
-    dx[i + 3 * nL][0] = 0.0001;
+  for (let i = 0; i < 4; i++) {
+    for (let j = i; j < nL; j++) {
+      pInit[j] = group[j].x;
+      pMin[j] = group[j].x - dt;
+      pMax[j] = group[j].x + dt;
+    }
+    for (let j = i; j < nL; j++) {
+      pInit[j + 2] = 1;
+      pMin[j + 2] = 0;
+      pMax[j + 2] = 1.5;
+    }
+    for (let j = i; j < nL; j++) {
+      pInit[j + 4] = group[j].width;
+      pMin[j + 4] = group[i].width / 4;
+      pMax[j + 4] = group[i].width * 4;
+    }
+    for (let j = i; j < nL + 6; j++) {
+      pInit[j + 6] = 0.5;
+      pMin[j + 6] = 0;
+      pMax[i + 6] = 1;
+    }
   }
-  let pFit = LM.optimize(
-    sumOfGaussianLorentzians,
-    pInit,
-    t,
-    yData,
-    weight,
-    dx,
-    pMin,
-    pMax,
-    consts,
-    LMOptions,
-  );
-  pFit = pFit.p;
+
+  let data = {
+    x: t,
+    y: yData,
+  };
+
   let result = new Array(nL);
+
+  let lmOptions = {
+    damping: 1.5,
+    initialValues: pInit,
+    minValues: pMin,
+    maxValues: pMax,
+    gradientDifference: 10e-2,
+    maxIterations: 100,
+    errorTolerance: 10e-5,
+  };
+
+  opts = Object.assign({}, opts, lmOptions);
+  let pFit = LM(data, sumOfGaussianLorentzians, opts);
   for (let i = 0; i < nL; i++) {
-    result[i] = [
-      pFit[i],
-      [pFit[i + nL][0] * maxY],
-      pFit[i + 2 * nL],
-      pFit[i + 3 * nL],
-    ];
+    result[i] = {
+      parameters: [
+        pFit.parameterValues[i],
+        pFit.parameterValues[i + nL] * maxY,
+        pFit.parameterValues[i + 2 * nL],
+        pFit.parameterValues[i + 3 * nL],
+      ],
+      error: pFit.parameterError,
+    };
   }
   return result;
 }

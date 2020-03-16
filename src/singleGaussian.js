@@ -1,5 +1,3 @@
-import Matrix from 'ml-matrix';
-
 /**
  * Single 3 parameter gaussian function
  * @param t Ordinate values
@@ -7,14 +5,16 @@ import Matrix from 'ml-matrix';
  * @param c Constant parameters(Not used)
  * @returns {*}
  */
-export function singleGaussian(t, p) {
-  let factor2 = (p[2][0] * p[2][0]) / 2;
-  let rows = t.rows;
-  let result = new Matrix(t.rows, t.columns);
-  for (let i = 0; i < rows; i++) {
-    result[i][0] =
-      p[1][0] *
-      Math.exp((-(t[i][0] - p[0][0]) * (t[i][0] - p[0][0])) / factor2);
-  }
-  return result;
+
+export function singleGaussian(p) {
+  return function(t) {
+    let factor2 = (p[2] * p[2]) / 2;
+    let rows = t.length;
+    if (!rows) return p[1] * Math.exp((-(t - p[0]) * (t - p[0])) / factor2);
+    let result = new Float64Array(t.length);
+    for (let i = 0; i < t.length; i++) {
+      result[i] = p[1] * Math.exp((-(t[i] - p[0]) * (t[i] - p[0])) / factor2);
+    }
+    return result;
+  };
 }
