@@ -20,22 +20,18 @@ export function optimizeLorentzianSum(xy, group, opts = {}) {
   let pMax = new Float64Array(nL * 3);
   let dt = Math.abs(t[0] - t[1]);
 
-  for (let i = 0; i < 4; i++) {
-    for (let j = i; j < nL; j++) {
-      pInit[j] = group[j].x;
-      pMin[j] = group[j].x - dt;
-      pMax[j] = group[j].x + dt;
-    }
-    for (let j = i; j < nL; j++) {
-      pInit[j + 2] = 1;
-      pMin[j + 2] = 0;
-      pMax[j + 2] = 1.5;
-    }
-    for (let j = i; j < nL; j++) {
-      pInit[j + 4] = group[j].width;
-      pMin[j + 4] = group[j].width / 4;
-      pMax[j + 4] = group[j].width * 4;
-    }
+  for (let i = 0; i < nL; i++) {
+    pInit[i] = group[i].x;
+    pInit[i + nL] = 1;
+    pInit[i + 2 * nL] = group[i].width;
+
+    pMin[i] = group[i].x - dt;
+    pMin[i + nL] = 0;
+    pMin[i + 2 * nL] = group[i].width / 4;
+
+    pMax[i] = group[i].x + dt;
+    pMax[i + nL] = 1.5;
+    pMax[i + 2 * nL] = group[i].width * 4;
   }
 
   let data = {
@@ -55,7 +51,7 @@ export function optimizeLorentzianSum(xy, group, opts = {}) {
     errorTolerance: 10e-5,
   };
 
-  opts = Object.assign({}, opts, lmOptions);
+  opts = Object.assign({}, lmOptions, opts);
 
   let pFit = LM(data, sumOfLorentzians, opts);
   for (let i = 0; i < nL; i++) {
