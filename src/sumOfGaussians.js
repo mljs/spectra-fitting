@@ -7,7 +7,7 @@
  * @returns {*}
  */
 export function sumOfGaussians(p) {
-  return function(t) {
+  return function (t) {
     let nL = p.length / 3;
     let factor;
     let rows = t.length;

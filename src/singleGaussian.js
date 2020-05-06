@@ -7,7 +7,7 @@
  */
 
 export function singleGaussian(p) {
-  return function(t) {
+  return function (t) {
     let factor2 = (p[2] * p[2]) / 2;
     let rows = t.length;
     if (!rows) return p[1] * Math.exp((-(t - p[0]) * (t - p[0])) / factor2);

@@ -7,7 +7,7 @@
  */
 
 export function sumOfGaussianLorentzians(p) {
-  return function(t) {
+  return function (t) {
     let nL = p.length / 4;
     let factorG1;
     let factorG2;

@@ -7,8 +7,8 @@ for (let i = 0; i < nbPoints; i++) {
   t[i] = (i - nbPoints / 2) * tFactor;
 }
 
-describe('Optimize gaussian train', function() {
-  it('group of two GL', function() {
+describe('Optimize gaussian train', function () {
+  it('group of two GL', function () {
     let pTrue = [0, 0.001, (tFactor * nbPoints) / 10];
     let yData = singleGaussian(pTrue);
     let groups = [

@@ -6,8 +6,8 @@ let t = new Float64Array(nbPoints);
 for (let i = 0; i < nbPoints; i++) {
   t[i] = (i - nbPoints / 2) * tFactor;
 }
-describe('Optimize sum of Gaussians', function() {
-  it('group of two GL', function() {
+describe('Optimize sum of Gaussians', function () {
+  it('group of two GL', function () {
     let pTrue = [-0.5, 0.5, 0.001, 0.001, 0.31, 0.31];
     let yData = sumOfGaussians(pTrue);
 

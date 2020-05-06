@@ -7,7 +7,7 @@
  */
 
 export function sumOfLorentzians(p) {
-  return function(t) {
+  return function (t) {
     let nL = p.length / 3;
     let factor;
     let p2;

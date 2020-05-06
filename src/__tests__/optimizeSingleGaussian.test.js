@@ -7,8 +7,8 @@ for (let i = 0; i < nbPoints; i++) {
   t[i] = (i - nbPoints / 2) * tFactor;
 }
 
-describe('Optimize 3 parameters Gaussian', function() {
-  it('Should approximate the true parameters', function() {
+describe('Optimize 3 parameters Gaussian', function () {
+  it('Should approximate the true parameters', function () {
     let pTrue = [0, 0.001, (tFactor * nbPoints) / 10];
     let yData = singleGaussian(pTrue);
     let result = optimizeSingleGaussian([t, yData(t)], {

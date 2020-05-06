@@ -7,7 +7,7 @@
  */
 
 export function singleLorentzian(p) {
-  return function(t) {
+  return function (t) {
     let factor = p[1] * Math.pow(p[2] / 2, 2);
     let rows = t.length;
     if (!rows) return factor / (Math.pow(t - p[0], 2) + Math.pow(p[2] / 2, 2));

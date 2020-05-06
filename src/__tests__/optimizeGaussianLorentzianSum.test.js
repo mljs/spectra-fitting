@@ -10,8 +10,8 @@ for (let i = 0; i < nbPoints; i++) {
   t[i] = (i - nbPoints / 2) * tFactor;
 }
 
-describe('Optimize 4 parameters of a linear combination of gaussian and lorentzians', function() {
-  it('group of two GL', function() {
+describe('Optimize 4 parameters of a linear combination of gaussian and lorentzians', function () {
+  it('group of two GL', function () {
     let pTrue = [
       0,
       0,

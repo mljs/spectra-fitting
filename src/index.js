@@ -1,8 +1,8 @@
 import { optimizeGaussianLorentzianSum } from './optimizeGaussianLorentzianSum';
 import { optimizeGaussianSum } from './optimizeGaussianSum';
 import { optimizeGaussianTrain } from './optimizeGaussianTrain';
-import { optimizeLorentzianTrain } from './optimizeLorentzianTrain';
 import { optimizeLorentzianSum } from './optimizeLorentzianSum';
+import { optimizeLorentzianTrain } from './optimizeLorentzianTrain';
 import { optimizeSingleGaussian } from './optimizeSingleGaussian';
 import { optimizeSingleLorentzian } from './optimizeSingleLorentzian';
 import { singleGaussian } from './singleGaussian';
