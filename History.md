@@ -1,3 +1,12 @@
+## [0.1.5](https://github.com/mljs/optimize-lorentzian/compare/v0.1.4...v0.1.5) (2020-05-06)
+
+
+### Bug Fixes
+
+* boundaries array bug ([#13](https://github.com/mljs/optimize-lorentzian/issues/13)) ([6c822e1](https://github.com/mljs/optimize-lorentzian/commit/6c822e14f25c5b091890cee750f34f7dd45bf136))
+
+
+
 <a name="0.1.4"></a>
 ## 0.1.4 (2016-08-16)
 
