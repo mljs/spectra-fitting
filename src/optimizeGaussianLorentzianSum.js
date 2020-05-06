@@ -13,27 +13,21 @@ export function optimizeGaussianLorentzianSum(xy, group, opts = {}) {
   let pMax = new Float64Array(nL * 4);
   let dt = Math.abs(t[0] - t[1]);
 
-  for (let i = 0; i < 4; i++) {
-    for (let j = i; j < nL; j++) {
-      pInit[j] = group[j].x;
-      pMin[j] = group[j].x - dt;
-      pMax[j] = group[j].x + dt;
-    }
-    for (let j = i; j < nL; j++) {
-      pInit[j + 2] = 1;
-      pMin[j + 2] = 0;
-      pMax[j + 2] = 1.5;
-    }
-    for (let j = i; j < nL; j++) {
-      pInit[j + 4] = group[j].width;
-      pMin[j + 4] = group[i].width / 4;
-      pMax[j + 4] = group[i].width * 4;
-    }
-    for (let j = i; j < nL + 6; j++) {
-      pInit[j + 6] = 0.5;
-      pMin[j + 6] = 0;
-      pMax[i + 6] = 1;
-    }
+  for (let i = 0; i < nL; i++) {
+    pInit[i] = group[i].x;
+    pInit[i + nL] = 1;
+    pInit[i + 2 * nL] = group[i].width;
+    pInit[i + 3 * nL] = 0.5;
+
+    pMin[i] = group[i].x - dt;
+    pMin[i + nL] = 0;
+    pMin[i + 2 * nL] = group[i].width / 4;
+    pMin[i + 3 * nL] = 0;
+
+    pMax[i] = group[i].x + dt;
+    pMax[i + nL] = 1.5;
+    pMax[i + 2 * nL] = group[i].width * 4;
+    pMax[i + 3 * nL] = 1;
   }
 
   let data = {
@@ -52,8 +46,7 @@ export function optimizeGaussianLorentzianSum(xy, group, opts = {}) {
     maxIterations: 100,
     errorTolerance: 10e-5,
   };
-
-  opts = Object.assign({}, opts, lmOptions);
+  opts = Object.assign({}, lmOptions, opts);
   let pFit = LM(data, sumOfGaussianLorentzians, opts);
   for (let i = 0; i < nL; i++) {
     result[i] = {

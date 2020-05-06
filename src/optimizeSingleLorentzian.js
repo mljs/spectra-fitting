@@ -31,7 +31,7 @@ export function optimizeSingleLorentzian(xy, peak, opts = {}) {
     maxIterations: 100,
     errorTolerance: 10e-5,
   };
-  opts = Object.assign({}, opts, lmOptions);
+  opts = Object.assign({}, lmOptions, opts);
   let pFit = LM(data, singleLorentzian, opts);
   return {
     parameters: [

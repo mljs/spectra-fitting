@@ -32,7 +32,7 @@ export function optimizeSingleGaussian(xy, peak, opts = {}) {
     errorTolerance: 10e-5,
   };
 
-  opts = Object.assign({}, opts, lmOptions);
+  opts = Object.assign({}, lmOptions, opts);
   let pFit = LM(data, singleGaussian, opts);
   return {
     parameters: [

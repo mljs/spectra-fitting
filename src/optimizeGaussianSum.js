@@ -19,29 +19,24 @@ export function optimizeGaussianSum(xy, group, opts = {}) {
   let pMax = new Float64Array(nL * 3);
   let dt = Math.abs(t[0] - t[1]);
 
-  for (let i = 0; i < 4; i++) {
-    for (let j = i; j < nL; j++) {
-      pInit[j] = group[j].x;
-      pMin[j] = group[j].x - dt;
-      pMax[j] = group[j].x + dt;
-    }
-    for (let j = i; j < nL; j++) {
-      pInit[j + 2] = group[j].y / maxY;
-      pMin[j + 2] = (group[j].y * 0.8) / maxY;
-      pMax[j + 2] = (group[j].y * 1.2) / maxY;
-    }
-    for (let j = i; j < nL; j++) {
-      pInit[j + 4] = group[j].width;
-      pMin[j + 4] = group[j].width / 2;
-      pMax[j + 4] = group[j].width * 2;
-    }
+  for (let i = 0; i < nL; i++) {
+    pInit[i] = group[i].x;
+    pInit[i + nL] = group[i].y / maxY;
+    pInit[i + 2 * nL] = group[i].width;
+
+    pMin[i] = group[i].x - dt;
+    pMin[i + nL] = (group[i].y * 0.8) / maxY;
+    pMin[i + 2 * nL] = group[i].width / 2;
+
+    pMax[i] = group[i].x + dt;
+    pMax[i + nL] = (group[i].y * 1.2) / maxY;
+    pMax[i + 2 * nL] = group[i].width * 2;
   }
 
   let data = {
     x: t,
     y: yData,
   };
-
   let result = new Array(nL);
 
   let lmOptions = {
@@ -54,7 +49,7 @@ export function optimizeGaussianSum(xy, group, opts = {}) {
     errorTolerance: 10e-5,
   };
 
-  opts = Object.assign({}, opts, lmOptions);
+  opts = Object.assign({}, lmOptions, opts);
 
   let pFit = LM(data, sumOfGaussians, opts);
   for (let i = 0; i < nL; i++) {
