@@ -27,7 +27,7 @@ export function optimizeSingleLorentzian(xy, peak, opts = {}) {
     initialValues: pInit,
     minValues: pMin,
     maxValues: pMax,
-    gradientDifference: 10e-2,
+    gradientDifference: dt / 10000,
     maxIterations: 100,
     errorTolerance: 10e-5,
   };

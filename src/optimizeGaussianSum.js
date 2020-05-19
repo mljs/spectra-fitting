@@ -25,12 +25,12 @@ export function optimizeGaussianSum(xy, group, opts = {}) {
     pInit[i + 2 * nL] = group[i].width;
 
     pMin[i] = group[i].x - dt;
-    pMin[i + nL] = (group[i].y * 0.8) / maxY;
-    pMin[i + 2 * nL] = group[i].width / 2;
+    pMin[i + nL] = 0;
+    pMin[i + 2 * nL] = group[i].width / 4;
 
     pMax[i] = group[i].x + dt;
     pMax[i + nL] = (group[i].y * 1.2) / maxY;
-    pMax[i + 2 * nL] = group[i].width * 2;
+    pMax[i + 2 * nL] = group[i].width * 4;
   }
 
   let data = {
@@ -44,7 +44,7 @@ export function optimizeGaussianSum(xy, group, opts = {}) {
     initialValues: pInit,
     minValues: pMin,
     maxValues: pMax,
-    gradientDifference: 10e-2,
+    gradientDifference: dt / 10000,
     maxIterations: 100,
     errorTolerance: 10e-5,
   };
@@ -57,7 +57,7 @@ export function optimizeGaussianSum(xy, group, opts = {}) {
       parameters: [
         pFit.parameterValues[i],
         pFit.parameterValues[i + nL] * maxY,
-        pFit.parameterValues[i + nL + 2],
+        pFit.parameterValues[i + nL * 2],
       ],
       error: pFit.parameterError,
     };
