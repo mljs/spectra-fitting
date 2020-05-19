@@ -46,7 +46,7 @@ export function optimizeLorentzianSum(xy, group, opts = {}) {
     initialValues: pInit,
     minValues: pMin,
     maxValues: pMax,
-    gradientDifference: 10e-2,
+    gradientDifference: dt / 10000,
     maxIterations: 100,
     errorTolerance: 10e-5,
   };
@@ -59,7 +59,7 @@ export function optimizeLorentzianSum(xy, group, opts = {}) {
       parameters: [
         pFit.parameterValues[i],
         pFit.parameterValues[i + nL] * maxY,
-        pFit.parameterValues[i + nL + 2],
+        pFit.parameterValues[i + nL * 2],
       ],
       error: pFit.parameterError,
     };

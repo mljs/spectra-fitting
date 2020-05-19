@@ -14,7 +14,7 @@ export function optimizeSingleGaussian(xy, peak, opts = {}) {
   yData.forEach((x, i, arr) => (arr[i] /= maxY));
   let dt = Math.abs(t[0] - t[1]);
   let pInit = new Float64Array([peak.x, 1, peak.width]);
-  let pMin = new Float64Array([peak.x - dt, 0.75, peak.width / 4]);
+  let pMin = new Float64Array([peak.x - dt, 0, peak.width / 4]);
   let pMax = new Float64Array([peak.x + dt, 1.25, peak.width * 4]);
 
   let data = {
@@ -27,7 +27,7 @@ export function optimizeSingleGaussian(xy, peak, opts = {}) {
     initialValues: pInit,
     minValues: pMin,
     maxValues: pMax,
-    gradientDifference: 10e-2,
+    gradientDifference: dt / 10000,
     maxIterations: 100,
     errorTolerance: 10e-5,
   };
