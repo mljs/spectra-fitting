@@ -4,16 +4,16 @@
 [![build status][travis-image]][travis-url]
 [![npm download][download-image]][download-url]
 
-Bell optmization library. It cotains:
->optimizeSingleLorentzian: Function to fit a curve to a single 3 parameter Lorentzian function
->optimizeLorentzianSum: Function to fit a curve to a set of 3 parameters Lorentzian functions
->optimizeSingleGaussian: Function to fit a curve to a single 3 parameter Gaussian function
->optimizeGaussianSum: Function to fit a curve to a set of 3 parameters Gaussian functions
+Bell optmization library. It contains:
+
+- `optimizeSingleLorentzian`: Function to fit a curve to a single 3 parameter Lorentzian function
+- `optimizeLorentzianSum`: Function to fit a curve to a set of 3 parameters Lorentzian functions
+- `optimizeSingleGaussian`: Function to fit a curve to a single 3 parameter Gaussian function
+- `optimizeGaussianSum`: Function to fit a curve to a set of 3 parameters Gaussian functions
 
 ## Installation
 
 `$ npm install ml-optimize-lorentzian`
-
 
 ## License
 
