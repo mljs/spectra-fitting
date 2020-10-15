@@ -1,5 +1,5 @@
 {
-  "name": "ml-optimize-lorentzian",
+  "name": "ml-spectra-fitting",
   "version": "0.2.0",
   "description": "Optimize Lorentzian",
   "main": "lib/index.js",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mljs/optimize-lorentzian.git"
+    "url": "https://github.com/mljs/spectra-fitting.git"
   },
   "keywords": [
     "Optimization",
@@ -29,9 +29,9 @@
   "author": "Andres Castillo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mljs/optimize-lorentzian/issues"
+    "url": "https://github.com/mljs/spectra-fitting/issues"
   },
-  "homepage": "https://github.com/mljs/optimize-lorentzian",
+  "homepage": "https://github.com/mljs/spectra-fitting",
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.10.4",
     "@types/jest": "^26.0.14",

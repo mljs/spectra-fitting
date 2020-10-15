@@ -1,4 +1,4 @@
-# ml-optimize-lorentzian
+# ml-spectra-fitting
 
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
@@ -13,15 +13,15 @@ Bell optmization library. It contains:
 
 ## Installation
 
-`$ npm install ml-optimize-lorentzian`
+`$ npm install ml-spectra-fitting`
 
 ## License
 
-  [MIT](./LICENSE)
+[MIT](./LICENSE)
 
-[npm-image]: https://img.shields.io/npm/v/ml-optimize-lorentzian.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/ml-optimize-lorentzian
-[travis-image]: https://img.shields.io/travis/mljs/optimize-lorentzian/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/mljs/optimize-lorentzian
-[download-image]: https://img.shields.io/npm/dm/ml-optimize-lorentzian.svg?style=flat-square
-[download-url]: https://npmjs.org/package/ml-optimize-lorentzian
+[npm-image]: https://img.shields.io/npm/v/ml-spectra-fitting.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/ml-spectra-fitting
+[travis-image]: https://img.shields.io/travis/mljs/spectra-fitting/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/mljs/spectra-fitting
+[download-image]: https://img.shields.io/npm/dm/ml-spectra-fitting.svg?style=flat-square
+[download-url]: https://npmjs.org/package/ml-spectra-fitting
