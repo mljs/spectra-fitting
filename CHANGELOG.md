@@ -1,3 +1,5 @@
+# Changelog
+
 ### [0.2.1](https://github.com/mljs/spectra-fitting/compare/v0.2.0...v0.2.1) (2020-10-15)
 
 # [0.2.0](https://github.com/mljs/spectra-fitting/compare/v0.1.5...v0.2.0) (2020-05-19)
