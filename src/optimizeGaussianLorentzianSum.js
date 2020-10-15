@@ -1,8 +1,8 @@
-import LM from 'ml-levenberg-marquardt';
+import LM from "ml-levenberg-marquardt";
 
-import { sumOfGaussianLorentzians } from './sumOfGaussianLorentzians';
+import { sumOfGaussianLorentzians } from "./sumOfGaussianLorentzians";
 
-export function optimizeGaussianLorentzianSum(xy, group, opts = {}) {
+export function optimizeGaussianLorentzianSum(xy, group, options = {}) {
   let t = xy[0];
   let yData = xy[1];
   let maxY = Math.max(...yData);
@@ -46,8 +46,8 @@ export function optimizeGaussianLorentzianSum(xy, group, opts = {}) {
     maxIterations: 100,
     errorTolerance: 10e-5,
   };
-  opts = Object.assign({}, lmOptions, opts);
-  let pFit = LM(data, sumOfGaussianLorentzians, opts);
+  options = Object.assign({}, lmOptions, options);
+  let pFit = LM(data, sumOfGaussianLorentzians, options);
   for (let i = 0; i < nL; i++) {
     result[i] = {
       parameters: [

@@ -1,9 +1,9 @@
-import { optimizeSingleLorentzian } from './optimizeSingleLorentzian';
+import { optimizeSingleLorentzian } from "./optimizeSingleLorentzian";
 
 /*
  peaks on group should sorted
  */
-export function optimizeLorentzianTrain(xy, group, opts = {}) {
+export function optimizeLorentzianTrain(xy, group, options = {}) {
   let t = xy[0];
   let yData = xy[1];
   let maxY = Math.max(...yData);
@@ -25,7 +25,7 @@ export function optimizeLorentzianTrain(xy, group, opts = {}) {
       yI.push(yData[currentIndex] * maxY);
       currentIndex++;
     }
-    current = optimizeSingleLorentzian([tI, yI], group[i], opts);
+    current = optimizeSingleLorentzian([tI, yI], group[i], options);
     if (current) {
       result.push({
         x: current.parameters[0],

@@ -1,9 +1,9 @@
-import { optimizeSingleGaussian } from './optimizeSingleGaussian';
+import { optimizeSingleGaussian } from "./optimizeSingleGaussian";
 
 /*
  peaks on group should sorted
  */
-export function optimizeGaussianTrain(xy, group, opts = {}) {
+export function optimizeGaussianTrain(xy, group, options = {}) {
   let t = xy[0];
   let yData = xy[1];
   let maxY = Math.max(...yData);
@@ -25,7 +25,7 @@ export function optimizeGaussianTrain(xy, group, opts = {}) {
       yI.push(yData[currentIndex] * maxY);
       currentIndex++;
     }
-    current = optimizeSingleGaussian([tI, yI], group[i], opts);
+    current = optimizeSingleGaussian([tI, yI], group[i], options);
     if (current) {
       result.push({
         x: current.parameters[0],

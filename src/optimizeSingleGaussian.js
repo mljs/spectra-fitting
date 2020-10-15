@@ -1,13 +1,13 @@
-import LM from 'ml-levenberg-marquardt';
+import LM from "ml-levenberg-marquardt";
 
-import { singleGaussian } from './singleGaussian';
+import { singleGaussian } from "./singleGaussian";
 
 /**
  * Fits a set of points to a gaussian bell. Returns the mean of the peak, the std and the height of the signal.
  * @param data,[y]
  * @returns {*[]}
  */
-export function optimizeSingleGaussian(xy, peak, opts = {}) {
+export function optimizeSingleGaussian(xy, peak, options = {}) {
   let t = xy[0];
   let yData = xy[1];
   let maxY = Math.max(...yData);
@@ -32,8 +32,8 @@ export function optimizeSingleGaussian(xy, peak, opts = {}) {
     errorTolerance: 10e-5,
   };
 
-  opts = Object.assign({}, lmOptions, opts);
-  let pFit = LM(data, singleGaussian, opts);
+  options = Object.assign({}, lmOptions, options);
+  let pFit = LM(data, singleGaussian, options);
   return {
     parameters: [
       pFit.parameterValues[0],

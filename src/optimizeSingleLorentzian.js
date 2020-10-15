@@ -1,13 +1,13 @@
-import LM from 'ml-levenberg-marquardt';
+import LM from "ml-levenberg-marquardt";
 
-import { singleLorentzian } from './singleLorentzian';
+import { singleLorentzian } from "./singleLorentzian";
 
 /**
  * * Fits a set of points to a Lorentzian function. Returns the center of the peak, the width at half height, and the height of the signal.
  * @param data,[y]
  * @returns {*[]}
  */
-export function optimizeSingleLorentzian(xy, peak, opts = {}) {
+export function optimizeSingleLorentzian(xy, peak, options = {}) {
   let t = xy[0];
   let yData = xy[1];
   let maxY = Math.max(...yData);
@@ -31,8 +31,8 @@ export function optimizeSingleLorentzian(xy, peak, opts = {}) {
     maxIterations: 100,
     errorTolerance: 10e-5,
   };
-  opts = Object.assign({}, lmOptions, opts);
-  let pFit = LM(data, singleLorentzian, opts);
+  options = Object.assign({}, lmOptions, options);
+  let pFit = LM(data, singleLorentzian, options);
   return {
     parameters: [
       pFit.parameterValues[0],
