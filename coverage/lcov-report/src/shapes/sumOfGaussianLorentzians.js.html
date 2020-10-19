@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for sumOfLorentzians.js</title>
+    <title>Code coverage report for src/shapes/sumOfGaussianLorentzians.js</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="prettify.css" />
-    <link rel="stylesheet" href="base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.png" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(sort-arrow-sprite.png);
+            background-image: url(../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="index.html">All files</a> sumOfLorentzians.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/shapes</a> sumOfGaussianLorentzians.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>14/14</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
@@ -83,10 +83,7 @@
 <a name='L24'></a><a href='#L24'>24</a>
 <a name='L25'></a><a href='#L25'>25</a>
 <a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L27'></a><a href='#L27'>27</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -95,24 +92,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">138x</span>
-<span class="cline-any cline-yes">4248x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4248x</span>
-<span class="cline-any cline-yes">4248x</span>
-<span class="cline-any cline-yes">4248x</span>
-<span class="cline-any cline-yes">8496x</span>
-<span class="cline-any cline-yes">8496x</span>
-<span class="cline-any cline-yes">8496x</span>
-<span class="cline-any cline-yes">8494x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">62x</span>
+<span class="cline-any cline-yes">1002x</span>
+<span class="cline-any cline-yes">31062x</span>
+<span class="cline-any cline-yes">31062x</span>
+<span class="cline-any cline-yes">31062x</span>
+<span class="cline-any cline-yes">62124x</span>
+<span class="cline-any cline-yes">62124x</span>
+<span class="cline-any cline-yes">62124x</span>
+<span class="cline-any cline-yes">62124x</span>
+<span class="cline-any cline-yes">62124x</span>
+<span class="cline-any cline-yes">62124x</span>
+<span class="cline-any cline-yes">62124x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4248x</span>
+<span class="cline-any cline-yes">31062x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
@@ -123,23 +117,20 @@
  * @returns {*}
  */
 &nbsp;
-export function sumOfLorentzians(p) {
+export function sumOfGaussianLorentzians(p) {
   return function (t) {
-    let nL = p.length / 3;
-    let factor;
-    let p2;
-    let rows = t.length;
-    let result = rows === undefined ? 0 : new Float64Array(rows).fill(0);
+    let nL = p.length / 4;
+    let result = 0;
     for (let i = 0; i &lt; nL; i++) {
-      p2 = Math.pow(p[i + nL * 2] / 2, 2);
-      factor = p[i + nL] * p2;
-      if (rows === undefined) {
-        result += factor / (Math.pow(t - p[i], 2) + p2);
-      } else {
-        for (let j = 0; j &lt; rows; j++) {
-          result[j] += factor / (Math.pow(t[j] - p[i], 2) + p2);
-        }
-      }
+      let xG = p[i + nL * 3];
+      let xL = 1 - xG;
+      let p2 = Math.pow(p[i + nL * 2] / 2, 2);
+      let factorL = xL * p[i + nL] * p2;
+      let factorG1 = p[i + nL * 2] * p[i + nL * 2] * 2;
+      let factorG2 = xG * p[i + nL];
+      result +=
+        factorG2 * Math.exp(-Math.pow(t - p[i], 2) / factorG1) +
+        factorL / (Math.pow(t - p[i], 2) + p2);
     }
     return result;
   };
@@ -151,17 +142,17 @@ export function sumOfLorentzians(p) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Oct 15 2020 15:34:52 GMT+0200 (Central European Summer Time)
+                at Mon Oct 19 2020 11:01:52 GMT-0500 (Colombia Standard Time)
             </div>
         </div>
-        <script src="prettify.js"></script>
+        <script src="../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="sorter.js"></script>
-        <script src="block-navigation.js"></script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
     </body>
 </html>
     

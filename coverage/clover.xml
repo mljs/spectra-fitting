@@ -1,254 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1602768892062" clover="3.2.0">
-  <project timestamp="1602768892062" name="All files">
-    <metrics statements="209" coveredstatements="207" conditionals="35" coveredconditionals="33" methods="24" coveredmethods="24" elements="268" coveredelements="264" complexity="0" loc="209" ncloc="209" packages="1" files="13" classes="13"/>
-    <file name="index.js" path="/Users/lpatiny/git/mljs/optimize-lorentzian/src/index.js">
-      <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-    </file>
-    <file name="optimizeGaussianLorentzianSum.js" path="/Users/lpatiny/git/mljs/optimize-lorentzian/src/optimizeGaussianLorentzianSum.js">
-      <metrics statements="30" coveredstatements="30" conditionals="1" coveredconditionals="1" methods="2" coveredmethods="2"/>
-      <line num="6" count="1" type="stmt"/>
-      <line num="7" count="1" type="stmt"/>
-      <line num="8" count="1" type="stmt"/>
-      <line num="9" count="31" type="stmt"/>
-      <line num="10" count="1" type="stmt"/>
-      <line num="11" count="1" type="stmt"/>
-      <line num="12" count="1" type="stmt"/>
-      <line num="13" count="1" type="stmt"/>
-      <line num="14" count="1" type="stmt"/>
-      <line num="16" count="1" type="stmt"/>
-      <line num="17" count="2" type="stmt"/>
-      <line num="18" count="2" type="stmt"/>
-      <line num="19" count="2" type="stmt"/>
-      <line num="20" count="2" type="stmt"/>
-      <line num="22" count="2" type="stmt"/>
-      <line num="23" count="2" type="stmt"/>
-      <line num="24" count="2" type="stmt"/>
-      <line num="25" count="2" type="stmt"/>
-      <line num="27" count="2" type="stmt"/>
-      <line num="28" count="2" type="stmt"/>
-      <line num="29" count="2" type="stmt"/>
-      <line num="30" count="2" type="stmt"/>
-      <line num="33" count="1" type="stmt"/>
-      <line num="38" count="1" type="stmt"/>
-      <line num="40" count="1" type="stmt"/>
-      <line num="49" count="1" type="stmt"/>
-      <line num="50" count="1" type="stmt"/>
-      <line num="51" count="1" type="stmt"/>
-      <line num="52" count="2" type="stmt"/>
-      <line num="62" count="1" type="stmt"/>
-    </file>
-    <file name="optimizeGaussianSum.js" path="/Users/lpatiny/git/mljs/optimize-lorentzian/src/optimizeGaussianSum.js">
-      <metrics statements="27" coveredstatements="27" conditionals="1" coveredconditionals="1" methods="2" coveredmethods="2"/>
-      <line num="12" count="1" type="stmt"/>
-      <line num="13" count="1" type="stmt"/>
-      <line num="14" count="1" type="stmt"/>
-      <line num="15" count="31" type="stmt"/>
-      <line num="16" count="1" type="stmt"/>
-      <line num="17" count="1" type="stmt"/>
-      <line num="18" count="1" type="stmt"/>
-      <line num="19" count="1" type="stmt"/>
-      <line num="20" count="1" type="stmt"/>
-      <line num="22" count="1" type="stmt"/>
-      <line num="23" count="2" type="stmt"/>
-      <line num="24" count="2" type="stmt"/>
-      <line num="25" count="2" type="stmt"/>
-      <line num="27" count="2" type="stmt"/>
-      <line num="28" count="2" type="stmt"/>
-      <line num="29" count="2" type="stmt"/>
-      <line num="31" count="2" type="stmt"/>
-      <line num="32" count="2" type="stmt"/>
-      <line num="33" count="2" type="stmt"/>
-      <line num="36" count="1" type="stmt"/>
-      <line num="40" count="1" type="stmt"/>
-      <line num="42" count="1" type="stmt"/>
-      <line num="52" count="1" type="stmt"/>
-      <line num="54" count="1" type="stmt"/>
-      <line num="55" count="1" type="stmt"/>
-      <line num="56" count="2" type="stmt"/>
-      <line num="65" count="1" type="stmt"/>
-    </file>
-    <file name="optimizeGaussianTrain.js" path="/Users/lpatiny/git/mljs/optimize-lorentzian/src/optimizeGaussianTrain.js">
-      <metrics statements="22" coveredstatements="21" conditionals="7" coveredconditionals="6" methods="2" coveredmethods="2"/>
-      <line num="7" count="1" type="stmt"/>
-      <line num="8" count="1" type="stmt"/>
-      <line num="9" count="1" type="stmt"/>
-      <line num="10" count="31" type="stmt"/>
-      <line num="11" count="1" type="stmt"/>
-      <line num="12" count="1" type="stmt"/>
-      <line num="15" count="1" type="stmt"/>
-      <line num="17" count="1" type="stmt"/>
-      <line num="18" count="1" type="stmt"/>
-      <line num="19" count="1" type="cond" truecount="2" falsecount="0"/>
-      <line num="20" count="1" type="stmt"/>
-      <line num="21" count="1" type="stmt"/>
-      <line num="22" count="1" type="stmt"/>
-      <line num="23" count="1" type="cond" truecount="2" falsecount="0"/>
-      <line num="24" count="15" type="stmt"/>
-      <line num="25" count="15" type="stmt"/>
-      <line num="26" count="15" type="stmt"/>
-      <line num="28" count="1" type="stmt"/>
-      <line num="29" count="1" type="cond" truecount="1" falsecount="1"/>
-      <line num="30" count="1" type="stmt"/>
-      <line num="37" count="0" type="stmt"/>
-      <line num="45" count="1" type="stmt"/>
-    </file>
-    <file name="optimizeLorentzianSum.js" path="/Users/lpatiny/git/mljs/optimize-lorentzian/src/optimizeLorentzianSum.js">
-      <metrics statements="27" coveredstatements="27" conditionals="1" coveredconditionals="1" methods="2" coveredmethods="2"/>
-      <line num="12" count="1" type="stmt"/>
-      <line num="13" count="1" type="stmt"/>
-      <line num="14" count="1" type="stmt"/>
-      <line num="15" count="31" type="stmt"/>
-      <line num="17" count="1" type="stmt"/>
-      <line num="18" count="1" type="stmt"/>
-      <line num="19" count="1" type="stmt"/>
-      <line num="20" count="1" type="stmt"/>
-      <line num="21" count="1" type="stmt"/>
-      <line num="23" count="1" type="stmt"/>
-      <line num="24" count="2" type="stmt"/>
-      <line num="25" count="2" type="stmt"/>
-      <line num="26" count="2" type="stmt"/>
-      <line num="28" count="2" type="stmt"/>
-      <line num="29" count="2" type="stmt"/>
-      <line num="30" count="2" type="stmt"/>
-      <line num="32" count="2" type="stmt"/>
-      <line num="33" count="2" type="stmt"/>
-      <line num="34" count="2" type="stmt"/>
-      <line num="37" count="1" type="stmt"/>
-      <line num="42" count="1" type="stmt"/>
-      <line num="44" count="1" type="stmt"/>
-      <line num="54" count="1" type="stmt"/>
-      <line num="56" count="1" type="stmt"/>
-      <line num="57" count="1" type="stmt"/>
-      <line num="58" count="2" type="stmt"/>
-      <line num="67" count="1" type="stmt"/>
-    </file>
-    <file name="optimizeLorentzianTrain.js" path="/Users/lpatiny/git/mljs/optimize-lorentzian/src/optimizeLorentzianTrain.js">
-      <metrics statements="22" coveredstatements="21" conditionals="7" coveredconditionals="6" methods="2" coveredmethods="2"/>
-      <line num="7" count="1" type="stmt"/>
-      <line num="8" count="1" type="stmt"/>
-      <line num="9" count="1" type="stmt"/>
-      <line num="10" count="31" type="stmt"/>
-      <line num="11" count="1" type="stmt"/>
-      <line num="12" count="1" type="stmt"/>
-      <line num="15" count="1" type="stmt"/>
-      <line num="17" count="1" type="stmt"/>
-      <line num="18" count="1" type="stmt"/>
-      <line num="19" count="1" type="cond" truecount="2" falsecount="0"/>
-      <line num="20" count="1" type="stmt"/>
-      <line num="21" count="1" type="stmt"/>
-      <line num="22" count="1" type="stmt"/>
-      <line num="23" count="1" type="cond" truecount="2" falsecount="0"/>
-      <line num="24" count="15" type="stmt"/>
-      <line num="25" count="15" type="stmt"/>
-      <line num="26" count="15" type="stmt"/>
-      <line num="28" count="1" type="stmt"/>
-      <line num="29" count="1" type="cond" truecount="1" falsecount="1"/>
-      <line num="30" count="1" type="stmt"/>
-      <line num="37" count="0" type="stmt"/>
-      <line num="45" count="1" type="stmt"/>
-    </file>
-    <file name="optimizeSingleGaussian.js" path="/Users/lpatiny/git/mljs/optimize-lorentzian/src/optimizeSingleGaussian.js">
-      <metrics statements="13" coveredstatements="13" conditionals="1" coveredconditionals="1" methods="2" coveredmethods="2"/>
-      <line num="11" count="2" type="stmt"/>
-      <line num="12" count="2" type="stmt"/>
-      <line num="13" count="2" type="stmt"/>
-      <line num="14" count="46" type="stmt"/>
-      <line num="15" count="2" type="stmt"/>
-      <line num="16" count="2" type="stmt"/>
-      <line num="17" count="2" type="stmt"/>
-      <line num="18" count="2" type="stmt"/>
-      <line num="20" count="2" type="stmt"/>
-      <line num="25" count="2" type="stmt"/>
-      <line num="35" count="2" type="stmt"/>
-      <line num="36" count="2" type="stmt"/>
-      <line num="37" count="2" type="stmt"/>
-    </file>
-    <file name="optimizeSingleLorentzian.js" path="/Users/lpatiny/git/mljs/optimize-lorentzian/src/optimizeSingleLorentzian.js">
-      <metrics statements="13" coveredstatements="13" conditionals="1" coveredconditionals="1" methods="2" coveredmethods="2"/>
-      <line num="11" count="2" type="stmt"/>
-      <line num="12" count="2" type="stmt"/>
-      <line num="13" count="2" type="stmt"/>
-      <line num="14" count="46" type="stmt"/>
-      <line num="15" count="2" type="stmt"/>
-      <line num="16" count="2" type="stmt"/>
-      <line num="17" count="2" type="stmt"/>
-      <line num="18" count="2" type="stmt"/>
-      <line num="20" count="2" type="stmt"/>
-      <line num="25" count="2" type="stmt"/>
-      <line num="34" count="2" type="stmt"/>
-      <line num="35" count="2" type="stmt"/>
-      <line num="36" count="2" type="stmt"/>
-    </file>
-    <file name="singleGaussian.js" path="/Users/lpatiny/git/mljs/optimize-lorentzian/src/singleGaussian.js">
-      <metrics statements="8" coveredstatements="8" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
-      <line num="10" count="134" type="stmt"/>
-      <line num="11" count="3038" type="stmt"/>
-      <line num="12" count="3038" type="stmt"/>
-      <line num="13" count="3038" type="cond" truecount="2" falsecount="0"/>
-      <line num="14" count="2" type="stmt"/>
-      <line num="15" count="2" type="stmt"/>
-      <line num="16" count="62" type="stmt"/>
-      <line num="18" count="2" type="stmt"/>
-    </file>
-    <file name="singleLorentzian.js" path="/Users/lpatiny/git/mljs/optimize-lorentzian/src/singleLorentzian.js">
-      <metrics statements="8" coveredstatements="8" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
-      <line num="10" count="184" type="stmt"/>
-      <line num="11" count="4188" type="stmt"/>
-      <line num="12" count="4188" type="stmt"/>
-      <line num="13" count="4188" type="cond" truecount="2" falsecount="0"/>
-      <line num="14" count="2" type="stmt"/>
-      <line num="15" count="2" type="stmt"/>
-      <line num="16" count="62" type="stmt"/>
-      <line num="18" count="2" type="stmt"/>
-    </file>
-    <file name="sumOfGaussianLorentzians.js" path="/Users/lpatiny/git/mljs/optimize-lorentzian/src/sumOfGaussianLorentzians.js">
-      <metrics statements="16" coveredstatements="16" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
-      <line num="10" count="1002" type="stmt"/>
-      <line num="11" count="31032" type="stmt"/>
-      <line num="15" count="31032" type="stmt"/>
-      <line num="17" count="31032" type="cond" truecount="2" falsecount="0"/>
-      <line num="18" count="31032" type="stmt"/>
-      <line num="19" count="62064" type="stmt"/>
-      <line num="20" count="62064" type="stmt"/>
-      <line num="21" count="62064" type="stmt"/>
-      <line num="22" count="62064" type="stmt"/>
-      <line num="23" count="62064" type="stmt"/>
-      <line num="24" count="62064" type="stmt"/>
-      <line num="25" count="62064" type="cond" truecount="2" falsecount="0"/>
-      <line num="26" count="62062" type="stmt"/>
-      <line num="30" count="2" type="stmt"/>
-      <line num="31" count="62" type="stmt"/>
-      <line num="37" count="31032" type="stmt"/>
-    </file>
-    <file name="sumOfGaussians.js" path="/Users/lpatiny/git/mljs/optimize-lorentzian/src/sumOfGaussians.js">
-      <metrics statements="11" coveredstatements="11" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
-      <line num="10" count="74" type="stmt"/>
-      <line num="11" count="2264" type="stmt"/>
-      <line num="13" count="2264" type="stmt"/>
-      <line num="14" count="2264" type="cond" truecount="2" falsecount="0"/>
-      <line num="15" count="2264" type="stmt"/>
-      <line num="16" count="4528" type="stmt"/>
-      <line num="17" count="4528" type="cond" truecount="2" falsecount="0"/>
-      <line num="18" count="4526" type="stmt"/>
-      <line num="20" count="2" type="stmt"/>
-      <line num="21" count="62" type="stmt"/>
-      <line num="25" count="2264" type="stmt"/>
-    </file>
-    <file name="sumOfLorentzians.js" path="/Users/lpatiny/git/mljs/optimize-lorentzian/src/sumOfLorentzians.js">
-      <metrics statements="12" coveredstatements="12" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
-      <line num="10" count="138" type="stmt"/>
-      <line num="11" count="4248" type="stmt"/>
-      <line num="14" count="4248" type="stmt"/>
-      <line num="15" count="4248" type="cond" truecount="2" falsecount="0"/>
-      <line num="16" count="4248" type="stmt"/>
-      <line num="17" count="8496" type="stmt"/>
-      <line num="18" count="8496" type="stmt"/>
-      <line num="19" count="8496" type="cond" truecount="2" falsecount="0"/>
-      <line num="20" count="8494" type="stmt"/>
-      <line num="22" count="2" type="stmt"/>
-      <line num="23" count="62" type="stmt"/>
-      <line num="27" count="4248" type="stmt"/>
-    </file>
+<coverage generated="1603123312070" clover="3.2.0">
+  <project timestamp="1603123312070" name="All files">
+    <metrics statements="69" coveredstatements="69" conditionals="27" coveredconditionals="24" methods="10" coveredmethods="10" elements="106" coveredelements="103" complexity="0" loc="69" ncloc="69" packages="2" files="6" classes="6"/>
+    <package name="src">
+      <metrics statements="43" coveredstatements="43" conditionals="27" coveredconditionals="24" methods="4" coveredmethods="4"/>
+      <file name="index.js" path="/home/abolanos/git/mljs/optimize-lorentzian/src/index.js">
+        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      </file>
+      <file name="optimize.js" path="/home/abolanos/git/mljs/optimize-lorentzian/src/optimize.js">
+        <metrics statements="2" coveredstatements="2" conditionals="1" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="10" count="2" type="stmt"/>
+        <line num="11" count="2" type="stmt"/>
+      </file>
+      <file name="optimizeSum.js" path="/home/abolanos/git/mljs/optimize-lorentzian/src/optimizeSum.js">
+        <metrics statements="41" coveredstatements="41" conditionals="26" coveredconditionals="24" methods="3" coveredmethods="3"/>
+        <line num="18" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="20" count="5" type="stmt"/>
+        <line num="21" count="155" type="stmt"/>
+        <line num="25" count="5" type="cond" truecount="3" falsecount="0"/>
+        <line num="27" count="2" type="stmt"/>
+        <line num="28" count="2" type="stmt"/>
+        <line num="29" count="2" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="33" count="1" type="stmt"/>
+        <line num="35" count="2" type="stmt"/>
+        <line num="36" count="2" type="stmt"/>
+        <line num="39" count="5" type="stmt"/>
+        <line num="40" count="5" type="stmt"/>
+        <line num="41" count="5" type="stmt"/>
+        <line num="42" count="5" type="stmt"/>
+        <line num="43" count="5" type="stmt"/>
+        <line num="45" count="5" type="stmt"/>
+        <line num="46" count="8" type="stmt"/>
+        <line num="47" count="8" type="stmt"/>
+        <line num="48" count="26" type="stmt"/>
+        <line num="49" count="26" type="stmt"/>
+        <line num="50" count="26" type="stmt"/>
+        <line num="54" count="5" type="stmt"/>
+        <line num="63" count="5" type="stmt"/>
+        <line num="65" count="5" type="stmt"/>
+        <line num="66" count="5" type="stmt"/>
+        <line num="67" count="8" type="stmt"/>
+        <line num="68" count="8" type="stmt"/>
+        <line num="69" count="8" type="stmt"/>
+        <line num="70" count="26" type="stmt"/>
+        <line num="73" count="5" type="stmt"/>
+        <line num="78" count="78" type="cond" truecount="4" falsecount="0"/>
+        <line num="80" count="24" type="stmt"/>
+        <line num="82" count="24" type="stmt"/>
+        <line num="84" count="24" type="cond" truecount="4" falsecount="0"/>
+        <line num="85" count="24" type="stmt"/>
+        <line num="87" count="24" type="stmt"/>
+        <line num="93" count="24" type="stmt"/>
+        <line num="95" count="6" type="cond" truecount="4" falsecount="0"/>
+        <line num="97" count="78" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.shapes">
+      <metrics statements="26" coveredstatements="26" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
+      <file name="sumOfGaussianLorentzians.js" path="/home/abolanos/git/mljs/optimize-lorentzian/src/shapes/sumOfGaussianLorentzians.js">
+        <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="10" count="1002" type="stmt"/>
+        <line num="11" count="31062" type="stmt"/>
+        <line num="12" count="31062" type="stmt"/>
+        <line num="13" count="31062" type="stmt"/>
+        <line num="14" count="62124" type="stmt"/>
+        <line num="15" count="62124" type="stmt"/>
+        <line num="16" count="62124" type="stmt"/>
+        <line num="17" count="62124" type="stmt"/>
+        <line num="18" count="62124" type="stmt"/>
+        <line num="19" count="62124" type="stmt"/>
+        <line num="20" count="62124" type="stmt"/>
+        <line num="24" count="31062" type="stmt"/>
+      </file>
+      <file name="sumOfGaussians.js" path="/home/abolanos/git/mljs/optimize-lorentzian/src/shapes/sumOfGaussians.js">
+        <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="10" count="113" type="stmt"/>
+        <line num="11" count="3503" type="stmt"/>
+        <line num="12" count="3503" type="stmt"/>
+        <line num="13" count="3503" type="stmt"/>
+        <line num="14" count="5549" type="stmt"/>
+        <line num="17" count="3503" type="stmt"/>
+      </file>
+      <file name="sumOfLorentzians.js" path="/home/abolanos/git/mljs/optimize-lorentzian/src/shapes/sumOfLorentzians.js">
+        <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="10" count="230" type="stmt"/>
+        <line num="11" count="7130" type="stmt"/>
+        <line num="12" count="7130" type="stmt"/>
+        <line num="13" count="7130" type="stmt"/>
+        <line num="14" count="11408" type="stmt"/>
+        <line num="15" count="11408" type="stmt"/>
+        <line num="16" count="11408" type="stmt"/>
+        <line num="18" count="7130" type="stmt"/>
+      </file>
+    </package>
   </project>
 </coverage>
