@@ -51,15 +51,18 @@ export function optimizeSum(data, group, options = {}) {
     }
   }
 
-  lmOptions = Object.assign({}, lmOptions, {
-    damping: 1.5,
-    initialValues: pInit,
-    minValues: pMin,
-    maxValues: pMax,
-    gradientDifference: dt / 10000,
-    maxIterations: 100,
-    errorTolerance: 10e-5,
-  });
+  lmOptions = Object.assign(
+    {
+      damping: 1.5,
+      initialValues: pInit,
+      minValues: pMin,
+      maxValues: pMax,
+      gradientDifference: dt / 10000,
+      maxIterations: 100,
+      errorTolerance: 10e-5,
+    },
+    lmOptions,
+  );
   let pFit = LM(data, paramsFunc, lmOptions);
 
   let result = new Array(nL);
