@@ -16,49 +16,33 @@ This is spectra fitting package that support gaussian, lorentzian and pseudoVoig
 
 ```js
 // import library
-import { optimizeSum } from '../index'; //'ml-spectra-fitting';
-// const { optimizeSum } = require('ml-levenberg-marquardt');
+import { optimizeSum } from 'ml-spectra-fitting';
 import { SpectrumGenerator } from 'spectrum-generator';
 
 const generator = new SpectrumGenerator({
   nbPoints: 41,
   from: -1,
   to: 1,
-  shape: {
-    kind: 'lorentzian',
-    options: {
-      fwhm: 100,
-      length: 1001,
-    },
-  },
 });
 
-generator.addPeak({ x: 0.5, y: 0.2 }, { width: 0.3 });
-generator.addPeak({ x: -0.5, y: 0.2 }, { width: 0.3 });
+// calculate fhwm from the expected standard deviation.
+const sdTofwhm = (sd) => 2 * Math.sqrt(2 * Math.log(2)) * sd;
+generator.addPeak({ x: 0.5, y: 0.2 }, { width: sdTofwhm(0.2) });
+generator.addPeak({ x: -0.5, y: 0.2 }, { width: sdTofwhm(0.3) });
 
 //points to fit {x, y};
 let data = generator.getSpectrum();
-
-const options = {
-  kind: 'lorentzian',
-  lmOptions: {
-    damping: 1.5,
-    gradientDifference: 10e-2,
-    maxIterations: 300,
-    errorTolerance: 10e-3,
-  },
-};
 
 //the approximate values to be optimized, It could comming from a peak picking with ml-gsd
 let peakList = [
   {
     x: -0.5,
-    y: 0.0009,
-    width: 0.38,
+    y: 0.18,
+    width: 0.18,
   },
   {
     x: 0.52,
-    y: 0.0011,
+    y: 0.17,
     width: 0.37,
   },
 ];
@@ -66,21 +50,21 @@ let peakList = [
 // the function recive a peaklist with {x, y, width} as a guess
 // and return a list of objects
 
-let fittedParams = optimizeSum(data, peakList, options);
+let fittedParams = optimizeSum(data, peakList);
 console.log(fittedParams);
 /**
  {
-    error: 0.05813844262141718,
+    error: 0.010502794375558983,
     parameters: [
       {
-        x: -0.4999207613519728,
-        y: 0.2004969777358536,
-        width: 0.3003891480106094
+        x: -0.49999760133593774,
+        y: 0.1999880261075537,
+        width: 0.3000369491704072
       },
       {
-        x: 0.5000683878450357,
-        y: 0.20050244686414306,
-        width: 0.3003654573416818
+        x: 0.5000084944744884,
+        y: 0.20004144804853427,
+        width: 0.1999731186595336
       }
     ]
   }
