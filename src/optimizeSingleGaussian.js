@@ -1,6 +1,6 @@
-import LM from "ml-levenberg-marquardt";
+import LM from 'ml-levenberg-marquardt';
 
-import { singleGaussian } from "./singleGaussian";
+import { singleGaussian } from './singleGaussian';
 
 /**
  * Fits a set of points to a gaussian bell. Returns the mean of the peak, the std and the height of the signal.

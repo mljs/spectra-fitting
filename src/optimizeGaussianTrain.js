@@ -1,4 +1,4 @@
-import { optimizeSingleGaussian } from "./optimizeSingleGaussian";
+import { optimizeSingleGaussian } from './optimizeSingleGaussian';
 
 /*
  peaks on group should sorted

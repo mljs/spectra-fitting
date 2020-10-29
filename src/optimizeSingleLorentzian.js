@@ -1,6 +1,6 @@
-import LM from "ml-levenberg-marquardt";
+import LM from 'ml-levenberg-marquardt';
 
-import { singleLorentzian } from "./singleLorentzian";
+import { singleLorentzian } from './singleLorentzian';
 
 /**
  * * Fits a set of points to a Lorentzian function. Returns the center of the peak, the width at half height, and the height of the signal.

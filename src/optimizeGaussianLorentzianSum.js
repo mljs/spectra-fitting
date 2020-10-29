@@ -1,6 +1,6 @@
-import LM from "ml-levenberg-marquardt";
+import LM from 'ml-levenberg-marquardt';
 
-import { sumOfGaussianLorentzians } from "./sumOfGaussianLorentzians";
+import { sumOfGaussianLorentzians } from './sumOfGaussianLorentzians';
 
 export function optimizeGaussianLorentzianSum(xy, group, options = {}) {
   let t = xy[0];

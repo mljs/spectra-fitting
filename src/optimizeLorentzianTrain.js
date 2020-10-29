@@ -1,4 +1,4 @@
-import { optimizeSingleLorentzian } from "./optimizeSingleLorentzian";
+import { optimizeSingleLorentzian } from './optimizeSingleLorentzian';
 
 /*
  peaks on group should sorted

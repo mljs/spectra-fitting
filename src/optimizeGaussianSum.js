@@ -1,6 +1,6 @@
-import LM from "ml-levenberg-marquardt";
+import LM from 'ml-levenberg-marquardt';
 
-import { sumOfGaussians } from "./sumOfGaussians";
+import { sumOfGaussians } from './sumOfGaussians';
 
 /**
  *
