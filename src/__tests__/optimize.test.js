@@ -22,9 +22,9 @@ describe('Optimize 4 parameters Lorentzian', function () {
       },
       { kind: 'lorentzian' },
     );
-    expect(result.parameters[0]).toBeCloseTo(pTrue[0], 3);
-    expect(result.parameters[1]).toBeCloseTo(pTrue[1], 3);
-    expect(result.parameters[2]).toBeCloseTo(pTrue[2], 2);
+    expect(result.parameters.x).toBeCloseTo(pTrue[0], 3);
+    expect(result.parameters.y).toBeCloseTo(pTrue[1], 3);
+    expect(result.parameters.width).toBeCloseTo(pTrue[2], 2);
   });
 });
 
@@ -41,8 +41,8 @@ describe('Optimize 3 parameters Gaussian', function () {
       },
       { kind: 'gaussian' },
     );
-    expect(result.parameters[0]).toBeCloseTo(pTrue[0], 3);
-    expect(result.parameters[1]).toBeCloseTo(pTrue[1], 3);
-    expect(result.parameters[2]).toBeCloseTo(pTrue[2], 3);
+    expect(result.parameters.x).toBeCloseTo(pTrue[0], 3);
+    expect(result.parameters.y).toBeCloseTo(pTrue[1], 3);
+    expect(result.parameters.width).toBeCloseTo(pTrue[2], 3);
   });
 });
