@@ -16,35 +16,35 @@ This is spectra fitting package that support gaussian, lorentzian and pseudoVoig
 
 ```js
 // import library
-import { optimizeSum, optimize } from 'ml-spectra-fitting';
-// const { optimizeSum, optimize } = require('ml-levenberg-marquardt');
+import { optimizeSum } from '../index'; //'ml-spectra-fitting';
+// const { optimizeSum } = require('ml-levenberg-marquardt');
 import { SpectrumGenerator } from 'spectrum-generator';
 
 const generator = new SpectrumGenerator({
-  nbPoints: 31,
+  nbPoints: 41,
   from: -1,
   to: 1,
   shape: {
     kind: 'lorentzian',
     options: {
-      fwhm: 10,
-      length: 101,
+      fwhm: 100,
+      length: 1001,
     },
   },
 });
 
-generator.addPeak({ x: 0.5, y: 0.001 }, { width: 0.31 });
-generator.addPeak({ x: -0.5, y: 0.001 }, { width: 0.31 });
+generator.addPeak({ x: 0.5, y: 0.2 }, { width: 0.3 });
+generator.addPeak({ x: -0.5, y: 0.2 }, { width: 0.3 });
 
 //points to fit {x, y};
-let data = spectrum.getSpectrum();
+let data = generator.getSpectrum();
 
 const options = {
   kind: 'lorentzian',
   lmOptions: {
     damping: 1.5,
     gradientDifference: 10e-2,
-    maxIterations: 100,
+    maxIterations: 300,
     errorTolerance: 10e-3,
   },
 };
@@ -65,23 +65,22 @@ let peakList = [
 
 // the function recive a peaklist with {x, y, width} as a guess
 // and return a list of objects
-let pTrue = [-0.5, 0.5, 0.001, 0.001, 0.31, 0.31];
 
 let fittedParams = optimizeSum(data, peakList, options);
 console.log(fittedParams);
 /**
  {
-   error: 0.000060723013888347444,
-   parameters: [
+    error: 0.05813844262141718,
+    parameters: [
       {
-        x: -0.5000000332583525, 
-        y: 0.0009999898592624667, 
-        width: 0.3100032423580314,
+        x: -0.4999207613519728,
+        y: 0.2004969777358536,
+        width: 0.3003891480106094
       },
       {
-        x: 0.5000000281242463, 
-        y: 0.000999988836163871, 
-        width: 0.31000364272190883,
+        x: 0.5000683878450357,
+        y: 0.20050244686414306,
+        width: 0.3003654573416818
       }
     ]
   }
