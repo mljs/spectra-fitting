@@ -66,7 +66,7 @@ export function optimizeSum(data, group, options = {}) {
   );
   let pFit = LM(data, paramsFunc, lmOptions);
 
-  let result = { error: pFit.parameterError, parameters: new Array(nbParams) };
+  let result = { error: pFit.parameterError, parameters: new Array(nL) };
   for (let i = 0; i < nL; i++) {
     let parameters = {};
     pFit.parameterValues[i + nL] *= maxY;
