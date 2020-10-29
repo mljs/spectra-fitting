@@ -1,4 +1,2 @@
-import { optimize } from './optimize';
-import { optimizeSum } from './optimizeSum';
-
-export { optimize, optimizeSum };
+export { optimize } from './optimize';
+export { optimizeSum } from './optimizeSum';
