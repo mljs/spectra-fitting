@@ -15,7 +15,7 @@
     "prepublishOnly": "npm run compile",
     "test": "npm run test-coverage && npm run eslint",
     "test-coverage": "jest --coverage",
-    "test-only": "jest",
+    "test-only": "jest",    
     "debug": "npm run prepublishOnly && node src/debug.js"
   },
   "repository": {
@@ -33,17 +33,27 @@
     "url": "https://github.com/mljs/spectra-fitting/issues"
   },
   "homepage": "https://github.com/mljs/spectra-fitting",
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "all"
+  },
   "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.12.1",
-    "@types/jest": "^26.0.15",
-    "eslint": "^7.12.1",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.4",
+    "@types/jest": "^26.0.14",
+    "eslint": "^7.11.0",
     "eslint-config-cheminfo": "^5.2.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "jest": "^26.6.1",
+    "jest": "^26.5.3",
     "prettier": "^2.1.2",
-    "rollup": "^2.32.1"
+    "rollup": "^2.30.0"
   },
   "dependencies": {
     "ml-array-max": "^1.2.0",
