@@ -1,16 +1,25 @@
-# ml-spectra-fitting
+
 
 [![NPM version][npm-image]][npm-url] [![build status][travis-image]][travis-url] [![npm download][download-image]][download-url]
 
-Curve fitting method in javascript.
+# ml-spectra-fitting
+
+Curve fitting method in javascript. 
+
+This is spectra fitting package optimize the position (x), max intensity (y), full width at half maximum (width) and the percent of lorentzian (mu). It supports three kind of shapes:
+
+| Name | Equation | | 
+|-------------|:------------:|:------|
+|<li>Gaussian</li> | <img src="https://tex.cheminfo.org/?tex=y \cdot exp \left[\frac{\left(t - x\right)^2}{2 \sigma^2}\right]"/> | <img src="https://tex.cheminfo.org/?tex=%5Csigma = \frac{width}{2\sqrt{2 \cdot Log(2)}}"/>
+<li> Lorentzian </li>| <img src="https://tex.cheminfo.org/?tex=y%5Ccdot%5Cfrac%7B%5Cgamma%7D%7B%5Cleft(t%20-%20x%5Cright)%5E2%20%2B%20%5Cgamma%7D"/> | <img src="https://tex.cheminfo.org/?tex=%5Cgamma%3D%5Cleft(%5Cfrac%7Bwidth%7D%7B2%7D%5Cright)%5E2"/>|
+| <li>Pseudo Voigt</li> | <img src='https://tex.cheminfo.org/?tex=y * \left[(1 - \mu) \cdot exp \left[\frac{\left(t - x\right)^2}{2 \sigma^2}\right] %2B \mu \cdot \frac{\gamma}{\left(t - x\right)^2 %2B \gamma}\right]'>
+It is a wrapper of [ml-levenberg-marquardt](https://github.com/mljs/levenberg-marquardt)
+
+##[API Documentation](https://mljs.github.io/spectra-fitting/)
 
 ## Installation
 
 `$ npm install ml-spectra-fitting`
-
-## [API Documentation](https://mljs.github.io/spectra-fitting/)
-
-This is spectra fitting package that support gaussian, lorentzian and pseudoVoigt kind of shapes. It is a wrapper of [ml-levenberg-marquardt](https://github.com/mljs/levenberg-marquardt)
 
 ## Example
 
