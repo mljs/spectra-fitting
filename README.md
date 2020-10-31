@@ -10,12 +10,13 @@ This is spectra fitting package optimize the position (x), max intensity (y), fu
 
 | Name | Equation | | 
 |-------------|:------------:|:------|
-|<li>Gaussian</li> | <img src="https://tex.cheminfo.org/?tex=y \cdot exp \left[\frac{\left(t - x\right)^2}{2 \sigma^2}\right]"/> | <img src="https://tex.cheminfo.org/?tex=%5Csigma = \frac{width}{2\sqrt{2 \cdot Log(2)}}"/>
-<li> Lorentzian </li>| <img src="https://tex.cheminfo.org/?tex=y%5Ccdot%5Cfrac%7B%5Cgamma%7D%7B%5Cleft(t%20-%20x%5Cright)%5E2%20%2B%20%5Cgamma%7D"/> | <img src="https://tex.cheminfo.org/?tex=%5Cgamma%3D%5Cleft(%5Cfrac%7Bwidth%7D%7B2%7D%5Cright)%5E2"/>|
-| <li>Pseudo Voigt</li> | <img src='https://tex.cheminfo.org/?tex=y * \left[(1 - \mu) \cdot exp \left[\frac{\left(t - x\right)^2}{2 \sigma^2}\right] %2B \mu \cdot \frac{\gamma}{\left(t - x\right)^2 %2B \gamma}\right]'>
+|Gaussian | <img src="https://tex.cheminfo.org/?tex=y%20%5Ccdot%20exp%20%5Cleft%5B%5Cfrac%7B%5Cdelta%7D%7B2%20%5Csigma%5E2%7D%5Cright%5D"/> | <img src="https://tex.cheminfo.org/?tex=%5Cdelta%20%3D%20%5Cleft(t%20-%20x%5Cright)%5E2%0A"/> |
+|Lorentzian| <img src="https://tex.cheminfo.org/?tex=y%5Ccdot%5Cfrac%7B%5Cgamma%7D%7B%5Cdelta%20%2B%20%5Cgamma%7D"/> | <img src="https://tex.cheminfo.org/?tex=%5Csigma%20%3D%20%5Cfrac%7Bwidth%7D%7B2%5Csqrt%7B2%20%5Ccdot%20Log(2)%7D%7D"/> |
+| Pseudo Voigt | <img src="https://tex.cheminfo.org/?tex=y%20*%20%5Cleft%5B%5Cmu%20%5Ccdot%20%5Cfrac%7B%5Cgamma%7D%7B%5Cdelta%20%2B%20%5Cgamma%7D%20%2B%20(1%20-%20%5Cmu)%20%5Ccdot%20exp%20%5Cleft%5B%5Cfrac%7B%5Cdelta%7D%7B2%20%5Csigma%5E2%7D%5Cright%5D%5Cright%5D%0A"/> | <img src="https://tex.cheminfo.org/?tex=%5Cgamma%3D%5Cleft(%5Cfrac%7Bwidth%7D%7B2%7D%5Cright)%5E2"/> |
+
 It is a wrapper of [ml-levenberg-marquardt](https://github.com/mljs/levenberg-marquardt)
 
-##[API Documentation](https://mljs.github.io/spectra-fitting/)
+## [API Documentation](https://mljs.github.io/spectra-fitting/)
 
 ## Installation
 
