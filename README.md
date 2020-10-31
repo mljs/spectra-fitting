@@ -25,10 +25,8 @@ const generator = new SpectrumGenerator({
   to: 1,
 });
 
-// calculate fhwm from the expected standard deviation.
-const sdTofwhm = (sd) => 2 * Math.sqrt(2 * Math.log(2)) * sd;
-generator.addPeak({ x: 0.5, y: 0.2 }, { width: sdTofwhm(0.2) });
-generator.addPeak({ x: -0.5, y: 0.2 }, { width: sdTofwhm(0.3) });
+generator.addPeak({ x: 0.5, y: 0.2 }, { width: 0.2 });
+generator.addPeak({ x: -0.5, y: 0.2 }, { width: 0.3 });
 
 //points to fit {x, y};
 let data = generator.getSpectrum();
