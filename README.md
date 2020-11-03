@@ -37,9 +37,7 @@ const peaks = [
   { x: 0.5, y: 0.2, width: 0.2 },
   { x: -0.5, y: 0.2, width: 0.3 },
 ];
-const data = generateSpectrum(peaks, {
-  from: -1,  to: 1, nbPoints: 41
-  });
+const data = generateSpectrum(peaks, {from: -1, to: 1, nbPoints: 41});
 
 
 //the approximate values to be optimized, It could come from a peak picking with ml-gsd
