@@ -15,7 +15,7 @@
     "prepublishOnly": "npm run compile",
     "test": "npm run test-coverage && npm run eslint",
     "test-coverage": "jest --coverage",
-    "test-only": "jest",    
+    "test-only": "jest",
     "debug": "npm run prepublishOnly && node src/debug.js"
   },
   "repository": {
@@ -58,6 +58,7 @@
   "dependencies": {
     "ml-array-max": "^1.2.0",
     "ml-levenberg-marquardt": "^2.1.1",
+    "ml-peak-shape-generator": "^0.6.0",
     "spectrum-generator": "^4.2.0"
   }
 }
