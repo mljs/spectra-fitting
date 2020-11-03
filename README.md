@@ -64,7 +64,7 @@ let peakList = [
 // the function recive a peaklist with {x, y, width} as a guess
 // and return a list of objects
 
-let fittedParams = optimizeSum(data, peakList);
+let fittedParams = optimize(data, peakList);
 console.log(fittedParams);
 /**
  {
@@ -89,7 +89,7 @@ console.log(fittedParams);
 For data with and combination of signals with shapes between gaussian and lorentzians, we could use the kind pseudovoigt to fit the data.
 
 ```js
-import { optimizeSum } from 'ml-spectra-fitting';
+import { optimize } from 'ml-spectra-fitting';
 import { SpectrumGenerator } from 'spectrum-generator';
 
 const generator = new SpectrumGenerator({
@@ -118,7 +118,7 @@ generator.addPeak(
 //points to fit {x, y};
 let data = generator.getSpectrum();
 console.log(JSON.stringify({x: Array.from(data.x), y: Array.from(data.y)}))
-//the approximate values to be optimized, It could comming from a peak picking with ml-gsd
+//the approximate values to be optimized, It could coming from a peak picking with ml-gsd
 let peakList = [
   {
     x: -0.5,
@@ -134,7 +134,7 @@ let peakList = [
 
 // the function recive a peaklist with {x, y, width} as a guess
 // and return a list of objects
-let fittedParams = optimizeSum(data, peakList, { kind: 'pseudovoigt' });
+let fittedParams = optimize(data, peakList, { kind: 'pseudovoigt' });
 
 console.log(fittedParams);
 /**
