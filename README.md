@@ -31,21 +31,23 @@ It is a wrapper of [ml-levenberg-marquardt](https://github.com/mljs/levenberg-ma
 ```js
 // import library
 import { optimizeSum } from 'ml-spectra-fitting';
-import { SpectrumGenerator } from 'spectrum-generator';
-
-const generator = new SpectrumGenerator({
-  nbPoints: 41,
-  from: -1,
-  to: 1,
-});
+import { generateSpectrum } from 'spectrum-generator';
 
 generator.addPeak({ x: 0.5, y: 0.2 }, { width: 0.2 });
 generator.addPeak({ x: -0.5, y: 0.2 }, { width: 0.3 });
 
-//points to fit {x, y};
-let data = generator.getSpectrum();
+const peaks = [
+  { x: 0.5, y: 0.2, width: 0.2 },
+  { x: -0.5, y: 0.2, width: 0.3 },
+];
+const data = generateSpectrum(peaks, {
+  from: -1, // default value: 0
+  to: 1, // default value: 1000
+  nbPoints: 41, // default value: 10001
+});
 
-//the approximate values to be optimized, It could comming from a peak picking with ml-gsd
+
+//the approximate values to be optimized, It could come from a peak picking with ml-gsd
 let peakList = [
   {
     x: -0.5,
