@@ -33,9 +33,6 @@ It is a wrapper of [ml-levenberg-marquardt](https://github.com/mljs/levenberg-ma
 import { optimizeSum } from 'ml-spectra-fitting';
 import { generateSpectrum } from 'spectrum-generator';
 
-generator.addPeak({ x: 0.5, y: 0.2 }, { width: 0.2 });
-generator.addPeak({ x: -0.5, y: 0.2 }, { width: 0.3 });
-
 const peaks = [
   { x: 0.5, y: 0.2, width: 0.2 },
   { x: -0.5, y: 0.2, width: 0.3 },
