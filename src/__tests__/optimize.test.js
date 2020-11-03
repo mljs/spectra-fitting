@@ -1,4 +1,5 @@
 import { optimize } from '../index';
+import { sumOfGaussianLorentzians } from '../shapes/sumOfGaussianLorentzians';
 import { sumOfGaussians } from '../shapes/sumOfGaussians';
 import { sumOfLorentzians } from '../shapes/sumOfLorentzians';
 
@@ -9,40 +10,80 @@ for (let i = 0; i < nbPoints; i++) {
   x[i] = (i - nbPoints / 2) * xFactor;
 }
 
-describe('Optimize 4 parameters Lorentzian', function () {
-  it('Should approximate the true parameters', function () {
-    let pTrue = [0, 0.001, (xFactor * nbPoints) / 10];
+describe('Optimize sum of Lorentzian', function () {
+  it('group of two GL', function () {
+    let pTrue = [-0.5, 0.5, 0.001, 0.001, 0.31, 0.31];
     let yData = sumOfLorentzians(pTrue);
     let result = optimize(
       { x, y: x.map((i) => yData(i)) },
-      {
-        x: 0.1,
-        y: 0.0009,
-        width: (xFactor * nbPoints) / 6,
-      },
+      [
+        { x: -0.5, y: 0.0009, width: (xFactor * nbPoints) / 8 },
+        { x: 0.52, y: 0.0009, width: (xFactor * nbPoints) / 8 },
+      ],
       { kind: 'lorentzian' },
     );
-    expect(result.peak.x).toBeCloseTo(pTrue[0], 3);
-    expect(result.peak.y).toBeCloseTo(pTrue[1], 3);
-    expect(result.peak.width).toBeCloseTo(pTrue[2], 2);
+    let nL = pTrue.length / 3;
+    for (let i = 0; i < nL; i++) {
+      let pFit = result.peaks[i];
+      expect(pFit.x).toBeCloseTo(pTrue[i], 2);
+      expect(pFit.y).toBeCloseTo(pTrue[i + nL], 2);
+      expect(pFit.width).toBeCloseTo(pTrue[i + nL * 2], 2);
+    }
   });
 });
 
-describe('Optimize 3 parameters Gaussian', function () {
-  it('Should approximate the true parameters', function () {
-    let pTrue = [0, 0.001, (xFactor * nbPoints) / 10];
+describe('Optimize sum of Gaussians', function () {
+  it('group of two GL', function () {
+    let pTrue = [-0.5, 0.5, 0.001, 0.001, 0.31, 0.31];
     let yData = sumOfGaussians(pTrue);
+
     let result = optimize(
       { x, y: x.map((i) => yData(i)) },
-      {
-        x: 0.1,
-        y: 0.0009,
-        width: (xFactor * nbPoints) / 6,
-      },
+      [
+        { x: -0.5, y: 0.0009, width: (xFactor * nbPoints) / 8 },
+        { x: 0.52, y: 0.0009, width: (xFactor * nbPoints) / 8 },
+      ],
       { kind: 'gaussian' },
     );
-    expect(result.peak.x).toBeCloseTo(pTrue[0], 3);
-    expect(result.peak.y).toBeCloseTo(pTrue[1], 3);
-    expect(result.peak.width).toBeCloseTo(pTrue[2], 3);
+    let nL = pTrue.length / 3;
+    for (let i = 0; i < nL; i++) {
+      let pFit = result.peaks[i];
+      expect(pFit.x).toBeCloseTo(pTrue[i], 2);
+      expect(pFit.y).toBeCloseTo(pTrue[i + nL], 2);
+      expect(pFit.width).toBeCloseTo(pTrue[i + nL * 2], 2);
+    }
+  });
+});
+
+describe('Optimize 4 parameters of a linear combination of gaussian and lorentzians', function () {
+  it('group of two GL', function () {
+    let pTrue = [
+      0,
+      0,
+      0.001,
+      0.001,
+      0.31,
+      0.31,
+      (xFactor * nbPoints) / 10,
+      (xFactor * nbPoints) / 10,
+    ];
+    let yData = sumOfGaussianLorentzians(pTrue);
+    let result = optimize(
+      { x, y: x.map(yData) },
+      [
+        { x: 0.1, y: 0.0009, width: (xFactor * nbPoints) / 6 },
+        { x: 0.1, y: 0.0009, width: (xFactor * nbPoints) / 6 },
+      ],
+      { kind: 'pseudoVoigt', lmOptions: { maxIterations: 300, damping: 1 } },
+    );
+
+    let nL = pTrue.length / 4;
+    for (let i = 0; i < nL; i++) {
+      let pFit = result.peaks[i];
+      expect(pFit.x).toBeCloseTo(pTrue[i], 3);
+      expect(pFit.y).toBeCloseTo(pTrue[i + nL], 3);
+      expect(pFit.width).toBeCloseTo(pTrue[i + nL * 2], 3);
+      expect(pFit.mu).toBeCloseTo(pTrue[i + nL * 3], 3);
+    }
   });
 });
