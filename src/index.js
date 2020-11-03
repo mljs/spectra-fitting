@@ -5,6 +5,10 @@ import { sumOfGaussianLorentzians } from './shapes/sumOfGaussianLorentzians';
 import { sumOfGaussians } from './shapes/sumOfGaussians';
 import { sumOfLorentzians } from './shapes/sumOfLorentzians';
 
+const STATE_INIT = 0;
+const STATE_MIN = 1;
+const STATE_MAX = 2;
+
 const keys = ['x', 'y', 'width', 'mu'];
 /**
  * Fits a set of points to the sum of a set of bell functions.
@@ -49,9 +53,9 @@ export function optimize(data, peakList, options = {}) {
   for (let i = 0; i < nL; i++) {
     let peak = peakList[i];
     for (let s = 0; s < nbParams; s++) {
-      pInit[i + s * nL] = getValue(s, peak, 'init', dt);
-      pMin[i + s * nL] = getValue(s, peak, 'min', dt);
-      pMax[i + s * nL] = getValue(s, peak, 'max', dt);
+      pInit[i + s * nL] = getValue(s, peak, STATE_INIT, dt);
+      pMin[i + s * nL] = getValue(s, peak, STATE_MIN, dt);
+      pMax[i + s * nL] = getValue(s, peak, STATE_MAX, dt);
     }
   }
 
@@ -87,21 +91,25 @@ function getValue(parameterIndex, peak, key, dt) {
   switch (parameterIndex) {
     case 0:
       value =
-        key === 'init' ? peak.x : key === 'min' ? peak.x - dt : peak.x + dt;
+        key === STATE_INIT
+          ? peak.x
+          : key === STATE_MIN
+          ? peak.x - dt
+          : peak.x + dt;
       break;
     case 1:
-      value = key === 'init' ? 1 : key === 'min' ? 0 : 1.5;
+      value = key === STATE_INIT ? 1 : key === STATE_MIN ? 0 : 1.5;
       break;
     case 2:
       value =
-        key === 'init'
+        key === STATE_INIT
           ? peak.width
-          : key === 'min'
+          : key === STATE_MIN
           ? peak.width / 4
           : peak.width * 4;
       break;
     default:
-      value = key === 'init' ? 0.5 : key === 'min' ? 0 : 1;
+      value = key === STATE_INIT ? 0.5 : key === STATE_MIN ? 0 : 1;
   }
   return value;
 }
