@@ -68,7 +68,7 @@ console.log(fittedParams);
  {
     error: 0.010502794375558983,
     iterations: 15,
-    parameters: [
+    peaks: [
       {
         x: -0.49999760133593774,
         y: 0.1999880261075537,
@@ -139,7 +139,7 @@ console.log(fittedParams);
 {
   error: 0.12361588652854476,
   iterations: 100,
-  parameters: [
+  peaks: [
     {
       x: -0.5000014532421942,
       y: 0.19995307937326137,

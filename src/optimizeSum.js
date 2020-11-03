@@ -67,14 +67,14 @@ export function optimizeSum(data, group, options = {}) {
   let pFit = LM(data, paramsFunc, lmOptions);
 
   let { parameterError: error, iterations } = pFit;
-  let result = { error, iterations, parameters: new Array(nL) };
+  let result = { error, iterations, peaks: new Array(nL) };
   for (let i = 0; i < nL; i++) {
-    let parameters = {};
+    let peak = {};
     pFit.parameterValues[i + nL] *= maxY;
     for (let s = 0; s < nbParams; s++) {
-      parameters[keys[s]] = pFit.parameterValues[i + s * nL];
+      peak[keys[s]] = pFit.parameterValues[i + s * nL];
     }
-    result.parameters[i] = parameters;
+    result.peaks[i] = peak;
   }
   return result;
 }

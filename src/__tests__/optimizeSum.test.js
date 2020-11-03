@@ -24,7 +24,7 @@ describe('Optimize sum of Lorentzian', function () {
     );
     let nL = pTrue.length / 3;
     for (let i = 0; i < nL; i++) {
-      let pFit = result.parameters[i];
+      let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(pTrue[i], 2);
       expect(pFit.y).toBeCloseTo(pTrue[i + nL], 2);
       expect(pFit.width).toBeCloseTo(pTrue[i + nL * 2], 2);
@@ -47,7 +47,7 @@ describe('Optimize sum of Gaussians', function () {
     );
     let nL = pTrue.length / 3;
     for (let i = 0; i < nL; i++) {
-      let pFit = result.parameters[i];
+      let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(pTrue[i], 2);
       expect(pFit.y).toBeCloseTo(pTrue[i + nL], 2);
       expect(pFit.width).toBeCloseTo(pTrue[i + nL * 2], 2);
@@ -79,7 +79,7 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
 
     let nL = pTrue.length / 4;
     for (let i = 0; i < nL; i++) {
-      let pFit = result.parameters[i];
+      let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(pTrue[i], 3);
       expect(pFit.y).toBeCloseTo(pTrue[i + nL], 3);
       expect(pFit.width).toBeCloseTo(pTrue[i + nL * 2], 3);

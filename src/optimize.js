@@ -11,6 +11,6 @@ import { optimizeSum } from './optimizeSum';
  */
 export function optimize(data, peak, options = {}) {
   let result = optimizeSum(data, [peak], options);
-  let { error, parameters } = result;
-  return { error, parameters: parameters[0] };
+  let { error, peaks } = result;
+  return { error, peak: peaks[0] };
 }
