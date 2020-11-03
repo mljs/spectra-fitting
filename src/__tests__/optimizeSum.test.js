@@ -74,8 +74,9 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
         { x: 0.1, y: 0.0009, width: (xFactor * nbPoints) / 6 },
         { x: 0.1, y: 0.0009, width: (xFactor * nbPoints) / 6 },
       ],
-      { kind: 'pseudoVoigt' },
+      { kind: 'pseudoVoigt', lmOptions: { maxIterations: 300, damping: 1 } },
     );
+
     let nL = pTrue.length / 4;
     for (let i = 0; i < nL; i++) {
       let pFit = result.parameters[i];

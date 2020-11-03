@@ -23,12 +23,12 @@ export function optimizeSum(data, group, options = {}) {
 
   let nbParams;
   let paramsFunc;
-  switch (kind) {
+  switch (kind.toLowerCase()) {
     case 'lorentzian':
       nbParams = 3;
       paramsFunc = sumOfLorentzians;
       break;
-    case 'pseudoVoigt':
+    case 'pseudovoigt':
       nbParams = 4;
       paramsFunc = sumOfGaussianLorentzians;
       break;
@@ -66,7 +66,8 @@ export function optimizeSum(data, group, options = {}) {
   );
   let pFit = LM(data, paramsFunc, lmOptions);
 
-  let result = { error: pFit.parameterError, parameters: new Array(nL) };
+  let { parameterError: error, iterations } = pFit;
+  let result = { error, iterations, parameters: new Array(nL) };
   for (let i = 0; i < nL; i++) {
     let parameters = {};
     pFit.parameterValues[i + nL] *= maxY;
@@ -78,9 +79,9 @@ export function optimizeSum(data, group, options = {}) {
   return result;
 }
 
-function getValue(s, peak, key, dt) {
+function getValue(parameterIndex, peak, key, dt) {
   let value;
-  switch (s) {
+  switch (parameterIndex) {
     case 0:
       value =
         key === 'init' ? peak.x : key === 'min' ? peak.x - dt : peak.x + dt;
