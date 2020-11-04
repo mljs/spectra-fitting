@@ -9,6 +9,7 @@
     "src"
   ],
   "scripts": {
+    "build": "cheminfo-build --entry src/index.js --root SpectraFitting",
     "eslint": "eslint src",
     "eslint-fix": "npm run eslint -- --fix",
     "compile": "rollup -c",
@@ -46,6 +47,7 @@
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.10.4",
     "@types/jest": "^26.0.14",
+    "cheminfo-build": "^1.1.8",
     "eslint": "^7.11.0",
     "eslint-config-cheminfo": "^5.2.2",
     "eslint-plugin-import": "^2.22.1",
