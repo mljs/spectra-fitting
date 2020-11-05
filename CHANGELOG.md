@@ -1,5 +1,13 @@
 # Changelog
 
+### [0.3.1](https://www.github.com/mljs/spectra-fitting/compare/v0.3.0...v0.3.1) (2020-11-05)
+
+
+### Bug Fixes
+
+* add missing build script ([42e4ce3](https://www.github.com/mljs/spectra-fitting/commit/42e4ce3ced85258933164de586ceb238101a2353))
+* update dependencies to fix web compatibility ([2113eef](https://www.github.com/mljs/spectra-fitting/commit/2113eef2079032ea27fcd7ecf0388625d36687cb))
+
 ### [0.3.2](https://www.github.com/mljs/spectra-fitting/compare/v0.3.1...v0.3.2) (2020-11-04)
 
 
