@@ -1,7 +1,7 @@
 {
   "name": "ml-spectra-fitting",
   "version": "0.3.2",
-  "description": "Fit spectra using guassian or lorentzian",
+  "description": "Fit spectra using gaussian or lorentzian",
   "main": "lib/index.js",
   "module": "src/index.js",
   "files": [
@@ -26,7 +26,8 @@
   "keywords": [
     "Optimization",
     "Lorentzian",
-    "Guassian"
+    "Gaussian",
+    "pseudovoigt"
   ],
   "author": "Andres Castillo",
   "license": "MIT",
@@ -58,9 +59,10 @@
     "rollup": "^2.33.1"
   },
   "dependencies": {
+    "esm": "^3.2.25",
     "ml-array-max": "^1.2.0",
     "ml-levenberg-marquardt": "^2.1.1",
-    "ml-peak-shape-generator": "^0.6.1",
+    "ml-peak-shape-generator": "^0.7.0",
     "spectrum-generator": "^4.4.0"
   }
 }

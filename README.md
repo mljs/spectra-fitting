@@ -1,10 +1,10 @@
-[![NPM version][npm-image]][npm-url] [![build status][travis-image]][travis-url] [![npm download][download-image]][download-url]
+[![NPM version][npm-image]][npm-url] [![npm download][download-image]][download-url]
 
 # ml-spectra-fitting
 
 Curve fitting method in javascript.
 
-This is spectra fitting package optimize the position (x), max intensity (y), full width at half maximum (width) and the percent of gaussian (mu). It supports three kind of shapes:
+This is a spectra fitting package to optimize the position (x), max intensity (y), full width at half maximum (FWHM = width) and the ratio of gaussian contribution (mu) if it's required. It supports three kind of shapes:
 
 | Name         |                                                                                                                            Equation                                                                                                                             |
 | ------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -14,7 +14,7 @@ This is spectra fitting package optimize the position (x), max intensity (y), fu
 
 where
 
-| <img src="https://tex.cheminfo.org/?tex=%5Cdelta%20%3D%20%5Cleft(t%20-%20x%5Cright)%5E2%0A"/> | <img src="https://tex.cheminfo.org/?tex=%5Csigma%20%3D%20%5Cfrac%7Bwidth%7D%7B2%5Csqrt%7B2%20%5Ccdot%20Log(2)%7D%7D"/> | <img src="https://tex.cheminfo.org/?tex=%5Cgamma%3D%5Cleft(width%5Cright)%5E2"/> |
+| <img src="https://tex.cheminfo.org/?tex=%5Cdelta%20%3D%20%5Cleft(t%20-%20x%5Cright)%5E2%0A"/> | <img src="https://tex.cheminfo.org/?tex=%5Csigma%20%3D%20%5Cfrac%7Bwidth%7D%7B2%5Csqrt%7B2%20%5Ccdot%20Ln(2)%7D%7D"/> | <img src="https://tex.cheminfo.org/?tex=%5Cgamma%3D%5Cleft(width%5Cright)%5E2"/> |
 | --------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------- |
 
 
@@ -54,11 +54,11 @@ let peakList = [
   },
 ];
 
-// the function recive a peaklist with {x, y, width} as a guess
-// and return a list of objects
+// the function receive an array of peaks {x, y, width} as a guess
+// and returns an array of peaks
 
-let fittedParams = optimize(data, peakList);
-console.log(fittedParams);
+let fittedPeaks = optimize(data, peakList);
+console.log(fittedPeaks);
 /**
  {
     error: 0.010502794375558983,
@@ -158,7 +158,5 @@ console.log(fittedParams);
 
 [npm-image]: https://img.shields.io/npm/v/ml-spectra-fitting.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/ml-spectra-fitting
-[travis-image]: https://img.shields.io/travis/mljs/spectra-fitting/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/mljs/spectra-fitting
 [download-image]: https://img.shields.io/npm/dm/ml-spectra-fitting.svg?style=flat-square
 [download-url]: https://npmjs.org/package/ml-spectra-fitting

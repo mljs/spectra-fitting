@@ -12,7 +12,7 @@ const STATE_MAX = 2;
 const keys = ['x', 'y', 'width', 'mu'];
 /**
  * Fits a set of points to the sum of a set of bell functions.
- * @param {Object} input - An object containing the x and y data to be fitted.
+ * @param {Object} data - An object containing the x and y data to be fitted.
  * @param {Array} peakList - A list of initial parameters to be optimized. e.g. coming from a peak picking [{x, y, width}].
  * @param {Object} [options = {}]
  * @param {String} [options.kind = 'gaussian'] - kind of shape used to fitting, lorentzian, gaussian and pseudovoigt are supported.
@@ -22,8 +22,13 @@ const keys = ['x', 'y', 'width', 'mu'];
 export function optimize(data, peakList, options = {}) {
   let { kind = 'gaussian', lmOptions = {} } = options;
 
+  let x = data.x;
   let maxY = getMaxValue(data.y);
-  data.y.forEach((_, i, arr) => (arr[i] /= maxY));
+  let y = data.y.map((e) => (e /= maxY));
+  let peaks = peakList.map((peak) => {
+    peak.y /= maxY;
+    return peak;
+  });
 
   let nbParams;
   let paramsFunc;
@@ -44,14 +49,14 @@ export function optimize(data, peakList, options = {}) {
       throw new Error('kind of shape is not supported');
   }
 
-  let nL = peakList.length;
+  let nL = peaks.length;
   let pInit = new Float64Array(nL * nbParams);
   let pMin = new Float64Array(nL * nbParams);
   let pMax = new Float64Array(nL * nbParams);
   let dt = Math.abs(data.x[0] - data.x[1]);
 
   for (let i = 0; i < nL; i++) {
-    let peak = peakList[i];
+    let peak = peaks[i];
     for (let s = 0; s < nbParams; s++) {
       pInit[i + s * nL] = getValue(s, peak, STATE_INIT, dt);
       pMin[i + s * nL] = getValue(s, peak, STATE_MIN, dt);
@@ -71,7 +76,7 @@ export function optimize(data, peakList, options = {}) {
     },
     lmOptions,
   );
-  let pFit = LM(data, paramsFunc, lmOptions);
+  let pFit = LM({ x, y }, paramsFunc, lmOptions);
 
   let { parameterError: error, iterations } = pFit;
   let result = { error, iterations, peaks: new Array(nL) };
@@ -98,7 +103,7 @@ function getValue(parameterIndex, peak, key, dt) {
           : peak.x + dt;
       break;
     case 1:
-      value = key === STATE_INIT ? 1 : key === STATE_MIN ? 0 : 1.5;
+      value = key === STATE_INIT ? peak.y : key === STATE_MIN ? 0 : 1.5;
       break;
     case 2:
       value =

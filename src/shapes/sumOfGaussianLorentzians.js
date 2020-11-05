@@ -13,13 +13,13 @@ export function sumOfGaussianLorentzians(p) {
     let nL = p.length / 4;
     let result = 0;
     for (let i = 0; i < nL; i++) {
-      let func = pseudovoigtFct({
-        x: p[i],
-        y: p[i + nL],
-        width: p[i + nL * 2],
-        mu: p[i + nL * 3],
-      });
-      result += func(t);
+      result += pseudovoigtFct(
+        p[i],
+        p[i + nL],
+        p[i + nL * 2],
+        p[i + nL * 3],
+        t,
+      );
     }
     return result;
   };

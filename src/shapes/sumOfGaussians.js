@@ -12,12 +12,7 @@ export function sumOfGaussians(p) {
     let nL = p.length / 3;
     let result = 0;
     for (let i = 0; i < nL; i++) {
-      let func = gaussianFct({
-        x: p[i],
-        y: p[i + nL],
-        width: p[i + nL * 2],
-      });
-      result += func(t);
+      result += gaussianFct(p[i], p[i + nL], p[i + nL * 2], t);
     }
     return result;
   };
