@@ -4,7 +4,7 @@
 
 Curve fitting method in javascript.
 
-This is a spectra fitting package to optimize the position (x), max intensity (y), full width at half maximum (width) and the ratio of gaussian contribution (mu) if it's required. It supports three kind of shapes:
+This is a spectra fitting package to optimize the position (x), max intensity (y), full width at half maximum (FWHM = width) and the ratio of gaussian contribution (mu) if it's required. It supports three kind of shapes:
 
 | Name         |                                                                                                                            Equation                                                                                                                             |
 | ------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
