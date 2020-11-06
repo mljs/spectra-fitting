@@ -26,7 +26,8 @@
   "keywords": [
     "Optimization",
     "Lorentzian",
-    "Guassian"
+    "Guassian",
+    "pseudovoigt"
   ],
   "author": "Andres Castillo",
   "license": "MIT",
