@@ -54,11 +54,11 @@ let peakList = [
   },
 ];
 
-// the function recive a peaklist with {x, y, width} as a guess
-// and return a list of objects
+// the function receive an array of peaks {x, y, width} as a guess
+// and returns an array of peaks
 
-let fittedParams = optimize(data, peakList);
-console.log(fittedParams);
+let fittedPeaks = optimize(data, peakList);
+console.log(fittedPeaks);
 /**
  {
     error: 0.010502794375558983,
