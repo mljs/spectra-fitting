@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset='utf-8'>
-  <title>ml-spectra-fitting 0.3.2 | Documentation</title>
-  <meta name='description' content='Fit spectra using guassian or lorentzian'>
+  <title>ml-spectra-fitting 0.5.0 | Documentation</title>
+  <meta name='description' content='Fit spectra using gaussian or lorentzian'>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' rel='stylesheet'>
   <link href='assets/style.css' rel='stylesheet'>
@@ -15,7 +15,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>ml-spectra-fitting</h3>
-          <div class='mb1'><code>0.3.2</code></div>
+          <div class='mb1'><code>0.5.0</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -87,7 +87,7 @@
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/b07039ad35685b5c91b5d5f6b6277446921f7a06/src/index.js#L22-L87'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/b59cea5f9ee19f36a686097467b58dd1c90e4eac/src/index.js#L22-L92'>
       <span>src/index.js</span>
       </a>
     
@@ -96,7 +96,7 @@
 
   <p>Fits a set of points to the sum of a set of bell functions.</p>
 
-    <div class='pre p1 fill-light mt0'>optimize(data: any, peakList: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>, options: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, input: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></div>
+    <div class='pre p1 fill-light mt0'>optimize(data: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, peakList: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>, options: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></div>
   
   
 
@@ -113,8 +113,9 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>data</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>data</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    An object containing the x and y data to be fitted.
+
           </div>
           
         </div>
@@ -177,15 +178,6 @@
           
         </div>
       
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>input</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-	    An object containing the x and y data to be fitted.
-
-          </div>
-          
-        </div>
-      
     </div>
   
 
@@ -231,7 +223,7 @@
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/b07039ad35685b5c91b5d5f6b6277446921f7a06/src/shapes/sumOfGaussianLorentzians.js#L11-L26'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/b59cea5f9ee19f36a686097467b58dd1c90e4eac/src/shapes/sumOfGaussianLorentzians.js#L11-L26'>
       <span>src/shapes/sumOfGaussianLorentzians.js</span>
       </a>
     
@@ -317,7 +309,7 @@ parameters are divided in 4 batches. 1st: centers; 2nd: heights; 3th: widths; 4t
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/b07039ad35685b5c91b5d5f6b6277446921f7a06/src/shapes/sumOfGaussians.js#L10-L24'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/b59cea5f9ee19f36a686097467b58dd1c90e4eac/src/shapes/sumOfGaussians.js#L10-L19'>
       <span>src/shapes/sumOfGaussians.js</span>
       </a>
     
@@ -403,7 +395,7 @@ parameters are divided in 3 batches. 1st: centers; 2nd: height; 3th: widths;</p>
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/b07039ad35685b5c91b5d5f6b6277446921f7a06/src/shapes/sumOfLorentzians.js#L11-L25'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/b59cea5f9ee19f36a686097467b58dd1c90e4eac/src/shapes/sumOfLorentzians.js#L11-L20'>
       <span>src/shapes/sumOfLorentzians.js</span>
       </a>
     
