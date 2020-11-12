@@ -127,7 +127,7 @@ let peakList = [
 
 // the function recive a peaklist with {x, y, width} as a guess
 // and return a list of objects
-let fittedParams = optimize(data, peakList, { kind: 'pseudovoigt' });
+let fittedParams = optimize(data, peakList, { shape: { kind: 'pseudovoigt' } });
 
 console.log(fittedParams);
 /**
