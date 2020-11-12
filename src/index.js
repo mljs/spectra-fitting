@@ -20,7 +20,7 @@ const keys = ['x', 'y', 'width', 'mu'];
  * @returns {Object} - A object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
 export function optimize(data, peakList, options = {}) {
-  let { kind = 'gaussian', lmOptions = {} } = options;
+  let { shape = { kind: 'gaussian' }, lmOptions = {} } = options;
 
   let x = data.x;
   let maxY = getMaxValue(data.y);
@@ -32,7 +32,7 @@ export function optimize(data, peakList, options = {}) {
 
   let nbParams;
   let paramsFunc;
-  switch (kind.toLowerCase()) {
+  switch (shape.kind.toLowerCase()) {
     case 'gaussian':
       nbParams = 3;
       paramsFunc = sumOfGaussians;
