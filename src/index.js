@@ -1,6 +1,7 @@
 import getMaxValue from 'ml-array-max';
-import LM from 'ml-levenberg-marquardt';
+import { getKind } from 'ml-peak-shape-generator';
 
+import { choiceMethod } from './choiceMethod';
 import { sumOfGaussianLorentzians } from './shapes/sumOfGaussianLorentzians';
 import { sumOfGaussians } from './shapes/sumOfGaussians';
 import { sumOfLorentzians } from './shapes/sumOfLorentzians';
@@ -12,15 +13,22 @@ const STATE_MAX = 2;
 const keys = ['x', 'y', 'width', 'mu'];
 /**
  * Fits a set of points to the sum of a set of bell functions.
- * @param {Object} data - An object containing the x and y data to be fitted.
- * @param {Array} peakList - A list of initial parameters to be optimized. e.g. coming from a peak picking [{x, y, width}].
- * @param {Object} [options = {}]
- * @param {String} [options.kind = 'gaussian'] - kind of shape used to fitting, lorentzian, gaussian and pseudovoigt are supported.
- * @param {Object} [options.lmOptions = {}] - options of ml-levenberg-marquardt optimization package.
- * @returns {Object} - A object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
+ * @param {object} data - An object containing the x and y data to be fitted.
+ * @param {array} peakList - A list of initial parameters to be optimized. e.g. coming from a peak picking [{x, y, width}].
+ * @param {object} [options = {}]
+ * @param {number|string} [options.kind = 'gaussian'] - kind of shape used to fitting, lorentzian, gaussian and pseudovoigt are supported.
+ * @param {object} [options.optimization = { kind: 'lm' }] - optimization options.
+ * @returns {object} - A object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
 export function optimize(data, peakList, options = {}) {
-  let { shape = { kind: 'gaussian' }, lmOptions = {} } = options;
+  let {
+    shape = { kind: 'gaussian' },
+    optimization = {
+      kind: 'lm',
+    },
+  } = options;
+
+  shape.kind = getKind(shape.kind);
 
   let x = data.x;
   let maxY = getMaxValue(data.y);
@@ -32,16 +40,16 @@ export function optimize(data, peakList, options = {}) {
 
   let nbParams;
   let paramsFunc;
-  switch (shape.kind.toLowerCase()) {
-    case 'gaussian':
+  switch (shape.kind) {
+    case 1:
       nbParams = 3;
       paramsFunc = sumOfGaussians;
       break;
-    case 'lorentzian':
+    case 2:
       nbParams = 3;
       paramsFunc = sumOfLorentzians;
       break;
-    case 'pseudovoigt':
+    case 3:
       nbParams = 4;
       paramsFunc = sumOfGaussianLorentzians;
       break;
@@ -64,19 +72,13 @@ export function optimize(data, peakList, options = {}) {
     }
   }
 
-  lmOptions = Object.assign(
-    {
-      damping: 1.5,
-      initialValues: pInit,
-      minValues: pMin,
-      maxValues: pMax,
-      gradientDifference: dt / 10000,
-      maxIterations: 100,
-      errorTolerance: 10e-5,
-    },
-    lmOptions,
-  );
-  let pFit = LM({ x, y }, paramsFunc, lmOptions);
+  let { algorithm, optOptions } = choiceMethod(optimization);
+
+  optOptions.minValues = pMin;
+  optOptions.maxValues = pMax;
+  optOptions.initialValues = pInit;
+
+  let pFit = algorithm({ x, y }, paramsFunc, optOptions);
 
   let { parameterError: error, iterations } = pFit;
   let result = { error, iterations, peaks: new Array(nL) };

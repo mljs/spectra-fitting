@@ -62,7 +62,7 @@
     "esm": "^3.2.25",
     "ml-array-max": "^1.2.0",
     "ml-levenberg-marquardt": "^2.1.1",
-    "ml-peak-shape-generator": "^0.9.0",
+    "ml-peak-shape-generator": "^0.10.0",
     "spectrum-generator": "^4.4.0"
   }
 }
