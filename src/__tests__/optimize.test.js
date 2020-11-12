@@ -20,7 +20,7 @@ describe('Optimize sum of Lorentzian', function () {
         { x: -0.5, y: 0.0009, width: (xFactor * nbPoints) / 8 },
         { x: 0.52, y: 0.0009, width: (xFactor * nbPoints) / 8 },
       ],
-      { kind: 'lorentzian' },
+      { shape: { kind: 'lorentzian' } },
     );
     let nL = pTrue.length / 3;
     for (let i = 0; i < nL; i++) {
@@ -43,7 +43,7 @@ describe('Optimize sum of Gaussians', function () {
         { x: -0.5, y: 0.0009, width: (xFactor * nbPoints) / 8 },
         { x: 0.52, y: 0.0009, width: (xFactor * nbPoints) / 8 },
       ],
-      { kind: 'gaussian' },
+      { shape: { kind: 'gaussian' } },
     );
     let nL = pTrue.length / 3;
     for (let i = 0; i < nL; i++) {
@@ -74,7 +74,10 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
         { x: 0.1, y: 0.0009, width: (xFactor * nbPoints) / 6 },
         { x: 0.1, y: 0.0009, width: (xFactor * nbPoints) / 6 },
       ],
-      { kind: 'pseudoVoigt', lmOptions: { maxIterations: 300, damping: 1 } },
+      {
+        shape: { kind: 'pseudoVoigt' },
+        lmOptions: { maxIterations: 300, damping: 1 },
+      },
     );
 
     let nL = pTrue.length / 4;
