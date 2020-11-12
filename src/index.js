@@ -1,7 +1,7 @@
 import getMaxValue from 'ml-array-max';
 import { getKind } from 'ml-peak-shape-generator';
 
-import { choiceMethod } from './choiceMethod';
+import { selectMethod } from './selectMethod';
 import { sumOfGaussianLorentzians } from './shapes/sumOfGaussianLorentzians';
 import { sumOfGaussians } from './shapes/sumOfGaussians';
 import { sumOfLorentzians } from './shapes/sumOfLorentzians';
@@ -72,13 +72,13 @@ export function optimize(data, peakList, options = {}) {
     }
   }
 
-  let { algorithm, optOptions } = choiceMethod(optimization);
+  let { algorithm, optimizationOptions } = selectMethod(optimization);
 
-  optOptions.minValues = pMin;
-  optOptions.maxValues = pMax;
-  optOptions.initialValues = pInit;
+  optimizationOptions.minValues = pMin;
+  optimizationOptions.maxValues = pMax;
+  optimizationOptions.initialValues = pInit;
 
-  let pFit = algorithm({ x, y }, paramsFunc, optOptions);
+  let pFit = algorithm({ x, y }, paramsFunc, optimizationOptions);
 
   let { parameterError: error, iterations } = pFit;
   let result = { error, iterations, peaks: new Array(nL) };

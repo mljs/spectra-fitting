@@ -2,12 +2,15 @@ import LM from 'ml-levenberg-marquardt';
 
 const LEVENBERG_MARQUARDT = 1;
 
-export function choiceMethod(optOptions = {}) {
-  let { kind, options } = optOptions;
+export function selectMethod(optimizationOptions = {}) {
+  let { kind, options } = optimizationOptions;
   kind = getKind(kind);
   switch (kind) {
     case 1:
-      return { algorithm: LM, optOptions: checkOptions(kind, options) };
+      return {
+        algorithm: LM,
+        optimizationOptions: checkOptions(kind, options),
+      };
     default:
       throw new Error(`Unknown kind algorithm`);
   }
