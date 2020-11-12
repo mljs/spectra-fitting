@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://www.github.com/mljs/spectra-fitting/compare/v0.5.0...v0.6.0) (2020-11-12)
+
+
+### Features
+
+* update ml-peak-shape-generator ([c16fbaa](https://www.github.com/mljs/spectra-fitting/commit/c16fbaa8d1612614a8c9bd4289eb0bae564d6a75))
+
 ## [0.5.0](https://www.github.com/mljs/spectra-fitting/compare/v0.4.0...v0.5.0) (2020-11-06)
 
 
