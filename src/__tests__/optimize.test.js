@@ -76,7 +76,10 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
       ],
       {
         shape: { kind: 'pseudoVoigt' },
-        lmOptions: { maxIterations: 300, damping: 1 },
+        optimization: {
+          kind: 'lm',
+          options: { maxIterations: 300, damping: 1 },
+        },
       },
     );
 
