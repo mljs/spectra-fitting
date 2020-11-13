@@ -16,8 +16,11 @@ const keys = ['x', 'y', 'width', 'mu'];
  * @param {object} data - An object containing the x and y data to be fitted.
  * @param {array} peakList - A list of initial parameters to be optimized. e.g. coming from a peak picking [{x, y, width}].
  * @param {object} [options = {}]
- * @param {number|string} [options.kind = 'gaussian'] - kind of shape used to fitting, lorentzian, gaussian and pseudovoigt are supported.
- * @param {object} [options.optimization = { kind: 'lm' }] - optimization options.
+ * @param {object} [options.shape={}] - it's specify the kind of shape used to fitting.
+ * @param {string} [options.shape.kind = 'gaussian'] - kind of shape; lorentzian, gaussian and pseudovoigt are supported.
+ * @param {object} [options.optimization = {}] - it's specify the kind and options of the algorithm use to optimize parameters.
+ * @param {object} [options.optimization.kind = 'lm'] - kind of algorithm. By default it's levenberg-marquardt.
+ * @param {object} [options.optimization.options = {}] - options for the specific kind of algorithm.
  * @returns {object} - A object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
 export function optimize(data, peakList, options = {}) {
@@ -81,14 +84,14 @@ export function optimize(data, peakList, options = {}) {
   let pFit = algorithm({ x, y }, paramsFunc, optimizationOptions);
 
   let { parameterError: error, iterations } = pFit;
-  let result = { error, iterations, peaks: new Array(nL) };
+  let result = { error, iterations, peaks: [] };
   for (let i = 0; i < nL; i++) {
     let peak = {};
     pFit.parameterValues[i + nL] *= maxY;
     for (let s = 0; s < nbParams; s++) {
       peak[keys[s]] = pFit.parameterValues[i + s * nL];
     }
-    result.peaks[i] = peak;
+    result.peaks.push(peak);
   }
   return result;
 }
