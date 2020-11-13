@@ -17,11 +17,10 @@ export function selectMethod(optimizationOptions = {}) {
 }
 
 function checkOptions(kind, options = {}) {
+  // eslint-disable-next-line default-case
   switch (kind) {
     case 1:
       return Object.assign({}, lmOptions, options);
-    default:
-      return;
   }
 }
 
