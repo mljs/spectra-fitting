@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://www.github.com/mljs/spectra-fitting/compare/v0.6.0...v0.7.0) (2020-11-13)
+
+
+### Features
+
+* improve coverage ([685d134](https://www.github.com/mljs/spectra-fitting/commit/685d134fb3f3761f63282ccaebc0e43b85c7881c))
+
 ## [0.6.0](https://www.github.com/mljs/spectra-fitting/compare/v0.5.0...v0.6.0) (2020-11-12)
 
 
