@@ -31,7 +31,7 @@ export function optimize(data, peakList, options = {}) {
     },
   } = options;
 
-  shape.kind = getKind(shape.kind);
+  let kind = getKind(shape.kind);
 
   let x = data.x;
   let maxY = getMaxValue(data.y);
@@ -43,7 +43,7 @@ export function optimize(data, peakList, options = {}) {
 
   let nbParams;
   let paramsFunc;
-  switch (shape.kind) {
+  switch (kind) {
     case 1:
       nbParams = 3;
       paramsFunc = sumOfGaussians;
