@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.7.1](https://www.github.com/mljs/spectra-fitting/compare/v0.7.0...v0.7.1) (2020-11-14)
+
+
+### Bug Fixes
+
+* avoid inplace modification of shape option ([5d54fe3](https://www.github.com/mljs/spectra-fitting/commit/5d54fe36e926fad7dc36e8e41ff5fe3411d128b0))
+
 ## [0.7.0](https://www.github.com/mljs/spectra-fitting/compare/v0.6.0...v0.7.0) (2020-11-13)
 
 
