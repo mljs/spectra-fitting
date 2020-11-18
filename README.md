@@ -41,7 +41,7 @@ const data = generateSpectrum(peaks, {from: -1, to: 1, nbPoints: 41});
 
 
 //the approximate values to be optimized, It could come from a peak picking with ml-gsd
-let peakList = [
+let peaks = [
   {
     x: -0.5,
     y: 0.18,
@@ -57,7 +57,7 @@ let peakList = [
 // the function receive an array of peaks {x, y, width} as a guess
 // and returns an array of peaks
 
-let fittedPeaks = optimize(data, peakList);
+let fittedPeaks = optimize(data, peaks);
 console.log(fittedPeaks);
 /**
  {
@@ -112,7 +112,7 @@ generator.addPeak(
 let data = generator.getSpectrum();
 console.log(JSON.stringify({x: Array.from(data.x), y: Array.from(data.y)}))
 //the approximate values to be optimized, It could coming from a peak picking with ml-gsd
-let peakList = [
+let peaks = [
   {
     x: -0.5,
     y: 0.22,
@@ -125,9 +125,9 @@ let peakList = [
   },
 ];
 
-// the function recive a peaklist with {x, y, width} as a guess
+// the function receive an array of peak with {x, y, width} as a guess
 // and return a list of objects
-let fittedParams = optimize(data, peakList, { shape: { kind: 'pseudovoigt' } });
+let fittedParams = optimize(data, peaks, { shape: { kind: 'pseudovoigt' } });
 
 console.log(fittedParams);
 /**
