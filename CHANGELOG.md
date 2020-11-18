@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://www.github.com/mljs/spectra-fitting/compare/v0.7.1...v0.8.0) (2020-11-18)
+
+
+### Features
+
+* first make a copy of the peaks to keep all attributes ([466278e](https://www.github.com/mljs/spectra-fitting/commit/466278e22628f3d0e73b6e112b42c71fbd30f91f))
+
 ### [0.7.1](https://www.github.com/mljs/spectra-fitting/compare/v0.7.0...v0.7.1) (2020-11-14)
 
 
