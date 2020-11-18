@@ -23,7 +23,7 @@ const keys = ['x', 'y', 'width', 'mu'];
  * @param {object} [options.optimization.options = {}] - options for the specific kind of algorithm.
  * @returns {object} - A object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
-export function optimize(data, peakList, options = {}) {
+export function optimize(data, peaks, options = {}) {
   let {
     shape = { kind: 'gaussian' },
     optimization = {
@@ -31,15 +31,13 @@ export function optimize(data, peakList, options = {}) {
     },
   } = options;
 
+  peaks = JSON.parse(JSON.stringify(peaks));
+
   let kind = getKind(shape.kind);
 
   let x = data.x;
   let maxY = getMaxValue(data.y);
   let y = data.y.map((e) => (e /= maxY));
-  let peaks = peakList.map((peak) => {
-    peak.y /= maxY;
-    return peak;
-  });
 
   let nbParams;
   let paramsFunc;
@@ -60,18 +58,17 @@ export function optimize(data, peakList, options = {}) {
       throw new Error('kind of shape is not supported');
   }
 
-  let nL = peaks.length;
-  let pInit = new Float64Array(nL * nbParams);
-  let pMin = new Float64Array(nL * nbParams);
-  let pMax = new Float64Array(nL * nbParams);
-  let dt = Math.abs(data.x[0] - data.x[1]);
+  let pInit = new Float64Array(peaks.length * nbParams);
+  let pMin = new Float64Array(peaks.length * nbParams);
+  let pMax = new Float64Array(peaks.length * nbParams);
+  let deltaX = Math.abs(data.x[0] - data.x[1]);
 
-  for (let i = 0; i < nL; i++) {
+  for (let i = 0; i < peaks.length; i++) {
     let peak = peaks[i];
     for (let s = 0; s < nbParams; s++) {
-      pInit[i + s * nL] = getValue(s, peak, STATE_INIT, dt);
-      pMin[i + s * nL] = getValue(s, peak, STATE_MIN, dt);
-      pMax[i + s * nL] = getValue(s, peak, STATE_MAX, dt);
+      pInit[i + s * peaks.length] = getValue(s, peak, STATE_INIT, deltaX);
+      pMin[i + s * peaks.length] = getValue(s, peak, STATE_MIN, deltaX);
+      pMax[i + s * peaks.length] = getValue(s, peak, STATE_MAX, deltaX);
     }
   }
 
@@ -84,14 +81,13 @@ export function optimize(data, peakList, options = {}) {
   let pFit = algorithm({ x, y }, paramsFunc, optimizationOptions);
 
   let { parameterError: error, iterations } = pFit;
-  let result = { error, iterations, peaks: [] };
-  for (let i = 0; i < nL; i++) {
-    let peak = {};
-    pFit.parameterValues[i + nL] *= maxY;
+  let result = { error, iterations, peaks };
+  for (let i = 0; i < peaks.length; i++) {
+    pFit.parameterValues[i + peaks.length] *= maxY;
     for (let s = 0; s < nbParams; s++) {
-      peak[keys[s]] = pFit.parameterValues[i + s * nL];
+      // we modify the optimized parameters
+      peaks[i][keys[s]] = pFit.parameterValues[i + s * peaks.length];
     }
-    result.peaks.push(peak);
   }
   return result;
 }
