@@ -14,7 +14,7 @@ const keys = ['x', 'y', 'width', 'mu'];
 /**
  * Fits a set of points to the sum of a set of bell functions.
  * @param {object} data - An object containing the x and y data to be fitted.
- * @param {array} peakList - A list of initial parameters to be optimized. e.g. coming from a peak picking [{x, y, width}].
+ * @param {array} peaks - A list of initial parameters to be optimized. e.g. coming from a peak picking [{x, y, width}].
  * @param {object} [options = {}]
  * @param {object} [options.shape={}] - it's specify the kind of shape used to fitting.
  * @param {string} [options.shape.kind = 'gaussian'] - kind of shape; lorentzian, gaussian and pseudovoigt are supported.
