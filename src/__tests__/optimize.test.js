@@ -11,7 +11,7 @@ for (let i = 0; i < nbPoints; i++) {
 }
 
 describe('Optimize sum of Lorentzian', function () {
-  it('group of two GL', function () {
+  it('group of two L', function () {
     let pTrue = [-0.5, 0.5, 0.001, 0.001, 0.31, 0.31];
     let yData = sumOfLorentzians(pTrue);
     let result = optimize(
@@ -33,7 +33,7 @@ describe('Optimize sum of Lorentzian', function () {
 });
 
 describe('Optimize sum of Gaussians', function () {
-  it('group of two GL', function () {
+  it('group of two G', function () {
     let pTrue = [-0.5, 0.5, 0.001, 0.001, 0.31, 0.31];
     let yData = sumOfGaussians(pTrue);
 
@@ -75,14 +75,17 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
         { x: 0.1, y: 0.0009, width: (xFactor * nbPoints) / 6 },
       ],
       {
-        shape: { kind: 'pseudoVoigt' },
+        shape: { kind: 'pseudovoigt' },
         optimization: {
           kind: 'lm',
-          options: { maxIterations: 300, damping: 1 },
+          options: {
+            maxIterations: 100,
+            damping: 0.1,
+            gradientDifference: 1e-5,
+          },
         },
       },
     );
-
     let nL = pTrue.length / 4;
     for (let i = 0; i < nL; i++) {
       let pFit = result.peaks[i];

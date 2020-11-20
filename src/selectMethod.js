@@ -36,8 +36,8 @@ function getKind(kind) {
 }
 
 const lmOptions = {
-  damping: 1.5,
+  damping: 0.1,
   gradientDifference: 1e-5,
   maxIterations: 100,
-  errorTolerance: 10e-5,
+  errorTolerance: 1e-5,
 };

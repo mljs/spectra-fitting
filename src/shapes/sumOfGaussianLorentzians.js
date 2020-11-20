@@ -9,8 +9,8 @@ import { pseudovoigtFct } from 'ml-peak-shape-generator';
  */
 
 export function sumOfGaussianLorentzians(p) {
+  let nL = p.length / 4;
   return function (t) {
-    let nL = p.length / 4;
     let result = 0;
     for (let i = 0; i < nL; i++) {
       result += pseudovoigtFct(

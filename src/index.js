@@ -1,6 +1,6 @@
-import getMaxValue from 'ml-array-max';
 import { getKind } from 'ml-peak-shape-generator';
 
+import { scaleData } from './scaleData';
 import { selectMethod } from './selectMethod';
 import { sumOfGaussianLorentzians } from './shapes/sumOfGaussianLorentzians';
 import { sumOfGaussians } from './shapes/sumOfGaussians';
@@ -32,12 +32,11 @@ export function optimize(data, peaks, options = {}) {
   } = options;
 
   peaks = JSON.parse(JSON.stringify(peaks));
+  data = { x: data.x.slice(), y: data.y.slice() };
 
   let kind = getKind(shape.kind);
 
-  let x = data.x;
-  let maxY = getMaxValue(data.y);
-  let y = data.y.map((e) => (e /= maxY));
+  let scaled = scaleData(data, peaks);
 
   let nbParams;
   let paramsFunc;
@@ -58,37 +57,48 @@ export function optimize(data, peaks, options = {}) {
       throw new Error('kind of shape is not supported');
   }
 
-  let pInit = new Float64Array(peaks.length * nbParams);
-  let pMin = new Float64Array(peaks.length * nbParams);
-  let pMax = new Float64Array(peaks.length * nbParams);
-  let deltaX = Math.abs(data.x[0] - data.x[1]);
+  let nbShapes = scaled.peaks.length;
+  let initialValues = new Float64Array(nbShapes * nbParams);
+  let minValues = new Float64Array(nbShapes * nbParams);
+  let maxValues = new Float64Array(nbShapes * nbParams);
+  let deltaX = Math.abs(scaled.data.x[0] - scaled.data.x[1]);
 
-  for (let i = 0; i < peaks.length; i++) {
-    let peak = peaks[i];
+  for (let i = 0; i < nbShapes; i++) {
+    let peak = scaled.peaks[i];
     for (let s = 0; s < nbParams; s++) {
-      pInit[i + s * peaks.length] = getValue(s, peak, STATE_INIT, deltaX);
-      pMin[i + s * peaks.length] = getValue(s, peak, STATE_MIN, deltaX);
-      pMax[i + s * peaks.length] = getValue(s, peak, STATE_MAX, deltaX);
+      initialValues[i + s * nbShapes] = getValue(s, peak, STATE_INIT, deltaX);
+      minValues[i + s * nbShapes] = getValue(s, peak, STATE_MIN, deltaX);
+      maxValues[i + s * nbShapes] = getValue(s, peak, STATE_MAX, deltaX);
     }
   }
 
   let { algorithm, optimizationOptions } = selectMethod(optimization);
 
-  optimizationOptions.minValues = pMin;
-  optimizationOptions.maxValues = pMax;
-  optimizationOptions.initialValues = pInit;
+  Object.assign(optimizationOptions, {
+    minValues,
+    maxValues,
+    initialValues,
+  });
 
-  let pFit = algorithm({ x, y }, paramsFunc, optimizationOptions);
+  let pFit = algorithm(scaled.data, paramsFunc, optimizationOptions);
 
-  let { parameterError: error, iterations } = pFit;
+  let { parameterError: error, iterations, parameterValues } = pFit;
+
   let result = { error, iterations, peaks };
   for (let i = 0; i < peaks.length; i++) {
-    pFit.parameterValues[i + peaks.length] *= maxY;
     for (let s = 0; s < nbParams; s++) {
-      // we modify the optimized parameters
-      peaks[i][keys[s]] = pFit.parameterValues[i + s * peaks.length];
+      result.peaks[i][keys[s]] = parameterValues[i + s * peaks.length];
     }
   }
+
+  result.peaks = scaleData(scaled.data, result.peaks, {
+    scaleXY: false,
+    reverse: true,
+    minX: scaled.oldMinX,
+    maxX: scaled.oldMaxX,
+    maxY: scaled.oldMaxY,
+  }).peaks;
+
   return result;
 }
 
