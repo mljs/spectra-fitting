@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://www.github.com/mljs/spectra-fitting/compare/v0.8.0...v0.9.0) (2020-12-04)
+
+
+### Features
+
+* update ml-levenberg-marquardt and adapt to the new version ([#41](https://www.github.com/mljs/spectra-fitting/issues/41)) ([9773585](https://www.github.com/mljs/spectra-fitting/commit/9773585e691edffff06617742800ced62042d557))
+
 ## [0.8.0](https://www.github.com/mljs/spectra-fitting/compare/v0.7.1...v0.8.0) (2020-11-18)
 
 
