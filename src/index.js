@@ -9,6 +9,7 @@ import { sumOfLorentzians } from './shapes/sumOfLorentzians';
 const STATE_INIT = 0;
 const STATE_MIN = 1;
 const STATE_MAX = 2;
+const STATE_GS = 3;
 
 const keys = ['x', 'y', 'width', 'mu'];
 /**
@@ -37,7 +38,10 @@ export function optimize(data, peaks, options = {}) {
 
   let x = data.x;
   let maxY = getMaxValue(data.y);
-  let y = data.y.map((e) => (e /= maxY));
+  let y = new Array(x.length);
+  for (let i = 0; i < x.length; i++) {
+    y[i] = data.y[i] / maxY;
+  }
 
   let nbParams;
   let paramsFunc;
@@ -58,17 +62,26 @@ export function optimize(data, peaks, options = {}) {
       throw new Error('kind of shape is not supported');
   }
 
-  let pInit = new Float64Array(peaks.length * nbParams);
-  let pMin = new Float64Array(peaks.length * nbParams);
-  let pMax = new Float64Array(peaks.length * nbParams);
+  let nbShapes = peaks.length;
+  let pInit = new Float64Array(nbShapes * nbParams);
+  let pMin = new Float64Array(nbShapes * nbParams);
+  let pMax = new Float64Array(nbShapes * nbParams);
+  let gradientDifference = new Float64Array(nbShapes * nbParams);
   let deltaX = Math.abs(data.x[0] - data.x[1]);
 
-  for (let i = 0; i < peaks.length; i++) {
+  for (let i = 0; i < nbShapes; i++) {
     let peak = peaks[i];
     for (let s = 0; s < nbParams; s++) {
-      pInit[i + s * peaks.length] = getValue(s, peak, STATE_INIT, deltaX);
-      pMin[i + s * peaks.length] = getValue(s, peak, STATE_MIN, deltaX);
-      pMax[i + s * peaks.length] = getValue(s, peak, STATE_MAX, deltaX);
+      pInit[i + s * nbShapes] = getValue(s, peak, STATE_INIT, deltaX, maxY);
+      pMin[i + s * nbShapes] = getValue(s, peak, STATE_MIN, deltaX, maxY);
+      pMax[i + s * nbShapes] = getValue(s, peak, STATE_MAX, deltaX, maxY);
+      gradientDifference[i + s * nbShapes] = getValue(
+        s,
+        peak,
+        STATE_GS,
+        deltaX,
+        maxY,
+      );
     }
   }
 
@@ -77,6 +90,7 @@ export function optimize(data, peaks, options = {}) {
   optimizationOptions.minValues = pMin;
   optimizationOptions.maxValues = pMax;
   optimizationOptions.initialValues = pInit;
+  optimizationOptions.gradientDifference = gradientDifference;
 
   let pFit = algorithm({ x, y }, paramsFunc, optimizationOptions);
 
@@ -92,30 +106,48 @@ export function optimize(data, peaks, options = {}) {
   return result;
 }
 
-function getValue(parameterIndex, peak, key, dt) {
+function getValue(parameterIndex, peak, key, dt, maxY) {
   let value;
   switch (parameterIndex) {
     case 0:
       value =
         key === STATE_INIT
           ? peak.x
+          : key === STATE_GS
+          ? dt / 1000
           : key === STATE_MIN
           ? peak.x - dt
           : peak.x + dt;
       break;
     case 1:
-      value = key === STATE_INIT ? peak.y : key === STATE_MIN ? 0 : 1.5;
+      value =
+        key === STATE_INIT
+          ? peak.y / maxY
+          : key === STATE_GS
+          ? 1e-3
+          : key === STATE_MIN
+          ? 0
+          : 1.5;
       break;
     case 2:
       value =
         key === STATE_INIT
           ? peak.width
+          : key === STATE_GS
+          ? dt / 1000
           : key === STATE_MIN
           ? peak.width / 4
           : peak.width * 4;
       break;
     default:
-      value = key === STATE_INIT ? 0.5 : key === STATE_MIN ? 0 : 1;
+      value =
+        key === STATE_INIT
+          ? 0.5
+          : key === STATE_GS
+          ? 0.01
+          : key === STATE_MIN
+          ? 0
+          : 1;
   }
   return value;
 }
