@@ -6,7 +6,7 @@ export function selectMethod(optimizationOptions = {}) {
   let { kind, options } = optimizationOptions;
   kind = getKind(kind);
   switch (kind) {
-    case 1:
+    case LEVENBERG_MARQUARDT:
       return {
         algorithm: LM,
         optimizationOptions: checkOptions(kind, options),
@@ -19,7 +19,7 @@ export function selectMethod(optimizationOptions = {}) {
 function checkOptions(kind, options = {}) {
   // eslint-disable-next-line default-case
   switch (kind) {
-    case 1:
+    case LEVENBERG_MARQUARDT:
       return Object.assign({}, lmOptions, options);
   }
 }
@@ -37,7 +37,6 @@ function getKind(kind) {
 
 const lmOptions = {
   damping: 1.5,
-  gradientDifference: 1e-5,
   maxIterations: 100,
-  errorTolerance: 10e-5,
+  errorTolerance: 1e-8,
 };

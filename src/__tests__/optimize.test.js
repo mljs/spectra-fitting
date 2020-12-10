@@ -97,7 +97,9 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
 describe('shape do not supported', () => {
   it('throw', () => {
     expect(() => {
-      optimize({ x: [0, 1, 2], y: [1, 2, 1] }, [], { shape: { kind: 4 } });
+      optimize({ x: [0, 1, 2], y: [1, 2, 1] }, [], {
+        shape: { kind: 'wrongKindOfShape' },
+      });
     }).toThrow('kind of shape is not supported');
   });
 });

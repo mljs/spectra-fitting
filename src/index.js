@@ -1,5 +1,4 @@
 import getMaxValue from 'ml-array-max';
-import { getKind } from 'ml-peak-shape-generator';
 
 import { selectMethod } from './selectMethod';
 import { sumOfGaussianLorentzians } from './shapes/sumOfGaussianLorentzians';
@@ -34,7 +33,11 @@ export function optimize(data, peaks, options = {}) {
 
   peaks = JSON.parse(JSON.stringify(peaks));
 
-  let kind = getKind(shape.kind);
+  if (typeof shape.kind !== 'string') {
+    throw new Error('kind should be a string');
+  }
+
+  let kind = shape.kind.toLowerCase().replace(/[^a-z]/g, '');
 
   let x = data.x;
   let maxY = getMaxValue(data.y);
@@ -46,15 +49,15 @@ export function optimize(data, peaks, options = {}) {
   let nbParams;
   let paramsFunc;
   switch (kind) {
-    case 1:
+    case 'gaussian':
       nbParams = 3;
       paramsFunc = sumOfGaussians;
       break;
-    case 2:
+    case 'lorentzian':
       nbParams = 3;
       paramsFunc = sumOfLorentzians;
       break;
-    case 3:
+    case 'pseudovoigt':
       nbParams = 4;
       paramsFunc = sumOfGaussianLorentzians;
       break;

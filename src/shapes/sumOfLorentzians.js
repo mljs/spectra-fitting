@@ -1,4 +1,4 @@
-import { lorentzianFct } from 'ml-peak-shape-generator';
+import { Lorentzian } from 'ml-peak-shape-generator';
 
 /**
  * This function calculates the spectrum as a sum of lorentzian functions. The Lorentzian
@@ -13,7 +13,7 @@ export function sumOfLorentzians(p) {
     let nL = p.length / 3;
     let result = 0;
     for (let i = 0; i < nL; i++) {
-      result += lorentzianFct(p[i], p[i + nL], p[i + nL * 2], t);
+      result += p[i + nL] * Lorentzian.fct(t - p[i], p[i + nL * 2]);
     }
     return result;
   };
