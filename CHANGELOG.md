@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.11.0](https://www.github.com/mljs/spectra-fitting/compare/v0.10.0...v0.11.0) (2020-12-20)
+
+
+### Features
+
+* add timeout option ([7743e81](https://www.github.com/mljs/spectra-fitting/commit/7743e811232e842927a05f2ead48c5bf86e56c8e))
+* update ml-peak-shape-generator 0.12.0 ([de1313e](https://www.github.com/mljs/spectra-fitting/commit/de1313e26083fd0c96ae3ba90650364b1dee185b))
+
 ## [0.10.0](https://www.github.com/mljs/spectra-fitting/compare/v0.9.0...v0.10.0) (2020-12-10)
 
 
