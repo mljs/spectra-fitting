@@ -20,6 +20,7 @@ const keys = ['x', 'y', 'width', 'mu'];
  * @param {string} [options.shape.kind = 'gaussian'] - kind of shape; lorentzian, gaussian and pseudovoigt are supported.
  * @param {object} [options.optimization = {}] - it's specify the kind and options of the algorithm use to optimize parameters.
  * @param {object} [options.optimization.kind = 'lm'] - kind of algorithm. By default it's levenberg-marquardt.
+ * @param {number} [options.optimization.options.timeout] - maximum time running before break in seconds.
  * @param {object} [options.optimization.options = {}] - options for the specific kind of algorithm.
  * @returns {object} - A object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
