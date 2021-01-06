@@ -10,6 +10,10 @@ const STATE_MIN = 1;
 const STATE_MAX = 2;
 const STATE_GS = 3;
 
+const X = 0;
+const Y = 1;
+const WIDTH = 2;
+
 const keys = ['x', 'y', 'width', 'mu'];
 /**
  * Fits a set of points to the sum of a set of bell functions.
@@ -116,17 +120,17 @@ export function optimize(data, peaks, options = {}) {
 function getValue(parameterIndex, peak, key, dt, maxY) {
   let value;
   switch (parameterIndex) {
-    case 0:
+    case X:
       value =
         key === STATE_INIT
           ? peak.x
           : key === STATE_GS
-            ? dt / 1000
-            : key === STATE_MIN
-              ? peak.x - dt
-              : peak.x + dt;
+          ? dt / 1000
+          : key === STATE_MIN
+          ? peak.x - peak.width * 2
+          : peak.x + peak.width * 2;
       break;
-    case 1:
+    case Y:
       value =
         key === STATE_INIT
           ? peak.y / maxY
@@ -136,7 +140,7 @@ function getValue(parameterIndex, peak, key, dt, maxY) {
               ? 0
               : 1.5;
       break;
-    case 2:
+    case WIDTH:
       value =
         key === STATE_INIT
           ? peak.width
