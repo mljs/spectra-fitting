@@ -8,7 +8,7 @@ import { sumOfLorentzians } from './shapes/sumOfLorentzians';
 const STATE_INIT = 0;
 const STATE_MIN = 1;
 const STATE_MAX = 2;
-const STATE_GS = 3;
+const STATE_GRADIENT_DIFFRENCE = 3;
 
 const X = 0;
 const Y = 1;
@@ -89,7 +89,7 @@ export function optimize(data, peaks, options = {}) {
       gradientDifference[i + s * nbShapes] = getValue(
         s,
         peak,
-        STATE_GS,
+        STATE_GRADIENT_DIFFRENCE,
         deltaX,
         maxY,
       );
@@ -117,48 +117,66 @@ export function optimize(data, peaks, options = {}) {
   return result;
 }
 
-function getValue(parameterIndex, peak, key, dt, maxY) {
-  let value;
+function getValue(parameterIndex, peak, state, delta, maxY) {
+  switch (state) {
+    case STATE_INIT:
+      switch (parameterIndex) {
+        case X:
+          return;
+        case Y:
+          return;
+      }
+      break;
+    case STATE_GRADIENT_DIFFRENCE:
+
+    case STATE_MIN:
+
+    case STATE_MAX:
+
+    default:
+      throw Error('');
+  }
+
   switch (parameterIndex) {
     case X:
       value =
-        key === STATE_INIT
+        state === STATE_INIT
           ? peak.x
-          : key === STATE_GS
-          ? dt / 1000
-          : key === STATE_MIN
-          ? peak.x - peak.width * 2
-          : peak.x + peak.width * 2;
+          : state === STATE_GRADIENT_DIFFRENCE
+            ? delta / 1000
+            : state === STATE_MIN
+              ? peak.x - peak.width * 2
+              : peak.x + peak.width * 2;
       break;
     case Y:
       value =
-        key === STATE_INIT
+        state === STATE_INIT
           ? peak.y / maxY
-          : key === STATE_GS
-          ? 1e-3
-          : key === STATE_MIN
-          ? 0
-          : 1.5;
+          : state === STATE_GRADIENT_DIFFRENCE
+            ? 1e-3
+            : state === STATE_MIN
+              ? 0
+              : 1.5;
       break;
     case WIDTH:
       value =
-        key === STATE_INIT
+        state === STATE_INIT
           ? peak.width
-          : key === STATE_GS
-          ? dt / 1000
-          : key === STATE_MIN
-          ? peak.width / 4
-          : peak.width * 4;
+          : state === STATE_GRADIENT_DIFFRENCE
+            ? delta / 1000
+            : state === STATE_MIN
+              ? peak.width / 4
+              : peak.width * 4;
       break;
     default:
       value =
-        key === STATE_INIT
+        state === STATE_INIT
           ? 0.5
-          : key === STATE_GS
-          ? 0.01
-          : key === STATE_MIN
-          ? 0
-          : 1;
+          : state === STATE_GRADIENT_DIFFRENCE
+            ? 0.01
+            : state === STATE_MIN
+              ? 0
+              : 1;
   }
   return value;
 }
