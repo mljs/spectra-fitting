@@ -135,30 +135,30 @@ function getValue(parameterIndex, peak, key, dt, maxY) {
         key === STATE_INIT
           ? peak.y / maxY
           : key === STATE_GS
-            ? 1e-3
-            : key === STATE_MIN
-              ? 0
-              : 1.5;
+          ? 1e-3
+          : key === STATE_MIN
+          ? 0
+          : 1.5;
       break;
     case WIDTH:
       value =
         key === STATE_INIT
           ? peak.width
           : key === STATE_GS
-            ? dt / 1000
-            : key === STATE_MIN
-              ? peak.width / 4
-              : peak.width * 4;
+          ? dt / 1000
+          : key === STATE_MIN
+          ? peak.width / 4
+          : peak.width * 4;
       break;
     default:
       value =
         key === STATE_INIT
           ? 0.5
           : key === STATE_GS
-            ? 0.01
-            : key === STATE_MIN
-              ? 0
-              : 1;
+          ? 0.01
+          : key === STATE_MIN
+          ? 0
+          : 1;
   }
   return value;
 }
