@@ -8,11 +8,12 @@ import { sumOfLorentzians } from './shapes/sumOfLorentzians';
 const STATE_INIT = 0;
 const STATE_MIN = 1;
 const STATE_MAX = 2;
-const STATE_GRADIENT_DIFFRENCE = 3;
+const STATE_GRADIENT_DIFFERENCE = 3;
 
 const X = 0;
 const Y = 1;
 const WIDTH = 2;
+const MU = 3;
 
 const keys = ['x', 'y', 'width', 'mu'];
 /**
@@ -78,8 +79,7 @@ export function optimize(data, peaks, options = {}) {
   let pMin = new Float64Array(nbShapes * nbParams);
   let pMax = new Float64Array(nbShapes * nbParams);
   let gradientDifference = new Float64Array(nbShapes * nbParams);
-  let deltaX = Math.abs(data.x[0] - data.x[1]);
-
+  let deltaX = Math.abs(x[1] - x[0]);
   for (let i = 0; i < nbShapes; i++) {
     let peak = peaks[i];
     for (let s = 0; s < nbParams; s++) {
@@ -89,7 +89,7 @@ export function optimize(data, peaks, options = {}) {
       gradientDifference[i + s * nbShapes] = getValue(
         s,
         peak,
-        STATE_GRADIENT_DIFFRENCE,
+        STATE_GRADIENT_DIFFERENCE,
         deltaX,
         maxY,
       );
@@ -118,65 +118,75 @@ export function optimize(data, peaks, options = {}) {
 }
 
 function getValue(parameterIndex, peak, state, delta, maxY) {
+  let {
+    xGradientDifference = peak.width / 2000,
+    yGradientDifference = 1e-3,
+    widthGradientDifference = peak.width / 2000,
+    muGradientDifference = 0.01,
+    xMinValue = peak.x - peak.width * 2,
+    yMinValue = 0,
+    widthMinValue = peak.width / 4,
+    muMinValue = 0,
+    xMaxValue = peak.x + peak.width * 2,
+    yMaxValue = 1.5,
+    widthMaxValue = peak.width * 4,
+    muMaxValue = 1,
+  } = peak.options || {};
+
   switch (state) {
     case STATE_INIT:
       switch (parameterIndex) {
         case X:
-          return;
+          return peak.x;
         case Y:
-          return;
+          return peak.y / maxY;
+        case WIDTH:
+          return peak.width;
+        case MU:
+          return peak.mu || 0.5;
+        default:
+          throw new Error('The parameter is not supported');
       }
-      break;
-    case STATE_GRADIENT_DIFFRENCE:
-
+    case STATE_GRADIENT_DIFFERENCE:
+      switch (parameterIndex) {
+        case X:
+          return xGradientDifference;
+        case Y:
+          return yGradientDifference;
+        case WIDTH:
+          return widthGradientDifference;
+        case MU:
+          return muGradientDifference;
+        default:
+          throw new Error('The parameter is not supported');
+      }
     case STATE_MIN:
-
+      switch (parameterIndex) {
+        case X:
+          return xMinValue;
+        case Y:
+          return yMinValue;
+        case WIDTH:
+          return widthMinValue;
+        case MU:
+          return muMinValue;
+        default:
+          throw new Error('The parameter is not supported');
+      }
     case STATE_MAX:
-
+      switch (parameterIndex) {
+        case X:
+          return xMaxValue;
+        case Y:
+          return yMaxValue;
+        case WIDTH:
+          return widthMaxValue;
+        case MU:
+          return muMaxValue;
+        default:
+          throw new Error('The parameter is not supported');
+      }
     default:
-      throw Error('');
+      throw Error('the state is not supported');
   }
-
-  switch (parameterIndex) {
-    case X:
-      value =
-        state === STATE_INIT
-          ? peak.x
-          : state === STATE_GRADIENT_DIFFRENCE
-            ? delta / 1000
-            : state === STATE_MIN
-              ? peak.x - peak.width * 2
-              : peak.x + peak.width * 2;
-      break;
-    case Y:
-      value =
-        state === STATE_INIT
-          ? peak.y / maxY
-          : state === STATE_GRADIENT_DIFFRENCE
-            ? 1e-3
-            : state === STATE_MIN
-              ? 0
-              : 1.5;
-      break;
-    case WIDTH:
-      value =
-        state === STATE_INIT
-          ? peak.width
-          : state === STATE_GRADIENT_DIFFRENCE
-            ? delta / 1000
-            : state === STATE_MIN
-              ? peak.width / 4
-              : peak.width * 4;
-      break;
-    default:
-      value =
-        state === STATE_INIT
-          ? 0.5
-          : state === STATE_GRADIENT_DIFFRENCE
-            ? 0.01
-            : state === STATE_MIN
-              ? 0
-              : 1;
-  }
-  return value;
 }
