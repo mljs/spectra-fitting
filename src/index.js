@@ -8,11 +8,12 @@ import { sumOfLorentzians } from './shapes/sumOfLorentzians';
 const STATE_INIT = 0;
 const STATE_MIN = 1;
 const STATE_MAX = 2;
-const STATE_GS = 3;
+const STATE_GRADIENT_DIFFERENCE = 3;
 
 const X = 0;
 const Y = 1;
 const WIDTH = 2;
+const MU = 3;
 
 const keys = ['x', 'y', 'width', 'mu'];
 /**
@@ -33,6 +34,18 @@ const keys = ['x', 'y', 'width', 'mu'];
  */
 export function optimize(data, peaks, options = {}) {
   let {
+    minFactorWidth = 0.25,
+    maxFactorWidth = 4,
+    minFactorX = 2,
+    maxFactorX = 2,
+    minFactorY = 0,
+    maxFactorY = 1.5,
+    minMuValue = 0,
+    maxMuValue = 1,
+    xGradientDifference,
+    yGradientDifference,
+    widthGradientDifference,
+    muGradientDifference = 0.01,
     shape = { kind: 'gaussian' },
     optimization = {
       kind: 'lm',
@@ -73,25 +86,38 @@ export function optimize(data, peaks, options = {}) {
       throw new Error('kind of shape is not supported');
   }
 
+  const getValueOptions = {
+    maxY,
+    minFactorX,
+    maxFactorX,
+    minFactorY,
+    maxFactorY,
+    minMuValue,
+    maxMuValue,
+    minFactorWidth,
+    maxFactorWidth,
+    xGradientDifference,
+    yGradientDifference,
+    widthGradientDifference,
+    muGradientDifference,
+  };
+
   let nbShapes = peaks.length;
-  let pInit = new Float64Array(nbShapes * nbParams);
   let pMin = new Float64Array(nbShapes * nbParams);
   let pMax = new Float64Array(nbShapes * nbParams);
+  let pInit = new Float64Array(nbShapes * nbParams);
   let gradientDifference = new Float64Array(nbShapes * nbParams);
-  let deltaX = Math.abs(data.x[0] - data.x[1]);
-
   for (let i = 0; i < nbShapes; i++) {
     let peak = peaks[i];
     for (let s = 0; s < nbParams; s++) {
-      pInit[i + s * nbShapes] = getValue(s, peak, STATE_INIT, deltaX, maxY);
-      pMin[i + s * nbShapes] = getValue(s, peak, STATE_MIN, deltaX, maxY);
-      pMax[i + s * nbShapes] = getValue(s, peak, STATE_MAX, deltaX, maxY);
+      pInit[i + s * nbShapes] = getValue(s, peak, STATE_INIT, getValueOptions);
+      pMin[i + s * nbShapes] = getValue(s, peak, STATE_MIN, getValueOptions);
+      pMax[i + s * nbShapes] = getValue(s, peak, STATE_MAX, getValueOptions);
       gradientDifference[i + s * nbShapes] = getValue(
         s,
         peak,
-        STATE_GS,
-        deltaX,
-        maxY,
+        STATE_GRADIENT_DIFFERENCE,
+        getValueOptions,
       );
     }
   }
@@ -117,48 +143,62 @@ export function optimize(data, peaks, options = {}) {
   return result;
 }
 
-function getValue(parameterIndex, peak, key, dt, maxY) {
-  let value;
-  switch (parameterIndex) {
-    case X:
-      value =
-        key === STATE_INIT
-          ? peak.x
-          : key === STATE_GS
-          ? dt / 1000
-          : key === STATE_MIN
-          ? peak.x - peak.width * 2
-          : peak.x + peak.width * 2;
-      break;
-    case Y:
-      value =
-        key === STATE_INIT
-          ? peak.y / maxY
-          : key === STATE_GS
-          ? 1e-3
-          : key === STATE_MIN
-          ? 0
-          : 1.5;
-      break;
-    case WIDTH:
-      value =
-        key === STATE_INIT
-          ? peak.width
-          : key === STATE_GS
-          ? dt / 1000
-          : key === STATE_MIN
-          ? peak.width / 4
-          : peak.width * 4;
-      break;
+function getValue(parameterIndex, peak, state, options) {
+  let maxY = options.maxY;
+  switch (state) {
+    case STATE_INIT:
+      switch (parameterIndex) {
+        case X:
+          return peak.x;
+        case Y:
+          return peak.y / maxY;
+        case WIDTH:
+          return peak.width;
+        case MU:
+          return peak.mu || 0.5;
+        default:
+          throw new Error('The parameter is not supported');
+      }
+    case STATE_GRADIENT_DIFFERENCE:
+      switch (parameterIndex) {
+        case X:
+          return options.xGradientDifference || peak.width / 2000;
+        case Y:
+          return options.yGradientDifference || 1e-3;
+        case WIDTH:
+          return options.widthGradientDifference || peak.width / 2000;
+        case MU:
+          return options.muGradientDifference;
+        default:
+          throw new Error('The parameter is not supported');
+      }
+    case STATE_MIN:
+      switch (parameterIndex) {
+        case X:
+          return peak.x - peak.width * options.minFactorX;
+        case Y:
+          return (peak.y / maxY) * options.minFactorY;
+        case WIDTH:
+          return peak.width * options.minFactorWidth;
+        case MU:
+          return options.minMuValue;
+        default:
+          throw new Error('The parameter is not supported');
+      }
+    case STATE_MAX:
+      switch (parameterIndex) {
+        case X:
+          return peak.x + peak.width * options.maxFactorX;
+        case Y:
+          return (peak.y / maxY) * options.maxFactorY;
+        case WIDTH:
+          return peak.width * options.maxFactorWidth;
+        case MU:
+          return options.maxMuValue;
+        default:
+          throw new Error('The parameter is not supported');
+      }
     default:
-      value =
-        key === STATE_INIT
-          ? 0.5
-          : key === STATE_GS
-          ? 0.01
-          : key === STATE_MIN
-          ? 0
-          : 1;
+      throw Error('the state is not supported');
   }
-  return value;
 }
