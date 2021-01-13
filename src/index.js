@@ -52,6 +52,21 @@ export function optimize(data, peaks, options = {}) {
     },
   } = options;
 
+  let {
+    minFactorWidth = 0.25,
+    maxFactorWidth = 4,
+    minFactorX = 2,
+    maxFactorX = 2,
+    minFactorY = 0,
+    maxFactorY = 1.5,
+    minMuValue = 0,
+    maxMuValue = 1,
+    xGradientDifference,
+    yGradientDifference = 1e-3,
+    widthGradientDifference,
+    muGradientDifference = 0.01,
+  } = optimization;
+
   peaks = JSON.parse(JSON.stringify(peaks));
 
   if (typeof shape.kind !== 'string') {
@@ -101,7 +116,6 @@ export function optimize(data, peaks, options = {}) {
     widthGradientDifference,
     muGradientDifference,
   };
-
   let nbShapes = peaks.length;
   let pMin = new Float64Array(nbShapes * nbParams);
   let pMax = new Float64Array(nbShapes * nbParams);
@@ -140,6 +154,7 @@ export function optimize(data, peaks, options = {}) {
       peaks[i][keys[s]] = pFit.parameterValues[i + s * peaks.length];
     }
   }
+
   return result;
 }
 
@@ -162,13 +177,25 @@ function getValue(parameterIndex, peak, state, options) {
     case STATE_GRADIENT_DIFFERENCE:
       switch (parameterIndex) {
         case X:
-          return options.xGradientDifference || peak.width / 2000;
+          return peak.xGradientDifference !== undefined
+            ? peak.xGradientDifference
+            : options.xGradientDifference !== undefined
+            ? options.xGradientDifference
+            : peak.width / 2e3;
         case Y:
-          return options.yGradientDifference || 1e-3;
+          return peak.yGradientDifference !== undefined
+            ? peak.yGradientDifference
+            : options.yGradientDifference;
         case WIDTH:
-          return options.widthGradientDifference || peak.width / 2000;
+          return peak.widthGradientDifference !== undefined
+            ? peak.widthGradientDifference
+            : options.widthGradientDifference !== undefined
+            ? options.widthGradientDifference
+            : peak.width / 2e3;
         case MU:
-          return options.muGradientDifference;
+          return peak.muGradientDifference !== undefined
+            ? peak.muGradientDifference
+            : options.muGradientDifference;
         default:
           throw new Error('The parameter is not supported');
       }
