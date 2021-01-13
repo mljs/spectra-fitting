@@ -34,18 +34,6 @@ const keys = ['x', 'y', 'width', 'mu'];
  */
 export function optimize(data, peaks, options = {}) {
   let {
-    minFactorWidth = 0.25,
-    maxFactorWidth = 4,
-    minFactorX = 2,
-    maxFactorX = 2,
-    minFactorY = 0,
-    maxFactorY = 1.5,
-    minMuValue = 0,
-    maxMuValue = 1,
-    xGradientDifference,
-    yGradientDifference,
-    widthGradientDifference,
-    muGradientDifference = 0.01,
     shape = { kind: 'gaussian' },
     optimization = {
       kind: 'lm',
