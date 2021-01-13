@@ -1,9 +1,5 @@
-import getMaxValue from 'ml-array-max';
-
+import { checkInput } from './checkInput';
 import { selectMethod } from './selectMethod';
-import { sumOfGaussianLorentzians } from './shapes/sumOfGaussianLorentzians';
-import { sumOfGaussians } from './shapes/sumOfGaussians';
-import { sumOfLorentzians } from './shapes/sumOfLorentzians';
 
 const STATE_INIT = 0;
 const STATE_MIN = 1;
@@ -45,77 +41,18 @@ const keys = ['x', 'y', 'width', 'mu'];
  * @returns {object} - A object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
 export function optimize(data, peaks, options = {}) {
-  let {
-    shape = { kind: 'gaussian' },
-    optimization = {
-      kind: 'lm',
-    },
-  } = options;
-
-  let {
-    minFactorWidth = 0.25,
-    maxFactorWidth = 4,
-    minFactorX = 2,
-    maxFactorX = 2,
-    minFactorY = 0,
-    maxFactorY = 1.5,
-    minMuValue = 0,
-    maxMuValue = 1,
-    xGradientDifference,
-    yGradientDifference = 1e-3,
-    widthGradientDifference,
-    muGradientDifference = 0.01,
-  } = optimization;
+  const {
+    y,
+    x,
+    maxY,
+    nbParams,
+    paramsFunc,
+    optimization,
+    getValueOptions,
+  } = checkInput(data, options);
 
   peaks = JSON.parse(JSON.stringify(peaks));
 
-  if (typeof shape.kind !== 'string') {
-    throw new Error('kind should be a string');
-  }
-
-  let kind = shape.kind.toLowerCase().replace(/[^a-z]/g, '');
-
-  let x = data.x;
-  let maxY = getMaxValue(data.y);
-  let y = new Array(x.length);
-  for (let i = 0; i < x.length; i++) {
-    y[i] = data.y[i] / maxY;
-  }
-
-  let nbParams;
-  let paramsFunc;
-  switch (kind) {
-    case 'gaussian':
-      nbParams = 3;
-      paramsFunc = sumOfGaussians;
-      break;
-    case 'lorentzian':
-      nbParams = 3;
-      paramsFunc = sumOfLorentzians;
-      break;
-    case 'pseudovoigt':
-      nbParams = 4;
-      paramsFunc = sumOfGaussianLorentzians;
-      break;
-    default:
-      throw new Error('kind of shape is not supported');
-  }
-
-  const getValueOptions = {
-    maxY,
-    minFactorX,
-    maxFactorX,
-    minFactorY,
-    maxFactorY,
-    minMuValue,
-    maxMuValue,
-    minFactorWidth,
-    maxFactorWidth,
-    xGradientDifference,
-    yGradientDifference,
-    widthGradientDifference,
-    muGradientDifference,
-  };
   let nbShapes = peaks.length;
   let pMin = new Float64Array(nbShapes * nbParams);
   let pMax = new Float64Array(nbShapes * nbParams);
