@@ -36,7 +36,6 @@ describe('Optimize sum of Gaussians', function () {
   it('group of two GL', function () {
     let pTrue = [-0.5, 0.5, 0.001, 0.001, 0.31, 0.31];
     let yData = sumOfGaussians(pTrue);
-
     let result = optimize(
       { x, y: x.map((i) => yData(i)) },
       [
@@ -67,9 +66,9 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
       (xFactor * nbPoints) / 10,
       (xFactor * nbPoints) / 10,
     ];
-    let yData = sumOfGaussianLorentzians(pTrue);
+    let func = sumOfGaussianLorentzians(pTrue);
     let result = optimize(
-      { x, y: x.map(yData) },
+      { x, y: x.map(func) },
       [
         { x: 0.1, y: 0.0009, width: (xFactor * nbPoints) / 6 },
         { x: 0.1, y: 0.0009, width: (xFactor * nbPoints) / 6 },
