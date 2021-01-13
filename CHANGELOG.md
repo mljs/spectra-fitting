@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.12.0](https://www.github.com/mljs/spectra-fitting/compare/v0.11.0...v0.12.0) (2021-01-13)
+
+
+### Features
+
+* remove  twice declaration ([bb8d013](https://www.github.com/mljs/spectra-fitting/commit/bb8d013e22c89b79fafaa0fefa2fe341b5d2fdc4))
+* use gradientDifference from peak too ([#48](https://www.github.com/mljs/spectra-fitting/issues/48)) ([fb81ac2](https://www.github.com/mljs/spectra-fitting/commit/fb81ac235fa73ee8814ecd65bf40353e8a54f53b))
+* x search space depending on peak width ([#45](https://www.github.com/mljs/spectra-fitting/issues/45)) ([63375d3](https://www.github.com/mljs/spectra-fitting/commit/63375d33805983e2288718d5763364111a08bb0e))
+
 ## [0.11.0](https://www.github.com/mljs/spectra-fitting/compare/v0.10.0...v0.11.0) (2020-12-20)
 
 
