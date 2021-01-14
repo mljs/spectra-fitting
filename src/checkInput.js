@@ -1,10 +1,11 @@
+import merge from 'merge-deep';
 import getMaxValue from 'ml-array-max';
 
 import { sumOfGaussianLorentzians } from './shapes/sumOfGaussianLorentzians';
 import { sumOfGaussians } from './shapes/sumOfGaussians';
 import { sumOfLorentzians } from './shapes/sumOfLorentzians';
 
-export function checkInput(data, options) {
+export function checkInput(data, peaks, options) {
   let {
     shape = { kind: 'gaussian' },
     optimization = {
@@ -18,20 +19,83 @@ export function checkInput(data, options) {
 
   let kind = shape.kind.toLowerCase().replace(/[^a-z]/g, '');
 
-  let nbParams;
   let paramsFunc;
+  let defaultParameters;
   switch (kind) {
     case 'gaussian':
-      nbParams = 3;
       paramsFunc = sumOfGaussians;
+      defaultParameters = {
+        x: {
+          init: (peak) => peak.x,
+          max: (peak) => peak.x + peak.width * 2,
+          min: (peak) => peak.x - peak.width * 2,
+          gradientDifference: (peak) => peak.width * 2e-3,
+        },
+        y: {
+          init: (peak) => peak.y,
+          max: () => 1.5,
+          min: () => 0,
+          gradientDifference: () => 1e-3,
+        },
+        width: {
+          init: (peak) => peak.width,
+          max: (peak) => peak.width * 2,
+          min: (peak) => peak.width * 0.5,
+          gradientDifference: (peak) => peak.width * 2e-3,
+        },
+      };
       break;
     case 'lorentzian':
-      nbParams = 3;
       paramsFunc = sumOfLorentzians;
+      defaultParameters = {
+        x: {
+          init: (peak) => peak.x,
+          max: (peak) => peak.x + peak.width * 2,
+          min: (peak) => peak.x - peak.width * 2,
+          gradientDifference: (peak) => peak.width * 2e-3,
+        },
+        y: {
+          init: (peak) => peak.y,
+          max: () => 1.5,
+          min: () => 0,
+          gradientDifference: () => 1e-3,
+        },
+        width: {
+          init: (peak) => peak.width,
+          max: (peak) => peak.width * 2,
+          min: (peak) => peak.width * 0.5,
+          gradientDifference: (peak) => peak.width * 2e-3,
+        },
+      };
       break;
     case 'pseudovoigt':
-      nbParams = 4;
       paramsFunc = sumOfGaussianLorentzians;
+      defaultParameters = {
+        x: {
+          init: (peak) => peak.x,
+          max: (peak) => peak.x + peak.width * 2,
+          min: (peak) => peak.x - peak.width * 2,
+          gradientDifference: (peak) => peak.width * 2e-3,
+        },
+        y: {
+          init: (peak) => peak.y,
+          max: () => 1.5,
+          min: () => 0,
+          gradientDifference: () => 1e-3,
+        },
+        width: {
+          init: (peak) => peak.width,
+          max: (peak) => peak.width * 2,
+          min: (peak) => peak.width * 0.5,
+          gradientDifference: (peak) => peak.width * 2e-3,
+        },
+        mu: {
+          init: (peak) => (peak.mu !== undefined ? peak.mu : 0.5),
+          min: () => 0,
+          max: () => 1,
+          gradientDifference: () => 0.01,
+        },
+      };
       break;
     default:
       throw new Error('kind of shape is not supported');
@@ -44,56 +108,39 @@ export function checkInput(data, options) {
     y[i] = data.y[i] / maxY;
   }
 
-  let {
-    minFactorWidth = 0.25,
-    maxFactorWidth = 4,
-    minFactorX = 2,
-    maxFactorX = 2,
-    minFactorY = 0,
-    maxFactorY = 1.5,
-    minMuValue = 0,
-    maxMuValue = 1,
-    xGradientDifference,
-    yGradientDifference = 1e-3,
-    widthGradientDifference,
-    muGradientDifference = 0.01,
-  } = optimization;
-
-  if (minFactorX === maxFactorX && minFactorX === 1) {
-    xGradientDifference = 0;
+  for (let i = 0; i < peaks.length; i++) {
+    peaks[i].y /= maxY;
   }
 
-  if (minFactorY === maxFactorY && minFactorY === 1) {
-    yGradientDifference = 0;
+  let parameters = merge(optimization.parameters, defaultParameters);
+  for (let key in parameters) {
+    for (let par in parameters[key]) {
+      if (!Array.isArray(parameters[key][par])) {
+        parameters[key][par] = [parameters[key][par]];
+      }
+      if (
+        parameters[key][par].length !== 1 &&
+        parameters[key][par].length !== peaks.length
+      ) {
+        throw new Error(`The length of ${key}-${par} is not correct`);
+      }
+      for (let index = 0; index < parameters[key][par].length; index++) {
+        if (typeof parameters[key][par][index] === 'number') {
+          let value = parameters[key][par][index];
+          parameters[key][par][index] = () => value;
+        }
+      }
+    }
   }
 
-  if (minFactorWidth === maxFactorWidth && minFactorWidth === 1) {
-    widthGradientDifference = 0;
-  }
-
-  const getValueOptions = {
-    maxY,
-    minFactorX,
-    maxFactorX,
-    minFactorY,
-    maxFactorY,
-    minMuValue,
-    maxMuValue,
-    minFactorWidth,
-    maxFactorWidth,
-    xGradientDifference,
-    yGradientDifference,
-    widthGradientDifference,
-    muGradientDifference,
-  };
+  optimization.parameters = parameters;
 
   return {
     y,
     x,
     maxY,
-    nbParams,
+    peaks,
     paramsFunc,
     optimization,
-    getValueOptions,
   };
 }

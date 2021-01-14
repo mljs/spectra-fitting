@@ -1,17 +1,17 @@
 import { checkInput } from './checkInput';
 import { selectMethod } from './selectMethod';
 
-const STATE_INIT = 0;
-const STATE_MIN = 1;
-const STATE_MAX = 2;
-const STATE_GRADIENT_DIFFERENCE = 3;
+// const STATE_INIT = 0;
+// const STATE_MIN = 1;
+// const STATE_MAX = 2;
+// const STATE_GRADIENT_DIFFERENCE = 3;
 
-const X = 0;
-const Y = 1;
-const WIDTH = 2;
-const MU = 3;
+// const X = 0;
+// const Y = 1;
+// const WIDTH = 2;
+// const MU = 3;
 
-const keys = ['x', 'y', 'width', 'mu'];
+// const keys = ['x', 'y', 'width', 'mu'];
 /**
  * Fits a set of points to the sum of a set of bell functions.
  * @param {object} data - An object containing the x and y data to be fitted.
@@ -40,36 +40,37 @@ const keys = ['x', 'y', 'width', 'mu'];
  * @param {number} [options.optimization.options.errorTolerance=1e-8]
  * @returns {object} - A object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
-export function optimize(data, peaks, options = {}) {
-  const {
-    y,
-    x,
-    maxY,
-    nbParams,
-    paramsFunc,
-    optimization,
-    getValueOptions,
-  } = checkInput(data, options);
+export function optimize(data, peakList, options = {}) {
+  const { y, x, maxY, peaks, paramsFunc, optimization } = checkInput(
+    data,
+    peakList,
+    options,
+  );
 
-  peaks = JSON.parse(JSON.stringify(peaks));
+  let parameters = optimization.parameters;
 
   let nbShapes = peaks.length;
-  let pMin = new Float64Array(nbShapes * nbParams);
-  let pMax = new Float64Array(nbShapes * nbParams);
-  let pInit = new Float64Array(nbShapes * nbParams);
-  let gradientDifference = new Float64Array(nbShapes * nbParams);
+  let parameterKey = Object.keys(parameters);
+  let nbParams = nbShapes * parameterKey.length;
+  let pMin = new Float64Array(nbParams);
+  let pMax = new Float64Array(nbParams);
+  let pInit = new Float64Array(nbParams);
+  let gradientDifference = new Float64Array(nbParams);
+
   for (let i = 0; i < nbShapes; i++) {
     let peak = peaks[i];
-    for (let s = 0; s < nbParams; s++) {
-      pInit[i + s * nbShapes] = getValue(s, peak, STATE_INIT, getValueOptions);
-      pMin[i + s * nbShapes] = getValue(s, peak, STATE_MIN, getValueOptions);
-      pMax[i + s * nbShapes] = getValue(s, peak, STATE_MAX, getValueOptions);
-      gradientDifference[i + s * nbShapes] = getValue(
-        s,
-        peak,
-        STATE_GRADIENT_DIFFERENCE,
-        getValueOptions,
-      );
+    for (let k = 0; k < parameterKey.length; k++) {
+      let key = parameterKey[k];
+      let init = parameters[key].init;
+      let min = parameters[key].min;
+      let max = parameters[key].max;
+      let gradientDifferenceValue = parameters[key].gradientDifference;
+      pInit[i + k * nbShapes] = init[i % init.length](peak);
+      pMin[i + k * nbShapes] = min[i % min.length](peak);
+      pMax[i + k * nbShapes] = max[i % max.length](peak);
+      gradientDifference[i + k * nbShapes] = gradientDifferenceValue[
+        i % gradientDifferenceValue.length
+      ](peak);
     }
   }
 
@@ -84,85 +85,14 @@ export function optimize(data, peaks, options = {}) {
 
   let { parameterError: error, iterations } = pFit;
   let result = { error, iterations, peaks };
-  for (let i = 0; i < peaks.length; i++) {
-    pFit.parameterValues[i + peaks.length] *= maxY;
-    for (let s = 0; s < nbParams; s++) {
+  for (let i = 0; i < nbShapes; i++) {
+    pFit.parameterValues[i + nbShapes] *= maxY;
+    for (let k = 0; k < parameterKey.length; k++) {
       // we modify the optimized parameters
-      peaks[i][keys[s]] = pFit.parameterValues[i + s * peaks.length];
+      peaks[i][parameterKey[k]] = pFit.parameterValues[i + k * nbShapes];
     }
   }
 
   return result;
 }
 
-function getValue(parameterIndex, peak, state, options) {
-  let maxY = options.maxY;
-  switch (state) {
-    case STATE_INIT:
-      switch (parameterIndex) {
-        case X:
-          return peak.x;
-        case Y:
-          return peak.y / maxY;
-        case WIDTH:
-          return peak.width;
-        case MU:
-          return peak.mu || 0.5;
-        default:
-          throw new Error('The parameter is not supported');
-      }
-    case STATE_GRADIENT_DIFFERENCE:
-      switch (parameterIndex) {
-        case X:
-          return peak.xGradientDifference !== undefined
-            ? peak.xGradientDifference
-            : options.xGradientDifference !== undefined
-            ? options.xGradientDifference
-            : peak.width / 2e3;
-        case Y:
-          return peak.yGradientDifference !== undefined
-            ? peak.yGradientDifference
-            : options.yGradientDifference;
-        case WIDTH:
-          return peak.widthGradientDifference !== undefined
-            ? peak.widthGradientDifference
-            : options.widthGradientDifference !== undefined
-            ? options.widthGradientDifference
-            : peak.width / 2e3;
-        case MU:
-          return peak.muGradientDifference !== undefined
-            ? peak.muGradientDifference
-            : options.muGradientDifference;
-        default:
-          throw new Error('The parameter is not supported');
-      }
-    case STATE_MIN:
-      switch (parameterIndex) {
-        case X:
-          return peak.x - peak.width * options.minFactorX;
-        case Y:
-          return (peak.y / maxY) * options.minFactorY;
-        case WIDTH:
-          return peak.width * options.minFactorWidth;
-        case MU:
-          return options.minMuValue;
-        default:
-          throw new Error('The parameter is not supported');
-      }
-    case STATE_MAX:
-      switch (parameterIndex) {
-        case X:
-          return peak.x + peak.width * options.maxFactorX;
-        case Y:
-          return (peak.y / maxY) * options.maxFactorY;
-        case WIDTH:
-          return peak.width * options.maxFactorWidth;
-        case MU:
-          return options.maxMuValue;
-        default:
-          throw new Error('The parameter is not supported');
-      }
-    default:
-      throw Error('the state is not supported');
-  }
-}
