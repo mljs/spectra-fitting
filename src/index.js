@@ -24,7 +24,7 @@ import { selectMethod } from './selectMethod';
  * @param {object} [options.optimization.parameters] - options of each parameter to be optimized e.g. For a gaussian shape
  *  it could have x, y and with properties, each of which could contain init, min, max and gradientDifference, those options will define the guess,
  *  the min and max value of the parameter (search space) and the step size to approximate the jacobian matrix respectively. Those options could be a number,
- *  array of numbers, callback, or array of callbacks.
+ *  array of numbers, callback, or array of callbacks. Each kind of shape has default parameters so it could be undefined.
  * @param {object} [options.optimization.parameters.x] - options for x parameter.
  * @param {number|callback|array<number|callback>} [options.optimization.parameters.x.init] - definition of the starting point of the parameter (the guess),
  *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the guess of the first peak and so on.
