@@ -21,18 +21,19 @@ import { selectMethod } from './selectMethod';
  * @param {string} [options.shape.kind = 'gaussian'] - kind of shape; lorentzian, gaussian and pseudovoigt are supported.
  * @param {object} [options.optimization = {}] - it's specify the kind and options of the algorithm use to optimize parameters.
  * @param {object} [options.optimization.kind = 'lm'] - kind of algorithm. By default it's levenberg-marquardt.
- * @param {number} [options.optimization.minFactorWidth = 0.25] - factor of width to define the lower limit of the width parameter.
- * @param {number} [options.optimization.maxFactorWidth = 4] - factor of width to define the upper limit of the width parameter.
- * @param {number} [options.optimization.minFactorX = 2] - factor of width to define the lower limit of the x parameter.
- * @param {number} [options.optimization.maxFactorX = 2] - factor of width to define the upper limit of the x parameter.
- * @param {number} [options.optimization.minFactorY = 0] - factor of width to define the upper limit of the y parameter.
- * @param {number} [options.optimization.maxFactorY = 1.5] - factor of width to define the lower limit of the y parameter.
- * @param {number} [options.optimization.minMuValue = 0] - minimum value of gaussian ratio.
- * @param {number} [options.optimization.maxMuValue = 1] - maximum value of gaussian ratio.
- * @param {number} [options.optimization.xGradientDifference] - value for gradient difference of x parameter.
- * @param {number} [options.optimization.yGradientDifference = 1e-3] - value for gradient difference of y parameter.
- * @param {number} [options.optimization.widthGradientDifference] - value for gradient difference of width parameter.
- * @param {number} [options.optimization.muGradientDifference = 0.01] - value for gradient difference of width parameter.
+ * @param {object} [options.optimization.parameters] - options of each parameter to be optimized e.g. For a gaussian shape
+ *  it could have x, y and with properties, each of which could contain init, min, max and gradientDifference, those options will define the guess,
+ *  the min and max value of the parameter (search space) and the step size to approximate the jacobian matrix respectively. Those options could be a number,
+ *  array of numbers, callback, or array of callbacks.
+ * @param {object} [options.optimization.parameters.x] - options for x parameter.
+ * @param {number|callback|array<number|callback>} [options.optimization.parameters.x.init] - definition of the starting point of the parameter (the guess),
+ *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the guess of the first peak and so on.
+ * @param {number|callback|array<number|callback>} [options.optimization.parameters.x.min] - definition of the lower limit of the parameter,
+ *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the min of the first peak and so on.
+ * @param {number|callback|array<number|callback>} [options.optimization.parameters.x.max] - definition of the upper limit of the parameter,
+ *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the max of the first peak and so on.
+ * @param {number|callback|array<number|callback>} [options.optimization.parameters.x.gradientDifference] - definition of  the step size to approximate the jacobian matrix of the parameter,
+ *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the gradientDifference of the first peak and so on.
  * @param {object} [options.optimization.options = {}] - options for the specific kind of algorithm.
  * @param {number} [options.optimization.options.timeout] - maximum time running before break in seconds.
  * @param {number} [options.optimization.options.damping=1.5]
@@ -95,4 +96,3 @@ export function optimize(data, peakList, options = {}) {
 
   return result;
 }
-
