@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset='utf-8'>
-  <title>ml-spectra-fitting 0.12.0 | Documentation</title>
+  <title>ml-spectra-fitting 0.13.0 | Documentation</title>
   <meta name='description' content='Fit spectra using gaussian or lorentzian'>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' rel='stylesheet'>
@@ -15,7 +15,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>ml-spectra-fitting</h3>
-          <div class='mb1'><code>0.12.0</code></div>
+          <div class='mb1'><code>0.13.0</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -87,7 +87,7 @@
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/d45bb0ed00be1426dd187dddd8059bd61d9dbc03/src/index.js#L35-L147'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/4dd1318cdd02bc27bbf65a29e6e5466ee456cc76/src/index.js#L44-L98'>
       <span>src/index.js</span>
       </a>
     
@@ -96,7 +96,7 @@
 
   <p>Fits a set of points to the sum of a set of bell functions.</p>
 
-    <div class='pre p1 fill-light mt0'>optimize(data: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>, peaks: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>, options: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></div>
+    <div class='pre p1 fill-light mt0'>optimize(data: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>, peakList: any, options: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>, peaks: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></div>
   
   
 
@@ -122,11 +122,8 @@
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>peaks</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>)</code>
-	    A list of initial parameters to be optimized. e.g. coming from a peak picking 
-[{x, y, width}]
-.
-
+            <span class='code bold'>peakList</span> <code class='quiet'>(any)</code>
+	    
           </div>
           
         </div>
@@ -197,6 +194,71 @@
 
   
     <tr>
+  <td class='break-word'><span class='code bold'>options.optimization.parameters</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>?</code>
+  </td>
+  <td class='break-word'><span>options of each parameter to be optimized e.g. For a gaussian shape
+it could have x, y and with properties, each of which could contain init, min, max and gradientDifference, those options will define the guess,
+the min and max value of the parameter (search space) and the step size to approximate the jacobian matrix respectively. Those options could be a number,
+array of numbers, callback, or array of callbacks. Each kind of shape has default parameters so it could be undefined.
+</span></td>
+</tr>
+
+  
+    <tr>
+  <td class='break-word'><span class='code bold'>options.optimization.parameters.x</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>?</code>
+  </td>
+  <td class='break-word'><span>options for x parameter.
+</span></td>
+</tr>
+
+  
+    <tr>
+  <td class='break-word'><span class='code bold'>options.optimization.parameters.x.init</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a> | callback | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>&#x3C;(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a> | callback)>)?</code>
+  </td>
+  <td class='break-word'><span>definition of the starting point of the parameter (the guess),
+if it is a callback the method pass the peak as the unique input, if it is an array the first element define the guess of the first peak and so on.
+</span></td>
+</tr>
+
+
+  
+    <tr>
+  <td class='break-word'><span class='code bold'>options.optimization.parameters.x.min</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a> | callback | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>&#x3C;(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a> | callback)>)?</code>
+  </td>
+  <td class='break-word'><span>definition of the lower limit of the parameter,
+if it is a callback the method pass the peak as the unique input, if it is an array the first element define the min of the first peak and so on.
+</span></td>
+</tr>
+
+
+  
+    <tr>
+  <td class='break-word'><span class='code bold'>options.optimization.parameters.x.max</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a> | callback | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>&#x3C;(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a> | callback)>)?</code>
+  </td>
+  <td class='break-word'><span>definition of the upper limit of the parameter,
+if it is a callback the method pass the peak as the unique input, if it is an array the first element define the max of the first peak and so on.
+</span></td>
+</tr>
+
+
+  
+    <tr>
+  <td class='break-word'><span class='code bold'>options.optimization.parameters.x.gradientDifference</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a> | callback | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>&#x3C;(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a> | callback)>)?</code>
+  </td>
+  <td class='break-word'><span>definition of  the step size to approximate the jacobian matrix of the parameter,
+if it is a callback the method pass the peak as the unique input, if it is an array the first element define the gradientDifference of the first peak and so on.
+</span></td>
+</tr>
+
+
+  
+
+
+  
+
+
+  
+    <tr>
   <td class='break-word'><span class='code bold'>options.optimization.options</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></code>
   
     (default <code>{}</code>)
@@ -256,6 +318,17 @@
           
         </div>
       
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>peaks</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>)</code>
+	    A list of initial parameters to be optimized. e.g. coming from a peak picking 
+[{x, y, width}]
+.
+
+          </div>
+          
+        </div>
+      
     </div>
   
 
@@ -301,7 +374,7 @@
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/d45bb0ed00be1426dd187dddd8059bd61d9dbc03/src/shapes/sumOfGaussianLorentzians.js#L11-L21'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/4dd1318cdd02bc27bbf65a29e6e5466ee456cc76/src/shapes/sumOfGaussianLorentzians.js#L11-L21'>
       <span>src/shapes/sumOfGaussianLorentzians.js</span>
       </a>
     
@@ -387,7 +460,7 @@ parameters are divided in 4 batches. 1st: centers; 2nd: heights; 3th: widths; 4t
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/d45bb0ed00be1426dd187dddd8059bd61d9dbc03/src/shapes/sumOfGaussians.js#L10-L19'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/4dd1318cdd02bc27bbf65a29e6e5466ee456cc76/src/shapes/sumOfGaussians.js#L10-L19'>
       <span>src/shapes/sumOfGaussians.js</span>
       </a>
     
@@ -473,7 +546,7 @@ parameters are divided in 3 batches. 1st: centers; 2nd: height; 3th: widths;</p>
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/d45bb0ed00be1426dd187dddd8059bd61d9dbc03/src/shapes/sumOfLorentzians.js#L11-L20'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/4dd1318cdd02bc27bbf65a29e6e5466ee456cc76/src/shapes/sumOfLorentzians.js#L11-L20'>
       <span>src/shapes/sumOfLorentzians.js</span>
       </a>
     
