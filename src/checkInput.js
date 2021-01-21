@@ -1,4 +1,4 @@
-import merge from 'merge-deep';
+import assignDeep from 'assign-deep';
 import getMaxValue from 'ml-array-max';
 
 import { sumOfGaussianLorentzians } from './shapes/sumOfGaussianLorentzians';
@@ -39,8 +39,8 @@ export function checkInput(data, peaks, options) {
         },
         width: {
           init: (peak) => peak.width,
-          max: (peak) => peak.width * 2,
-          min: (peak) => peak.width * 0.5,
+          max: (peak) => peak.width * 4,
+          min: (peak) => peak.width * 0.25,
           gradientDifference: (peak) => peak.width * 2e-3,
         },
       };
@@ -62,8 +62,8 @@ export function checkInput(data, peaks, options) {
         },
         width: {
           init: (peak) => peak.width,
-          max: (peak) => peak.width * 2,
-          min: (peak) => peak.width * 0.5,
+          max: (peak) => peak.width * 4,
+          min: (peak) => peak.width * 0.25,
           gradientDifference: (peak) => peak.width * 2e-3,
         },
       };
@@ -85,8 +85,8 @@ export function checkInput(data, peaks, options) {
         },
         width: {
           init: (peak) => peak.width,
-          max: (peak) => peak.width * 2,
-          min: (peak) => peak.width * 0.5,
+          max: (peak) => peak.width * 4,
+          min: (peak) => peak.width * 0.25,
           gradientDifference: (peak) => peak.width * 2e-3,
         },
         mu: {
@@ -112,7 +112,8 @@ export function checkInput(data, peaks, options) {
     peaks[i].y /= maxY;
   }
 
-  let parameters = merge(optimization.parameters, defaultParameters);
+  let parameters = assignDeep({}, optimization.parameters, defaultParameters);
+
   for (let key in parameters) {
     for (let par in parameters[key]) {
       if (!Array.isArray(parameters[key][par])) {
