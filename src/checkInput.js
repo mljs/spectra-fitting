@@ -112,7 +112,7 @@ export function checkInput(data, peaks, options) {
     peaks[i].y /= maxY;
   }
 
-  let parameters = assignDeep({}, optimization.parameters, defaultParameters);
+  let parameters = assignDeep({}, defaultParameters, optimization.parameters);
 
   for (let key in parameters) {
     for (let par in parameters[key]) {
