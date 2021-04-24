@@ -1,5 +1,5 @@
-import { checkInput } from './checkInput';
-import { selectMethod } from './selectMethod';
+import { checkInput } from './util/checkInput';
+import { selectMethod } from './util/selectMethod';
 
 // const STATE_INIT = 0;
 // const STATE_MIN = 1;
