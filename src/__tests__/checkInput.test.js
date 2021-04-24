@@ -8,6 +8,7 @@ describe('change default parameters', () => {
       optimization: {
         parameters: {
           x: {
+            hola: 'hola2',
             max: (peak) => peak.x + peak.width * 0.1,
           },
         },
@@ -17,5 +18,7 @@ describe('change default parameters', () => {
     let { optimization } = checkInput(data, peaks, options);
     let { parameters } = optimization;
     expect(parameters.x.max[0](peaks[0])).toBe(0.2);
+    expect(parameters.x.min[0](peaks[0])).toBe(-4);
+    expect(parameters.y.max[0](peaks[0])).toBe(1.5);
   });
 });
