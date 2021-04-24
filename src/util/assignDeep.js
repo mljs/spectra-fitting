@@ -1,5 +1,3 @@
-import assignSymbols from 'assign-symbols';
-
 const isValidKey = (key) => {
   return key !== '__proto__' && key !== 'constructor' && key !== 'prototype';
 };
@@ -25,7 +23,6 @@ export function assignDeep(target, ...args) {
         target[key] = args[index][key];
       }
     }
-    assignSymbols(target, args[index]);
   }
   return target;
 }
