@@ -30,6 +30,9 @@
     "pseudovoigt"
   ],
   "author": "Andres Castillo",
+  "contributors": [
+    "J. Alejandro Bolaños A. <jobo322>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mljs/spectra-fitting/issues"
@@ -61,6 +64,6 @@
     "assign-deep": "^1.0.1",
     "ml-array-max": "^1.2.2",
     "ml-levenberg-marquardt": "^3.1.0",
-    "ml-peak-shape-generator": "^1.0.0"
+    "ml-peak-shape-generator": "^2.0.2"
   }
 }
