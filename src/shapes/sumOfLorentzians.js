@@ -8,12 +8,14 @@ import { lorentzian } from 'ml-peak-shape-generator';
  * @returns {*}
  */
 
+const { fct: lorentzianFct } = lorentzian;
+
 export function sumOfLorentzians(p) {
   return function (t) {
     let nL = p.length / 3;
     let result = 0;
     for (let i = 0; i < nL; i++) {
-      result += p[i + nL] * lorentzian.fct(t - p[i], p[i + nL * 2]);
+      result += p[i + nL] * lorentzianFct(t - p[i], p[i + nL * 2]);
     }
     return result;
   };
