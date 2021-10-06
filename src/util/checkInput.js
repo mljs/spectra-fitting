@@ -1,9 +1,10 @@
-import assignDeep from 'assign-deep';
 import getMaxValue from 'ml-array-max';
 
-import { sumOfGaussianLorentzians } from './shapes/sumOfGaussianLorentzians';
-import { sumOfGaussians } from './shapes/sumOfGaussians';
-import { sumOfLorentzians } from './shapes/sumOfLorentzians';
+import { sumOfGaussianLorentzians } from '../shapes/sumOfGaussianLorentzians';
+import { sumOfGaussians } from '../shapes/sumOfGaussians';
+import { sumOfLorentzians } from '../shapes/sumOfLorentzians';
+
+import { assignDeep } from './assignDeep';
 
 export function checkInput(data, peaks, options) {
   let {
@@ -112,7 +113,7 @@ export function checkInput(data, peaks, options) {
     peaks[i].y /= maxY;
   }
 
-  let parameters = assignDeep({}, optimization.parameters, defaultParameters);
+  let parameters = assignDeep({}, defaultParameters, optimization.parameters);
 
   for (let key in parameters) {
     for (let par in parameters[key]) {

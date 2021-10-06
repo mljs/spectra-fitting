@@ -1,6 +1,5 @@
 import { gaussian } from 'ml-peak-shape-generator';
 
-const { fct: gaussianFct } = gaussian;
 /**
  * This function calculates the spectrum as a sum of gaussian functions. The Gaussian
  * parameters are divided in 3 batches. 1st: centers; 2nd: height; 3th: widths;
@@ -9,8 +8,10 @@ const { fct: gaussianFct } = gaussian;
  * @returns {*}
  */
 
+const { fct: gaussianFct } = gaussian;
+
 export function sumOfGaussians(p) {
-  return function (t) {
+  return (t) => {
     let nL = p.length / 3;
     let result = 0;
     for (let i = 0; i < nL; i++) {

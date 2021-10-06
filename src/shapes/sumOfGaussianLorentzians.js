@@ -1,6 +1,5 @@
 import { pseudoVoigt } from 'ml-peak-shape-generator';
 
-const { fct: pseudoVoigtFct } = pseudoVoigt;
 /**
  * This function calculates the spectrum as a sum of linear combination of gaussian and lorentzian functions. The pseudo voigt
  * parameters are divided in 4 batches. 1st: centers; 2nd: heights; 3th: widths; 4th: mu's ;
@@ -9,8 +8,10 @@ const { fct: pseudoVoigtFct } = pseudoVoigt;
  * @returns {*}
  */
 
+const { fct: pseudoVoigtFct } = pseudoVoigt;
+
 export function sumOfGaussianLorentzians(p) {
-  return function (t) {
+  return (t) => {
     let nL = p.length / 4;
     let result = 0;
     for (let i = 0; i < nL; i++) {
