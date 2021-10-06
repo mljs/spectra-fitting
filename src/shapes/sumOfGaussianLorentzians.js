@@ -11,7 +11,7 @@ import { pseudoVoigt } from 'ml-peak-shape-generator';
 const { fct: pseudoVoigtFct } = pseudoVoigt;
 
 export function sumOfGaussianLorentzians(p) {
-  return function (t) {
+  return (t) => {
     let nL = p.length / 4;
     let result = 0;
     for (let i = 0; i < nL; i++) {

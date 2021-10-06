@@ -10,8 +10,8 @@ for (let i = 0; i < nbPoints; i++) {
   x[i] = (i - nbPoints / 2) * xFactor;
 }
 
-describe('Optimize sum of Lorentzian', function () {
-  it('group of two GL', function () {
+describe('Optimize sum of Lorentzian', () => {
+  it('group of two GL', () => {
     let pTrue = [-0.5, 0.5, 0.001, 0.001, 0.31, 0.31];
     let yData = sumOfLorentzians(pTrue);
     let result = optimize(
@@ -32,8 +32,8 @@ describe('Optimize sum of Lorentzian', function () {
   });
 });
 
-describe('Optimize sum of Gaussians', function () {
-  it('group of two GL', function () {
+describe('Optimize sum of Gaussians', () => {
+  it('group of two GL', () => {
     let pTrue = [-0.5, 0.5, 0.001, 0.001, 0.31, 0.31];
     let yData = sumOfGaussians(pTrue);
     let result = optimize(
@@ -54,8 +54,8 @@ describe('Optimize sum of Gaussians', function () {
   });
 });
 
-describe('Optimize 4 parameters of a linear combination of gaussian and lorentzians', function () {
-  it('group of two GL', function () {
+describe('Optimize 4 parameters of a linear combination of gaussian and lorentzians', () => {
+  it('group of two GL', () => {
     let pTrue = [
       0,
       0,
