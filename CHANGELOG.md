@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.0.0](https://www.github.com/mljs/spectra-fitting/compare/v0.13.0...v1.0.0) (2021-03-24)
+
+
+### Bug Fixes
+
+* update readme and dependencies ([c512ea3](https://www.github.com/mljs/spectra-fitting/commit/c512ea3d6e3a848d67c64700fde3f7d577221d09))
+
+## [0.13.0](https://www.github.com/mljs/spectra-fitting/compare/v0.12.0...v0.13.0) (2021-01-21)
+
+
+### Features
+
+* generate new version with checkInput function ([3782d1f](https://www.github.com/mljs/spectra-fitting/commit/3782d1f36f6672d74704109695e74946ae701d61))
+* increment min max of width parameter ([7d7c324](https://www.github.com/mljs/spectra-fitting/commit/7d7c3244583b1cb8d444bb34ae6b5f324c7c3b35))
+
 ## [0.12.0](https://www.github.com/mljs/spectra-fitting/compare/v0.11.0...v0.12.0) (2021-01-13)
 
 

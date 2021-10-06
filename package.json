@@ -1,6 +1,6 @@
 {
   "name": "ml-spectra-fitting",
-  "version": "0.12.0",
+  "version": "1.0.0",
   "description": "Fit spectra using gaussian or lorentzian",
   "main": "lib/index.js",
   "module": "src/index.js",
@@ -30,6 +30,9 @@
     "pseudovoigt"
   ],
   "author": "Andres Castillo",
+  "contributors": [
+    "J. Alejandro Bolaños A. <jobo322>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mljs/spectra-fitting/issues"
