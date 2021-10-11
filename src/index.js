@@ -87,10 +87,15 @@ export function optimize(data, peakList, options = {}) {
   let { parameterError: error, iterations } = pFit;
   let result = { error, iterations, peaks };
   for (let i = 0; i < nbShapes; i++) {
-    pFit.parameterValues[i + nbShapes] *= maxY;
     for (let k = 0; k < parameterKey.length; k++) {
+      const key = parameterKey[k];
+      const value = pFit.parameterValues[i + k * nbShapes];
       // we modify the optimized parameters
-      peaks[i][parameterKey[k]] = pFit.parameterValues[i + k * nbShapes];
+      if (key === 'x' || key === 'y') {
+        peaks[i][parameterKey[k]] = key === 'y' ? value * maxY : value;
+      } else {
+        peaks[i].shape[parameterKey[k]] = value;
+      }
     }
   }
 

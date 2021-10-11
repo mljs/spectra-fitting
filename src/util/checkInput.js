@@ -28,9 +28,9 @@ export function checkInput(data, peaks, options) {
       defaultParameters = {
         x: {
           init: (peak) => peak.x,
-          max: (peak) => peak.x + peak.width * 2,
-          min: (peak) => peak.x - peak.width * 2,
-          gradientDifference: (peak) => peak.width * 2e-3,
+          max: (peak) => peak.x + peak.shape.width * 2,
+          min: (peak) => peak.x - peak.shape.width * 2,
+          gradientDifference: (peak) => peak.shape.width * 2e-3,
         },
         y: {
           init: (peak) => peak.y,
@@ -39,10 +39,10 @@ export function checkInput(data, peaks, options) {
           gradientDifference: () => 1e-3,
         },
         width: {
-          init: (peak) => peak.width,
-          max: (peak) => peak.width * 4,
-          min: (peak) => peak.width * 0.25,
-          gradientDifference: (peak) => peak.width * 2e-3,
+          init: (peak) => peak.shape.width,
+          max: (peak) => peak.shape.width * 4,
+          min: (peak) => peak.shape.width * 0.25,
+          gradientDifference: (peak) => peak.shape.width * 2e-3,
         },
       };
       break;
@@ -51,9 +51,9 @@ export function checkInput(data, peaks, options) {
       defaultParameters = {
         x: {
           init: (peak) => peak.x,
-          max: (peak) => peak.x + peak.width * 2,
-          min: (peak) => peak.x - peak.width * 2,
-          gradientDifference: (peak) => peak.width * 2e-3,
+          max: (peak) => peak.x + peak.shape.width * 2,
+          min: (peak) => peak.x - peak.shape.width * 2,
+          gradientDifference: (peak) => peak.shape.width * 2e-3,
         },
         y: {
           init: (peak) => peak.y,
@@ -62,10 +62,10 @@ export function checkInput(data, peaks, options) {
           gradientDifference: () => 1e-3,
         },
         width: {
-          init: (peak) => peak.width,
-          max: (peak) => peak.width * 4,
-          min: (peak) => peak.width * 0.25,
-          gradientDifference: (peak) => peak.width * 2e-3,
+          init: (peak) => peak.shape.width,
+          max: (peak) => peak.shape.width * 4,
+          min: (peak) => peak.shape.width * 0.25,
+          gradientDifference: (peak) => peak.shape.width * 2e-3,
         },
       };
       break;
@@ -74,9 +74,9 @@ export function checkInput(data, peaks, options) {
       defaultParameters = {
         x: {
           init: (peak) => peak.x,
-          max: (peak) => peak.x + peak.width * 2,
-          min: (peak) => peak.x - peak.width * 2,
-          gradientDifference: (peak) => peak.width * 2e-3,
+          max: (peak) => peak.x + peak.shape.width * 2,
+          min: (peak) => peak.x - peak.shape.width * 2,
+          gradientDifference: (peak) => peak.shape.width * 2e-3,
         },
         y: {
           init: (peak) => peak.y,
@@ -85,13 +85,13 @@ export function checkInput(data, peaks, options) {
           gradientDifference: () => 1e-3,
         },
         width: {
-          init: (peak) => peak.width,
-          max: (peak) => peak.width * 4,
-          min: (peak) => peak.width * 0.25,
-          gradientDifference: (peak) => peak.width * 2e-3,
+          init: (peak) => peak.shape.width,
+          max: (peak) => peak.shape.width * 4,
+          min: (peak) => peak.shape.width * 0.25,
+          gradientDifference: (peak) => peak.shape.width * 2e-3,
         },
         mu: {
-          init: (peak) => (peak.mu !== undefined ? peak.mu : 0.5),
+          init: (peak) => (peak.shape.mu !== undefined ? peak.shape.mu : 0.5),
           min: () => 0,
           max: () => 1,
           gradientDifference: () => 0.01,
