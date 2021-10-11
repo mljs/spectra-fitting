@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.0](https://www.github.com/mljs/spectra-fitting/compare/v1.0.0...v1.1.0) (2021-10-11)
+
+
+### Features
+
+* ! homogenize and generalize output ([#58](https://www.github.com/mljs/spectra-fitting/issues/58)) ([a230b39](https://www.github.com/mljs/spectra-fitting/commit/a230b39de13a1ae124d89fd61345e55b44ab017b))
+* fixing wrong order in object assignment. close [#52](https://www.github.com/mljs/spectra-fitting/issues/52) ([#53](https://www.github.com/mljs/spectra-fitting/issues/53)) ([ce3d47f](https://www.github.com/mljs/spectra-fitting/commit/ce3d47f4a9f8da60a58c030a98ac5acf5fda3fa0))
+* update ml-peak-shape-generator to 2.0.1 ([#54](https://www.github.com/mljs/spectra-fitting/issues/54)) ([73782cc](https://www.github.com/mljs/spectra-fitting/commit/73782cc0a5291f0dd7b618861164f3881e89014a))
+
 ## [1.0.0](https://www.github.com/mljs/spectra-fitting/compare/v0.13.0...v1.0.0) (2021-03-24)
 
 
