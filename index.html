@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset='utf-8'>
-  <title>ml-spectra-fitting 1.0.0 | Documentation</title>
+  <title>ml-spectra-fitting 2.0.0 | Documentation</title>
   <meta name='description' content='Fit spectra using gaussian or lorentzian'>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' rel='stylesheet'>
@@ -15,7 +15,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>ml-spectra-fitting</h3>
-          <div class='mb1'><code>1.0.0</code></div>
+          <div class='mb1'><code>2.0.0</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -29,6 +29,26 @@
               
                 
                 <li><a
+                  href='#gaussian'
+                  class="">
+                  gaussian
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#lorentzian'
+                  class="">
+                  lorentzian
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
                   href='#optimize'
                   class="">
                   optimize
@@ -39,29 +59,9 @@
               
                 
                 <li><a
-                  href='#sumofgaussianlorentzians'
+                  href='#pseudovoigt'
                   class="">
-                  sumOfGaussianLorentzians
-                  
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#sumofgaussians'
-                  class="">
-                  sumOfGaussians
-                  
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#sumoflorentzians'
-                  class="">
-                  sumOfLorentzians
+                  pseudoVoigt
                   
                 </a>
                 
@@ -82,12 +82,182 @@
   
   <div class='clearfix'>
     
+    <h3 class='fl m0' id='gaussian'>
+      gaussian
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/36637882efd55f39cd756e0b4b5323d9d4cef0de/src/shapes/sumOfGaussians.js#L11-L11'>
+      <span>src/shapes/sumOfGaussians.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function calculates the spectrum as a sum of gaussian functions. The Gaussian
+parameters are divided in 3 batches. 1st: centers; 2nd: height; 3th: widths;</p>
+
+    <div class='pre p1 fill-light mt0'>gaussian</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>t</span> <code class='quiet'>(any)</code>
+	    Ordinate values
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>p</span> <code class='quiet'>(any)</code>
+	    Gaussian parameters
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>any</code>:
+        
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='lorentzian'>
+      lorentzian
+    </h3>
+    
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/36637882efd55f39cd756e0b4b5323d9d4cef0de/src/shapes/sumOfLorentzians.js#L11-L11'>
+      <span>src/shapes/sumOfLorentzians.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>This function calculates the spectrum as a sum of lorentzian functions. The Lorentzian
+parameters are divided in 3 batches. 1st: centers; 2nd: heights; 3th: widths;</p>
+
+    <div class='pre p1 fill-light mt0'>lorentzian</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>t</span> <code class='quiet'>(any)</code>
+	    Ordinate values
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>p</span> <code class='quiet'>(any)</code>
+	    Lorentzian parameters
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>any</code>:
+        
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
     <h3 class='fl m0' id='optimize'>
       optimize
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/821a92314a7b643bfba68c54428c9946992be4e5/src/index.js#L44-L98'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/36637882efd55f39cd756e0b4b5323d9d4cef0de/src/index.js#L44-L103'>
       <span>src/index.js</span>
       </a>
     
@@ -321,9 +491,7 @@ if it is a callback the method pass the peak as the unique input, if it is an ar
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>peaks</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>)</code>
-	    A list of initial parameters to be optimized. e.g. coming from a peak picking 
-[{x, y, width}]
-.
+	    A list of initial parameters to be optimized. e.g. coming from a peak picking [{x, y, width}].
 
           </div>
           
@@ -338,9 +506,7 @@ if it is a callback the method pass the peak as the unique input, if it is an ar
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></code>:
-        A object with fitting error and the list of optimized parameters { parameters: 
-[ {x, y, width} ]
-, error } if the kind of shape is pseudoVoigt mu parameter is optimized.
+        A object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
 
       
     
@@ -369,12 +535,12 @@ if it is a callback the method pass the peak as the unique input, if it is an ar
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='sumofgaussianlorentzians'>
-      sumOfGaussianLorentzians
+    <h3 class='fl m0' id='pseudovoigt'>
+      pseudoVoigt
     </h3>
     
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/821a92314a7b643bfba68c54428c9946992be4e5/src/shapes/sumOfGaussianLorentzians.js#L11-L21'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/36637882efd55f39cd756e0b4b5323d9d4cef0de/src/shapes/sumOfGaussianLorentzians.js#L11-L11'>
       <span>src/shapes/sumOfGaussianLorentzians.js</span>
       </a>
     
@@ -384,7 +550,7 @@ if it is a callback the method pass the peak as the unique input, if it is an ar
   <p>This function calculates the spectrum as a sum of linear combination of gaussian and lorentzian functions. The pseudo voigt
 parameters are divided in 4 batches. 1st: centers; 2nd: heights; 3th: widths; 4th: mu's ;</p>
 
-    <div class='pre p1 fill-light mt0'>sumOfGaussianLorentzians(p: any, t: any): any</div>
+    <div class='pre p1 fill-light mt0'>pseudoVoigt</div>
   
   
 
@@ -398,15 +564,6 @@ parameters are divided in 4 batches. 1st: centers; 2nd: heights; 3th: widths; 4t
   
     <div class='py1 quiet mt1 prose-big'>Parameters</div>
     <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>p</span> <code class='quiet'>(any)</code>
-	    Lorentzian parameters
-
-          </div>
-          
-        </div>
       
         <div class='space-bottom0'>
           <div>
@@ -417,160 +574,6 @@ parameters are divided in 4 batches. 1st: centers; 2nd: heights; 3th: widths; 4t
           
         </div>
       
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-          
-        
-          
-          <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='sumofgaussians'>
-      sumOfGaussians
-    </h3>
-    
-    
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/821a92314a7b643bfba68c54428c9946992be4e5/src/shapes/sumOfGaussians.js#L10-L19'>
-      <span>src/shapes/sumOfGaussians.js</span>
-      </a>
-    
-  </div>
-  
-
-  <p>This function calculates the spectrum as a sum of gaussian functions. The Gaussian
-parameters are divided in 3 batches. 1st: centers; 2nd: height; 3th: widths;</p>
-
-    <div class='pre p1 fill-light mt0'>sumOfGaussians(p: any, t: any): any</div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>p</span> <code class='quiet'>(any)</code>
-	    Gaussian parameters
-
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>t</span> <code class='quiet'>(any)</code>
-	    Ordinate values
-
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code>any</code>:
-        
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-          
-        
-          
-          <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='sumoflorentzians'>
-      sumOfLorentzians
-    </h3>
-    
-    
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/mljs/spectra-fitting/blob/821a92314a7b643bfba68c54428c9946992be4e5/src/shapes/sumOfLorentzians.js#L11-L20'>
-      <span>src/shapes/sumOfLorentzians.js</span>
-      </a>
-    
-  </div>
-  
-
-  <p>This function calculates the spectrum as a sum of lorentzian functions. The Lorentzian
-parameters are divided in 3 batches. 1st: centers; 2nd: heights; 3th: widths;</p>
-
-    <div class='pre p1 fill-light mt0'>sumOfLorentzians(p: any, t: any): any</div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>p</span> <code class='quiet'>(any)</code>
@@ -580,15 +583,6 @@ parameters are divided in 3 batches. 1st: centers; 2nd: heights; 3th: widths;</p
           
         </div>
       
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>t</span> <code class='quiet'>(any)</code>
-	    Ordinate values
-
-          </div>
-          
-        </div>
-      
     </div>
   
 
@@ -599,7 +593,6 @@ parameters are divided in 3 batches. 1st: centers; 2nd: heights; 3th: widths;</p
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code>any</code>:
         
-
       
     
   
