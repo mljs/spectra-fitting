@@ -91,8 +91,10 @@ export function optimize(data, peakList, options = {}) {
       const key = parameterKey[k];
       const value = pFit.parameterValues[i + k * nbShapes];
       // we modify the optimized parameters
-      if (key === 'x' || key === 'y') {
-        peaks[i][parameterKey[k]] = key === 'y' ? value * maxY : value;
+      if (key === 'x' || key === 'fwhm') {
+        peaks[i][parameterKey[k]] = value;
+      } else if (key === 'y') {
+        peaks[i][parameterKey[k]] = value * maxY;
       } else {
         peaks[i].shape[parameterKey[k]] = value;
       }

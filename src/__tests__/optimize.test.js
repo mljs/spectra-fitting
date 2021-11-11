@@ -17,8 +17,8 @@ describe('Optimize sum of Lorentzian', () => {
     let result = optimize(
       { x, y: x.map((i) => yData(i)) },
       [
-        { x: -0.5, y: 0.0009, shape: { width: (xFactor * nbPoints) / 8 } },
-        { x: 0.52, y: 0.0009, shape: { width: (xFactor * nbPoints) / 8 } },
+        { x: -0.5, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
+        { x: 0.52, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
       ],
       { shape: { kind: 'lorentzian' } },
     );
@@ -27,7 +27,7 @@ describe('Optimize sum of Lorentzian', () => {
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(pTrue[i], 2);
       expect(pFit.y).toBeCloseTo(pTrue[i + nL], 2);
-      expect(pFit.shape.width).toBeCloseTo(pTrue[i + nL * 2], 2);
+      expect(pFit.fwhm).toBeCloseTo(pTrue[i + nL * 2], 2);
     }
   });
 });
@@ -39,8 +39,8 @@ describe('Optimize sum of Gaussians', () => {
     let result = optimize(
       { x, y: x.map((i) => yData(i)) },
       [
-        { x: -0.5, y: 0.0009, shape: { width: (xFactor * nbPoints) / 8 } },
-        { x: 0.52, y: 0.0009, shape: { width: (xFactor * nbPoints) / 8 } },
+        { x: -0.5, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
+        { x: 0.52, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
       ],
       { shape: { kind: 'gaussian' } },
     );
@@ -49,7 +49,7 @@ describe('Optimize sum of Gaussians', () => {
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(pTrue[i], 2);
       expect(pFit.y).toBeCloseTo(pTrue[i + nL], 2);
-      expect(pFit.shape.width).toBeCloseTo(pTrue[i + nL * 2], 2);
+      expect(pFit.fwhm).toBeCloseTo(pTrue[i + nL * 2], 2);
     }
   });
 });
@@ -70,8 +70,8 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
     let result = optimize(
       { x, y: x.map(func) },
       [
-        { x: 0.1, y: 0.0009, shape: { width: (xFactor * nbPoints) / 6 } },
-        { x: 0.1, y: 0.0009, shape: { width: (xFactor * nbPoints) / 6 } },
+        { x: 0.1, y: 0.0009, fwhm: (xFactor * nbPoints) / 6 },
+        { x: 0.1, y: 0.0009, fwhm: (xFactor * nbPoints) / 6 },
       ],
       {
         shape: { kind: 'pseudoVoigt' },
@@ -87,7 +87,7 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(pTrue[i], 3);
       expect(pFit.y).toBeCloseTo(pTrue[i + nL], 3);
-      expect(pFit.shape.width).toBeCloseTo(pTrue[i + nL * 2], 3);
+      expect(pFit.fwhm).toBeCloseTo(pTrue[i + nL * 2], 3);
       expect(pFit.shape.mu).toBeCloseTo(pTrue[i + nL * 3], 3);
     }
   });

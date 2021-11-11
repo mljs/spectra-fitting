@@ -3,12 +3,12 @@ import { checkInput } from '../checkInput';
 describe('change default parameters', () => {
   it('change the max value of x parameter', () => {
     let data = { x: [-1, 0, 1], y: [1, 2, 1] };
-    let peaks = [{ x: 0, y: 1, shape: { width: 2 } }];
+    let peaks = [{ x: 0, y: 1, fwhm: 2 }];
     let options = {
       optimization: {
         parameters: {
           x: {
-            max: (peak) => peak.x + peak.shape.width * 0.1,
+            max: (peak) => peak.x + peak.fwhm * 0.1,
           },
         },
       },
