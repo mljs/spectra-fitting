@@ -91,7 +91,7 @@ export function checkInput(data, peaks, options) {
           gradientDifference: (peak) => peak.fwhm * 2e-3,
         },
         mu: {
-          init: (peak) => (peak.shape?.mu !== undefined ? peak.shape.mu : 0.5),
+          init: (peak) => (peak.shape && peak.shape.mu !== undefined ? peak.shape.mu : 0.5),
           min: () => 0,
           max: () => 1,
           gradientDifference: () => 0.01,
