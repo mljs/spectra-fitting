@@ -1,6 +1,6 @@
 {
   "name": "ml-spectra-fitting",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Fit spectra using gaussian or lorentzian",
   "main": "lib/index.js",
   "module": "src/index.js",

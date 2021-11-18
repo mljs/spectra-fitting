@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://www.github.com/mljs/spectra-fitting/compare/v2.0.0...v3.0.0) (2021-11-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* change width to fwhm (#60)
+
+### Features
+
+* change width to fwhm ([#60](https://www.github.com/mljs/spectra-fitting/issues/60)) ([31c731f](https://www.github.com/mljs/spectra-fitting/commit/31c731ffda2bf78a0f83d89525e7428a3341b2db))
+
 ## [2.0.0](https://www.github.com/mljs/spectra-fitting/compare/v1.0.0...v2.0.0) (2021-10-11)
 
 
