@@ -60,7 +60,7 @@
     "jest": "^27.2.5",
     "prettier": "^2.4.1",
     "rollup": "^2.58.0",
-    "spectrum-generator": "^5.4.0"
+    "spectrum-generator": "^6.0.0"
   },
   "dependencies": {
     "ml-array-max": "^1.2.3",
