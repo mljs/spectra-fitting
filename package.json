@@ -4,6 +4,7 @@
   "description": "Fit spectra using gaussian or lorentzian",
   "main": "lib/index.js",
   "module": "src/index.js",
+  "types": "spectra-fitting.d.ts",
   "files": [
     "lib",
     "src"
@@ -64,6 +65,7 @@
   },
   "dependencies": {
     "ml-array-max": "^1.2.3",
+    "ml-gsd": "^9.0.0",
     "ml-levenberg-marquardt": "^3.1.1",
     "ml-peak-shape-generator": "^3.0.1"
   }
