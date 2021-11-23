@@ -11,11 +11,13 @@ import { Lorentzian } from 'ml-peak-shape-generator';
 // const lorentzianFct = Lorentzian.fct;
 
 export function sumOfLorentzians(p) {
+  const lorentzian = new Lorentzian();
   return (t) => {
     let nL = p.length / 3;
     let result = 0;
     for (let i = 0; i < nL; i++) {
-      result += p[i + nL] * Lorentzian.fct(t - p[i], p[i + nL * 2]);
+      lorentzian.fwhm = p[i + nL * 2];
+      result += p[i + nL] * lorentzian.fct(t - p[i]);
     }
     return result;
   };
