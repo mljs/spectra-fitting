@@ -1,6 +1,13 @@
-import type { Peak1D } from 'ml-gsd';
-import type { DataXY } from 'cheminfo-types';
+import { DataXY } from 'cheminfo-types';
 import { Shape1D } from 'ml-peak-shape-generator';
+
+interface Peak1D {
+  x: number;
+  y: number;
+  width: number;
+  fwhm?: number;
+  shape?: Shape1D;
+}
 
 export interface IOptimizationOptions {
   kind?: string;
