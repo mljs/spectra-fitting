@@ -9,11 +9,13 @@ import { Gaussian } from 'ml-peak-shape-generator';
  */
 
 export function sumOfGaussians(p) {
+  const nL = p.length / 3;
+  const gaussian = new Gaussian();
   return (t) => {
-    let nL = p.length / 3;
     let result = 0;
     for (let i = 0; i < nL; i++) {
-      result += p[i + nL] * Gaussian.fct(t - p[i], p[i + nL * 2]);
+      gaussian.fwhm = p[i + nL * 2];
+      result += p[i + nL] * gaussian.fct(t - p[i]);
     }
     return result;
   };
