@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.0.1](https://www.github.com/mljs/spectra-fitting/compare/v3.0.0...v3.0.1) (2021-11-23)
+
+
+### Bug Fixes
+
+* add types file ([#62](https://www.github.com/mljs/spectra-fitting/issues/62)) ([81c653c](https://www.github.com/mljs/spectra-fitting/commit/81c653c5e02308ba3bf514c3f20a59e3f8e95594))
+
 ## [3.0.0](https://www.github.com/mljs/spectra-fitting/compare/v2.0.0...v3.0.0) (2021-11-18)
 
 
