@@ -14,7 +14,7 @@ This is a spectra fitting package to optimize the position (x), max intensity (y
 
 where
 
-| <img src="https://tex.cheminfo.org/?tex=%5Cdelta%20%3D%20%5Cleft(t%20-%20x%5Cright)%5E2%0A"/> | <img src="https://tex.cheminfo.org/?tex=%5Csigma%20%3D%20%5Cfrac%7Bwidth%7D%7B2%5Csqrt%7B2%20%5Ccdot%20Ln(2)%7D%7D"/> | <img src="https://tex.cheminfo.org/?tex=%5Cgamma%3D%5Cleft(width%5Cright)%5E2"/> |
+| <img src="https://tex.cheminfo.org/?tex=%5Cdelta%20%3D%20%5Cleft(t%20-%20x%5Cright)%5E2%0A"/> | <img src="https://tex.cheminfo.org/?tex=%5Csigma%20%3D%20%5Cfrac%7BFWHM%7D%7B2%5Csqrt%7B2%20%5Ccdot%20Ln(2)%7D%7D"/> | <img src="https://tex.cheminfo.org/?tex=%5Cgamma%3D%5Cleft(FWHM%5Cright)%5E2"/> |
 | --------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------- |
 
 It is a wrapper of [ml-levenberg-marquardt](https://github.com/mljs/levenberg-marquardt)
@@ -33,8 +33,8 @@ import { optimizeSum } from 'ml-spectra-fitting';
 import { generateSpectrum } from 'spectrum-generator';
 
 const peaks = [
-  { x: 0.5, y: 0.2, width: 0.2 },
-  { x: -0.5, y: 0.2, width: 0.3 },
+  { x: 0.5, y: 0.2, fwhm: 0.2 },
+  { x: -0.5, y: 0.2, fwhm: 0.3 },
 ];
 const data = generateSpectrum(peaks, { from: -1, to: 1, nbPoints: 41 });
 
@@ -43,16 +43,16 @@ let peaks = [
   {
     x: -0.5,
     y: 0.18,
-    width: 0.18,
+    fwhm: 0.18,
   },
   {
     x: 0.52,
     y: 0.17,
-    width: 0.37,
+    fwhm: 0.37,
   },
 ];
 
-// the function receive an array of peaks {x, y, width} as a guess
+// the function receive an array of peaks {x, y, fwhm} as a guess
 // and returns an array of peaks
 
 let fittedPeaks = optimize(data, peaks);
@@ -65,12 +65,12 @@ console.log(fittedPeaks);
       {
         x: -0.49999760133593774,
         y: 0.1999880261075537,
-        width: 0.3000369491704072
+        fwhm: 0.3000369491704072
       },
       {
         x: 0.5000084944744884,
         y: 0.20004144804853427,
-        width: 0.1999731186595336
+        fwhm: 0.1999731186595336
       }
     ]
   }
@@ -90,18 +90,13 @@ const generator = new SpectrumGenerator({
 });
 
 // by default the kind of shape is gaussian;
-generator.addPeak({ x: 0.5, y: 0.2 }, { width: 0.2 });
+generator.addPeak({ x: 0.5, y: 0.2 }, { fwhm: 0.2 });
 generator.addPeak(
   { x: -0.5, y: 0.2 },
   {
-    width: 0.1,
+    fwhm: 0.1,
     shape: {
       kind: 'lorentzian',
-      options: {
-        fwhm: 1000,
-        length: 50001,
-        factor: 5,
-      },
     },
   },
 );
@@ -114,16 +109,16 @@ let peaks = [
   {
     x: -0.5,
     y: 0.22,
-    width: 0.25,
+    fwhm: 0.25,
   },
   {
     x: 0.52,
     y: 0.18,
-    width: 0.18,
+    fwhm: 0.18,
   },
 ];
 
-// the function receive an array of peak with {x, y, width} as a guess
+// the function receive an array of peak with {x, y, fwhm} as a guess
 // and return a list of objects
 let fittedParams = optimize(data, peaks, { shape: { kind: 'pseudovoigt' } });
 
