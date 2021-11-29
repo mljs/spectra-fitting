@@ -52,21 +52,21 @@
     "trailingComma": "all"
   },
   "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.15.4",
-    "@types/jest": "^27.0.2",
+    "@babel/plugin-transform-modules-commonjs": "^7.16.0",
+    "@types/jest": "^27.0.3",
     "cheminfo-build": "^1.1.11",
-    "eslint": "^7.32.0",
-    "eslint-config-cheminfo": "^5.6.0",
+    "eslint": "^8.3.0",
+    "eslint-config-cheminfo": "^7.2.1",
     "esm": "^3.2.25",
-    "jest": "^27.2.5",
-    "prettier": "^2.4.1",
-    "rollup": "^2.58.0",
-    "spectrum-generator": "^6.0.1"
+    "jest": "^27.3.1",
+    "prettier": "^2.5.0",
+    "rollup": "^2.60.1",
+    "spectrum-generator": "^6.0.2"
   },
   "dependencies": {
     "cheminfo-types": "^0.8.0",
     "ml-array-max": "^1.2.3",
     "ml-levenberg-marquardt": "^3.1.1",
-    "ml-peak-shape-generator": "^3.0.3"
+    "ml-peak-shape-generator": "^4.0.1"
   }
 }
