@@ -9,7 +9,7 @@ interface Peak1D {
   shape?: Shape1D;
 }
 
-export interface IOptimizationOptions {
+export interface OptimizationOptions {
   kind?: string;
   parameters?: any;
   options?: {
@@ -20,14 +20,14 @@ export interface IOptimizationOptions {
   };
 }
 
-export interface IOptimizeOptions {
+export interface OptimizeOptions {
   shape?: Shape1D;
-  optimization?: IOptimizationOptions;
+  optimization?: OptimizationOptions;
 }
 export function optimize(
   data: DataXY,
   peakList: Peak1D[],
-  options: IOptimizeOptions,
+  options: OptimizeOptions,
 ): {
   error: number;
   peaks: Peak1D[];
