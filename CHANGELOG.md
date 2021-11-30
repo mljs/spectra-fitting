@@ -1,5 +1,13 @@
 # Changelog
 
+### [3.0.2](https://www.github.com/mljs/spectra-fitting/compare/v3.0.1...v3.0.2) (2021-11-30)
+
+
+### Bug Fixes
+
+* remove I from OptimizeOptions and OptimizationOptions ([b007255](https://www.github.com/mljs/spectra-fitting/commit/b0072552e0fcc584b9a43fc7a49803f3cc231fe9))
+* update README ([f4f34cd](https://www.github.com/mljs/spectra-fitting/commit/f4f34cd2235a6d0467ddf55cacc8f25012a533c9))
+
 ### [3.0.1](https://www.github.com/mljs/spectra-fitting/compare/v3.0.0...v3.0.1) (2021-11-23)
 
 
