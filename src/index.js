@@ -69,9 +69,8 @@ export function optimize(data, peakList, options = {}) {
       pInit[i + k * nbShapes] = init[i % init.length](peak);
       pMin[i + k * nbShapes] = min[i % min.length](peak);
       pMax[i + k * nbShapes] = max[i % max.length](peak);
-      gradientDifference[i + k * nbShapes] = gradientDifferenceValue[
-        i % gradientDifferenceValue.length
-      ](peak);
+      gradientDifference[i + k * nbShapes] =
+        gradientDifferenceValue[i % gradientDifferenceValue.length](peak);
     }
   }
 

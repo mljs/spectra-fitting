@@ -44,13 +44,6 @@
   "jest": {
     "testEnvironment": "node"
   },
-  "prettier": {
-    "arrowParens": "always",
-    "semi": true,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "all"
-  },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.16.0",
     "@types/jest": "^27.0.3",
