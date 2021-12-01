@@ -1,5 +1,12 @@
 # Changelog
 
+### [3.0.3](https://www.github.com/mljs/spectra-fitting/compare/v3.0.2...v3.0.3) (2021-12-01)
+
+
+### Bug Fixes
+
+* move type definition to src to publish in npm ([baa1fb2](https://www.github.com/mljs/spectra-fitting/commit/baa1fb2c05a696a30ec40afb533d109de43a5626))
+
 ### [3.0.2](https://www.github.com/mljs/spectra-fitting/compare/v3.0.1...v3.0.2) (2021-11-30)
 
 
