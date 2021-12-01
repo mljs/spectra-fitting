@@ -6,13 +6,15 @@ import { sumOfLorentzians } from '../shapes/sumOfLorentzians';
 
 import { assignDeep } from './assignDeep';
 
-export function checkInput(data, peaks, options) {
+export function checkInput(data, peakList, options) {
   let {
     shape = { kind: 'gaussian' },
     optimization = {
       kind: 'lm',
     },
   } = options;
+
+  let peaks = JSON.parse(JSON.stringify(peakList));
 
   if (typeof shape.kind !== 'string') {
     throw new Error('kind should be a string');

@@ -1,17 +1,6 @@
 import { checkInput } from './util/checkInput';
 import { selectMethod } from './util/selectMethod';
 
-// const STATE_INIT = 0;
-// const STATE_MIN = 1;
-// const STATE_MAX = 2;
-// const STATE_GRADIENT_DIFFERENCE = 3;
-
-// const X = 0;
-// const Y = 1;
-// const WIDTH = 2;
-// const MU = 3;
-
-// const keys = ['x', 'y', 'width', 'mu'];
 /**
  * Fits a set of points to the sum of a set of bell functions.
  * @param {object} data - An object containing the x and y data to be fitted.

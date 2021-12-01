@@ -14,20 +14,24 @@ describe('Optimize sum of Lorentzian', () => {
   it('group of two GL', () => {
     let pTrue = [-0.5, 0.5, 0.001, 0.001, 0.31, 0.31];
     let yData = sumOfLorentzians(pTrue);
-    let result = optimize(
-      { x, y: x.map((i) => yData(i)) },
-      [
-        { x: -0.5, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
-        { x: 0.52, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
-      ],
-      { shape: { kind: 'lorentzian' } },
-    );
+    let peakList = [
+      { x: -0.5, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
+      { x: 0.52, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
+    ];
+    let result = optimize({ x, y: x.map((i) => yData(i)) }, peakList, {
+      shape: { kind: 'lorentzian' },
+    });
+
     let nL = pTrue.length / 3;
     for (let i = 0; i < nL; i++) {
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(pTrue[i], 2);
       expect(pFit.y).toBeCloseTo(pTrue[i + nL], 2);
       expect(pFit.fwhm).toBeCloseTo(pTrue[i + nL * 2], 2);
+      expect(peakList).toStrictEqual([
+        { x: -0.5, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
+        { x: 0.52, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
+      ]);
     }
   });
 });
