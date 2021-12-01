@@ -4,7 +4,7 @@
   "description": "Fit spectra using gaussian or lorentzian",
   "main": "lib/index.js",
   "module": "src/index.js",
-  "types": "spectra-fitting.d.ts",
+  "types": "src/spectra-fitting.d.ts",
   "files": [
     "lib",
     "src"
