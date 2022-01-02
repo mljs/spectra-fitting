@@ -1,16 +1,17 @@
 import { DataXY } from 'cheminfo-types';
 import { Shape1D } from 'ml-peak-shape-generator';
 
-interface Peak1D {
+export interface Peak1D {
   x: number;
   y: number;
-  width: number;
-  fwhm?: number;
-  shape?: Shape1D;
+  width?: number;
+  fwhm: number;
+  shape?: Shape1D | { kind: string };
 }
 
 export interface OptimizationOptions {
-  kind?: string;
+  kind?: string | number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   parameters?: any;
   options?: {
     timeout?: number;
@@ -21,11 +22,11 @@ export interface OptimizationOptions {
 }
 
 export interface OptimizeOptions {
-  shape?: Shape1D;
+  shape?: Shape1D | { kind: string };
   optimization?: OptimizationOptions;
 }
 export function optimize(
-  data: DataXY,
+  data: DataXY<number[]>,
   peakList: Peak1D[],
   options: OptimizeOptions,
 ): {
