@@ -1,3 +1,7 @@
+import { DataXY, DoubleArray } from 'cheminfo-types';
+import { Data } from 'ml-levenberg-marquardt';
+
+import { OptimizeOptions, Peak1D } from './spectra-fitting.d';
 import { checkInput } from './util/checkInput';
 import { selectMethod } from './util/selectMethod';
 
@@ -30,7 +34,11 @@ import { selectMethod } from './util/selectMethod';
  * @param {number} [options.optimization.options.errorTolerance=1e-8]
  * @returns {object} - A object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
-export function optimize(data, peakList, options = {}) {
+export function optimize(
+  data: DataXY<DoubleArray>,
+  peakList: Peak1D[],
+  options: OptimizeOptions = {},
+) {
   const { y, x, maxY, peaks, paramsFunc, optimization } = checkInput(
     data,
     peakList,
@@ -70,7 +78,7 @@ export function optimize(data, peakList, options = {}) {
   optimizationOptions.initialValues = pInit;
   optimizationOptions.gradientDifference = gradientDifference;
 
-  let pFit = algorithm({ x, y }, paramsFunc, optimizationOptions);
+  let pFit = algorithm({ x, y } as Data, paramsFunc, optimizationOptions);
 
   let { parameterError: error, iterations } = pFit;
   let result = { error, iterations, peaks };
@@ -80,11 +88,12 @@ export function optimize(data, peakList, options = {}) {
       const value = pFit.parameterValues[i + k * nbShapes];
       // we modify the optimized parameters
       if (key === 'x' || key === 'fwhm') {
-        peaks[i][parameterKey[k]] = value;
+        peaks[i][key] = value;
       } else if (key === 'y') {
-        peaks[i][parameterKey[k]] = value * maxY;
+        peaks[i][key] = value * maxY;
       } else {
-        peaks[i].shape[parameterKey[k]] = value;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (peaks[i].shape as any)[key] = value;
       }
     }
   }

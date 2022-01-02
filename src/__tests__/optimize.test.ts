@@ -92,7 +92,10 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
       expect(pFit.x).toBeCloseTo(pTrue[i], 3);
       expect(pFit.y).toBeCloseTo(pTrue[i + nL], 3);
       expect(pFit.fwhm).toBeCloseTo(pTrue[i + nL * 2], 3);
-      expect(pFit.shape.mu).toBeCloseTo(pTrue[i + nL * 3], 3);
+      expect((pFit.shape as { mu: number }).mu).toBeCloseTo(
+        pTrue[i + nL * 3],
+        3,
+      );
     }
   });
 });
