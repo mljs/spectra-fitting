@@ -1,8 +1,24 @@
-import LM from 'ml-levenberg-marquardt';
+/* eslint-disable @typescript-eslint/switch-exhaustiveness-check */
+import LM, {
+  Data,
+  FittedFunction,
+  Options,
+  Result,
+} from 'ml-levenberg-marquardt';
+
+import { OptimizationOptions } from '../spectra-fitting.d';
 
 const LEVENBERG_MARQUARDT = 1;
 
-export function selectMethod(optimizationOptions = {}) {
+export function selectMethod(optimizationOptions: OptimizationOptions = {}): {
+  algorithm: (
+    d: Data,
+    fn: FittedFunction,
+    o?: Partial<Options> | undefined,
+  ) => Result;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  optimizationOptions: any;
+} {
   let { kind, options } = optimizationOptions;
   kind = getKind(kind);
   switch (kind) {
@@ -16,7 +32,15 @@ export function selectMethod(optimizationOptions = {}) {
   }
 }
 
-function checkOptions(kind, options = {}) {
+function checkOptions(
+  kind: string | number,
+  options: {
+    timeout?: number;
+    damping?: number;
+    maxIterations?: number;
+    errorTolerance?: number;
+  } = {},
+) {
   // eslint-disable-next-line default-case
   switch (kind) {
     case LEVENBERG_MARQUARDT:
@@ -24,7 +48,7 @@ function checkOptions(kind, options = {}) {
   }
 }
 
-function getKind(kind) {
+function getKind(kind?: string | number) {
   if (typeof kind !== 'string') return kind;
   switch (kind.toLowerCase().replace(/[^a-z]/g, '')) {
     case 'lm':

@@ -1,15 +1,16 @@
-const isValidKey = (key) => {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const isValidKey = (key: string) => {
   return key !== '__proto__' && key !== 'constructor' && key !== 'prototype';
 };
 
-const isObject = (val) => {
+const isObject = (val: any) => {
   return typeof val === 'object';
 };
-const isPrimitive = (val) => {
+const isPrimitive = (val: any) => {
   return typeof val === 'object' ? val === null : typeof val !== 'function';
 };
 
-export function assignDeep(target, ...args) {
+export function assignDeep(target: Record<string, any>, ...args: any) {
   let index = 0;
   if (isPrimitive(target)) target = args[index++];
   if (!target) target = {};

@@ -1,12 +1,18 @@
+import { DataXY, DoubleArray } from 'cheminfo-types';
 import getMaxValue from 'ml-array-max';
 
 import { sumOfGaussianLorentzians } from '../shapes/sumOfGaussianLorentzians';
 import { sumOfGaussians } from '../shapes/sumOfGaussians';
 import { sumOfLorentzians } from '../shapes/sumOfLorentzians';
+import { OptimizeOptions, Peak1D } from '../spectra-fitting.d';
 
 import { assignDeep } from './assignDeep';
 
-export function checkInput(data, peakList, options) {
+export function checkInput(
+  data: DataXY<DoubleArray>,
+  peakList: Peak1D[],
+  options: OptimizeOptions,
+) {
   let {
     shape = { kind: 'gaussian' },
     optimization = {
@@ -14,7 +20,7 @@ export function checkInput(data, peakList, options) {
     },
   } = options;
 
-  let peaks = JSON.parse(JSON.stringify(peakList));
+  let peaks: Peak1D[] = JSON.parse(JSON.stringify(peakList));
 
   if (typeof shape.kind !== 'string') {
     throw new Error('kind should be a string');
@@ -29,22 +35,22 @@ export function checkInput(data, peakList, options) {
       paramsFunc = sumOfGaussians;
       defaultParameters = {
         x: {
-          init: (peak) => peak.x,
-          max: (peak) => peak.x + peak.fwhm * 2,
-          min: (peak) => peak.x - peak.fwhm * 2,
-          gradientDifference: (peak) => peak.fwhm * 2e-3,
+          init: (peak: Peak1D) => peak.x,
+          max: (peak: Peak1D) => peak.x + peak.fwhm * 2,
+          min: (peak: Peak1D) => peak.x - peak.fwhm * 2,
+          gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
         },
         y: {
-          init: (peak) => peak.y,
+          init: (peak: Peak1D) => peak.y,
           max: () => 1.5,
           min: () => 0,
           gradientDifference: () => 1e-3,
         },
         fwhm: {
-          init: (peak) => peak.fwhm,
-          max: (peak) => peak.fwhm * 4,
-          min: (peak) => peak.fwhm * 0.25,
-          gradientDifference: (peak) => peak.fwhm * 2e-3,
+          init: (peak: Peak1D) => peak.fwhm,
+          max: (peak: Peak1D) => peak.fwhm * 4,
+          min: (peak: Peak1D) => peak.fwhm * 0.25,
+          gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
         },
       };
       break;
@@ -52,22 +58,22 @@ export function checkInput(data, peakList, options) {
       paramsFunc = sumOfLorentzians;
       defaultParameters = {
         x: {
-          init: (peak) => peak.x,
-          max: (peak) => peak.x + peak.fwhm * 2,
-          min: (peak) => peak.x - peak.fwhm * 2,
-          gradientDifference: (peak) => peak.fwhm * 2e-3,
+          init: (peak: Peak1D) => peak.x,
+          max: (peak: Peak1D) => peak.x + peak.fwhm * 2,
+          min: (peak: Peak1D) => peak.x - peak.fwhm * 2,
+          gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
         },
         y: {
-          init: (peak) => peak.y,
+          init: (peak: Peak1D) => peak.y,
           max: () => 1.5,
           min: () => 0,
           gradientDifference: () => 1e-3,
         },
         fwhm: {
-          init: (peak) => peak.fwhm,
-          max: (peak) => peak.fwhm * 4,
-          min: (peak) => peak.fwhm * 0.25,
-          gradientDifference: (peak) => peak.fwhm * 2e-3,
+          init: (peak: Peak1D) => peak.fwhm,
+          max: (peak: Peak1D) => peak.fwhm * 4,
+          min: (peak: Peak1D) => peak.fwhm * 0.25,
+          gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
         },
       };
       break;
@@ -75,26 +81,29 @@ export function checkInput(data, peakList, options) {
       paramsFunc = sumOfGaussianLorentzians;
       defaultParameters = {
         x: {
-          init: (peak) => peak.x,
-          max: (peak) => peak.x + peak.fwhm * 2,
-          min: (peak) => peak.x - peak.fwhm * 2,
-          gradientDifference: (peak) => peak.fwhm * 2e-3,
+          init: (peak: Peak1D) => peak.x,
+          max: (peak: Peak1D) => peak.x + peak.fwhm * 2,
+          min: (peak: Peak1D) => peak.x - peak.fwhm * 2,
+          gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
         },
         y: {
-          init: (peak) => peak.y,
+          init: (peak: Peak1D) => peak.y,
           max: () => 1.5,
           min: () => 0,
           gradientDifference: () => 1e-3,
         },
         fwhm: {
-          init: (peak) => peak.fwhm,
-          max: (peak) => peak.fwhm * 4,
-          min: (peak) => peak.fwhm * 0.25,
-          gradientDifference: (peak) => peak.fwhm * 2e-3,
+          init: (peak: Peak1D) => peak.fwhm,
+          max: (peak: Peak1D) => peak.fwhm * 4,
+          min: (peak: Peak1D) => peak.fwhm * 0.25,
+          gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
         },
         mu: {
-          init: (peak) =>
-            peak.shape && peak.shape.mu !== undefined ? peak.shape.mu : 0.5,
+          init: (peak: Peak1D) =>
+            peak.shape !== undefined &&
+            (peak.shape as { mu: number }).mu !== undefined
+              ? (peak.shape as { mu: number }).mu
+              : 0.5,
           min: () => 0,
           max: () => 1,
           gradientDifference: () => 0.01,
@@ -107,18 +116,18 @@ export function checkInput(data, peakList, options) {
 
   let x = data.x;
   let maxY = getMaxValue(data.y);
-  let y = new Array(x.length);
+  let y = new Array<number>(x.length);
   for (let i = 0; i < x.length; i++) {
     y[i] = data.y[i] / maxY;
   }
 
-  for (let i = 0; i < peaks.length; i++) {
-    peaks[i].y /= maxY;
-    peaks[i].shape = {
+  peaks.forEach((peak) => {
+    peak.y /= maxY;
+    peak.shape = {
       kind: shape.kind,
-      ...peaks[i].shape,
+      ...peak.shape,
     };
-  }
+  });
 
   let parameters = assignDeep({}, defaultParameters, optimization.parameters);
 
