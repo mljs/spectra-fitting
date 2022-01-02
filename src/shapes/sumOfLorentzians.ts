@@ -10,9 +10,9 @@ import { Lorentzian } from 'ml-peak-shape-generator';
 
 // const lorentzianFct = Lorentzian.fct;
 
-export function sumOfLorentzians(p) {
+export function sumOfLorentzians(p: number[]) {
   const lorentzian = new Lorentzian();
-  return (t) => {
+  return (t: number) => {
     let nL = p.length / 3;
     let result = 0;
     for (let i = 0; i < nL; i++) {

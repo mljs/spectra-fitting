@@ -8,10 +8,10 @@ import { Gaussian } from 'ml-peak-shape-generator';
  * @returns {*}
  */
 
-export function sumOfGaussians(p) {
+export function sumOfGaussians(p: number[]) {
   const nL = p.length / 3;
   const gaussian = new Gaussian();
-  return (t) => {
+  return (t: number) => {
     let result = 0;
     for (let i = 0; i < nL; i++) {
       gaussian.fwhm = p[i + nL * 2];
