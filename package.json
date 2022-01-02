@@ -2,24 +2,29 @@
   "name": "ml-spectra-fitting",
   "version": "3.0.3",
   "description": "Fit spectra using gaussian or lorentzian",
-  "main": "lib/index.js",
-  "module": "src/index.js",
-  "types": "src/spectra-fitting.d.ts",
+  "main": "./lib/index.js",
+  "module": "./lib-esm/index.js",
+  "types": "./lib/index.d.ts",
   "files": [
     "lib",
-    "src"
+    "src",
+    "lib-esm"
   ],
   "scripts": {
     "build": "cheminfo-build --entry src/index.js --root SpectraFitting",
+    "check-types": "tsc --noEmit",
+    "clean": "rimraf lib lib-esm",
     "eslint": "eslint src",
     "eslint-fix": "npm run eslint -- --fix",
-    "compile": "rollup -c",
-    "prepublishOnly": "npm run compile",
-    "test": "npm run test-coverage && npm run eslint",
+    "prepack": "npm run tsc",
+    "test": "npm run test-coverage && npm run eslint && npm run check-types",
     "prettier": "prettier --check src",
     "prettier-write": "prettier --write src",
     "test-coverage": "jest --coverage",
     "test-only": "jest",
+    "tsc": "npm run clean && npm run tsc-cjs && npm run tsc-esm",
+    "tsc-cjs": "tsc --project tsconfig.cjs.json",
+    "tsc-esm": "tsc --project tsconfig.esm.json",
     "debug": "npm run prepublishOnly && node src/debug.js"
   },
   "repository": {
@@ -41,20 +46,20 @@
     "url": "https://github.com/mljs/spectra-fitting/issues"
   },
   "homepage": "https://github.com/mljs/spectra-fitting",
-  "jest": {
-    "testEnvironment": "node"
-  },
   "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.16.5",
-    "@types/jest": "^27.0.3",
+    "@babel/plugin-transform-modules-commonjs": "^7.16.7",
+    "@types/jest": "^27.4.0",
     "cheminfo-build": "^1.1.11",
-    "eslint": "^8.5.0",
+    "eslint": "^8.6.0",
     "eslint-config-cheminfo": "^7.2.1",
+    "eslint-config-cheminfo-typescript": "^10.3.0",
     "esm": "^3.2.25",
     "jest": "^27.4.5",
     "prettier": "^2.5.1",
-    "rollup": "^2.61.1",
-    "spectrum-generator": "^6.0.2"
+    "rollup": "^2.62.0",
+    "spectrum-generator": "^6.0.2",
+    "ts-jest": "^27.1.2",
+    "typescript": "^4.5.4"
   },
   "dependencies": {
     "cheminfo-types": "^0.9.1",
