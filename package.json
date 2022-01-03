@@ -11,17 +11,17 @@
     "lib-esm"
   ],
   "scripts": {
-    "build": "cheminfo-build --entry src/index.js --root SpectraFitting",
+    "build": "cheminfo-build --entry lib-esm/index.js --root SpectraFitting",
     "check-types": "tsc --noEmit",
     "clean": "rimraf lib lib-esm",
     "eslint": "eslint src",
     "eslint-fix": "npm run eslint -- --fix",
     "prepack": "npm run tsc",
-    "test": "npm run test-coverage && npm run eslint && npm run check-types",
+    "test": "npm run test-only && npm run eslint && npm run check-types",
     "prettier": "prettier --check src",
     "prettier-write": "prettier --write src",
     "test-coverage": "jest --coverage",
-    "test-only": "jest",
+    "test-only": "jest --coverage",
     "tsc": "npm run clean && npm run tsc-cjs && npm run tsc-esm",
     "tsc-cjs": "tsc --project tsconfig.cjs.json",
     "tsc-esm": "tsc --project tsconfig.esm.json",
@@ -57,7 +57,6 @@
     "esm": "^3.2.25",
     "jest": "^27.4.5",
     "prettier": "^2.5.1",
-    "rollup": "^2.62.0",
     "spectrum-generator": "^6.0.2",
     "ts-jest": "^27.1.2",
     "typescript": "^4.5.4"

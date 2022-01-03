@@ -1,7 +1,7 @@
 import { DataXY, DoubleArray } from 'cheminfo-types';
 import { Data } from 'ml-levenberg-marquardt';
 
-import { OptimizeOptions, Peak1D } from './spectra-fitting.d';
+import { OptimizeOptions, Peak1D } from './spectra-fitting';
 import { checkInput } from './util/checkInput';
 import { selectMethod } from './util/selectMethod';
 
@@ -34,11 +34,16 @@ import { selectMethod } from './util/selectMethod';
  * @param {number} [options.optimization.options.errorTolerance=1e-8]
  * @returns {object} - A object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
+
 export function optimize(
   data: DataXY<DoubleArray>,
   peakList: Peak1D[],
-  options: OptimizeOptions = {},
-) {
+  options: OptimizeOptions,
+): {
+  error: number;
+  peaks: Peak1D[];
+  iterations: number;
+} {
   const { y, x, maxY, peaks, paramsFunc, optimization } = checkInput(
     data,
     peakList,

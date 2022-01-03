@@ -6,7 +6,7 @@ import LM, {
   Result,
 } from 'ml-levenberg-marquardt';
 
-import { OptimizationOptions } from '../spectra-fitting.d';
+import { OptimizationOptions } from '../spectra-fitting';
 
 const LEVENBERG_MARQUARDT = 1;
 

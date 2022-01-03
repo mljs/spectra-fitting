@@ -4,7 +4,7 @@ import getMaxValue from 'ml-array-max';
 import { sumOfGaussianLorentzians } from '../shapes/sumOfGaussianLorentzians';
 import { sumOfGaussians } from '../shapes/sumOfGaussians';
 import { sumOfLorentzians } from '../shapes/sumOfLorentzians';
-import { OptimizeOptions, Peak1D } from '../spectra-fitting.d';
+import { OptimizeOptions, Peak1D } from '../spectra-fitting';
 
 import { assignDeep } from './assignDeep';
 

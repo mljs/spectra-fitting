@@ -1,4 +1,3 @@
-import { DataXY } from 'cheminfo-types';
 import { Shape1D } from 'ml-peak-shape-generator';
 
 export interface Peak1D {
@@ -25,12 +24,3 @@ export interface OptimizeOptions {
   shape?: Shape1D | { kind: string };
   optimization?: OptimizationOptions;
 }
-export function optimize(
-  data: DataXY<number[]>,
-  peakList: Peak1D[],
-  options: OptimizeOptions,
-): {
-  error: number;
-  peaks: Peak1D[];
-  iterations: number;
-};

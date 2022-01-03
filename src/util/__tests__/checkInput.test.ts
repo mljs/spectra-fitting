@@ -1,4 +1,4 @@
-import { Peak1D } from '../../spectra-fitting.d';
+import { Peak1D } from '../../spectra-fitting';
 import { checkInput } from '../checkInput';
 
 describe('change default parameters', () => {
