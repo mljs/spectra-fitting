@@ -100,8 +100,7 @@ export function checkInput(
         },
         mu: {
           init: (peak: Peak1D) =>
-            peak.shape !== undefined &&
-            (peak.shape as { mu: number }).mu !== undefined
+            peak.shape && (peak.shape as { mu: number }).mu !== undefined
               ? (peak.shape as { mu: number }).mu
               : 0.5,
           min: () => 0,
@@ -136,10 +135,7 @@ export function checkInput(
       if (!Array.isArray(parameters[key][par])) {
         parameters[key][par] = [parameters[key][par]];
       }
-      if (
-        parameters[key][par].length !== 1 &&
-        parameters[key][par].length !== peaks.length
-      ) {
+      if (![peaks.length, 1].includes(parameters[key][par].length)) {
         throw new Error(`The length of ${key}-${par} is not correct`);
       }
       for (let index = 0; index < parameters[key][par].length; index++) {
@@ -150,7 +146,6 @@ export function checkInput(
       }
     }
   }
-
   optimization.parameters = parameters;
 
   return {
