@@ -45,21 +45,21 @@
     "testEnvironment": "node"
   },
   "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.16.5",
-    "@types/jest": "^27.0.3",
+    "@babel/plugin-transform-modules-commonjs": "^7.16.8",
+    "@types/jest": "^27.4.0",
     "cheminfo-build": "^1.1.11",
-    "eslint": "^8.5.0",
+    "eslint": "^8.7.0",
     "eslint-config-cheminfo": "^7.2.1",
     "esm": "^3.2.25",
-    "jest": "^27.4.5",
+    "jest": "^27.4.7",
     "prettier": "^2.5.1",
-    "rollup": "^2.61.1",
+    "rollup": "^2.66.0",
     "spectrum-generator": "^6.0.2"
   },
   "dependencies": {
     "cheminfo-types": "^0.9.1",
-    "ml-array-max": "^1.2.3",
-    "ml-levenberg-marquardt": "^3.1.1",
+    "ml-array-max": "^1.2.4",
+    "ml-levenberg-marquardt": "^4.0.0",
     "ml-peak-shape-generator": "^4.0.1"
   }
 }

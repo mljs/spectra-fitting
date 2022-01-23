@@ -1,4 +1,4 @@
-import LM from 'ml-levenberg-marquardt';
+import { levenbergMarquardt } from 'ml-levenberg-marquardt';
 
 const LEVENBERG_MARQUARDT = 1;
 
@@ -8,7 +8,7 @@ export function selectMethod(optimizationOptions = {}) {
   switch (kind) {
     case LEVENBERG_MARQUARDT:
       return {
-        algorithm: LM,
+        algorithm: levenbergMarquardt,
         optimizationOptions: checkOptions(kind, options),
       };
     default:
