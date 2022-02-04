@@ -1,8 +1,10 @@
 import { levenbergMarquardt } from 'ml-levenberg-marquardt';
 
+import { OptimizationOptions } from '../spectra-fitting';
+
 const LEVENBERG_MARQUARDT = 1;
 
-export function selectMethod(optimizationOptions = {}) {
+export function selectMethod(optimizationOptions: OptimizationOptions = {}) {
   let { kind, options } = optimizationOptions;
   kind = getKind(kind);
   switch (kind) {
@@ -16,15 +18,24 @@ export function selectMethod(optimizationOptions = {}) {
   }
 }
 
-function checkOptions(kind, options = {}) {
-  // eslint-disable-next-line default-case
+function checkOptions(
+  kind: string | number,
+  options: {
+    timeout?: number;
+    damping?: number;
+    maxIterations?: number;
+    errorTolerance?: number;
+  } = {},
+): any {
   switch (kind) {
     case LEVENBERG_MARQUARDT:
       return Object.assign({}, lmOptions, options);
+    default:
+      throw new Error(`unknown kind: ${kind}`);
   }
 }
 
-function getKind(kind) {
+function getKind(kind?: string | number) {
   if (typeof kind !== 'string') return kind;
   switch (kind.toLowerCase().replace(/[^a-z]/g, '')) {
     case 'lm':
