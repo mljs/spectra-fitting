@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/switch-exhaustiveness-check */
-import LM, {
+import {
+  levenbergMarquardt,
   Data,
   FittedFunction,
   Options,
@@ -24,7 +25,7 @@ export function selectMethod(optimizationOptions: OptimizationOptions = {}): {
   switch (kind) {
     case LEVENBERG_MARQUARDT:
       return {
-        algorithm: LM,
+        algorithm: levenbergMarquardt,
         optimizationOptions: checkOptions(kind, options),
       };
     default:
