@@ -10,7 +10,6 @@ export interface Peak1D {
 
 export interface OptimizationOptions {
   kind?: string | number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   parameters?: any;
   options?: {
     timeout?: number;

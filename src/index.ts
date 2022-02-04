@@ -1,5 +1,4 @@
 import { DataXY, DoubleArray } from 'cheminfo-types';
-import { Data } from 'ml-levenberg-marquardt';
 
 import { OptimizeOptions, Peak1D } from './spectra-fitting';
 import { checkInput } from './util/checkInput';
@@ -83,7 +82,7 @@ export function optimize(
   optimizationOptions.initialValues = pInit;
   optimizationOptions.gradientDifference = gradientDifference;
 
-  let pFit = algorithm({ x, y } as Data, paramsFunc, optimizationOptions);
+  let pFit = algorithm({ x, y }, paramsFunc, optimizationOptions);
 
   let { parameterError: error, iterations } = pFit;
   let result = { error, iterations, peaks };
@@ -97,7 +96,6 @@ export function optimize(
       } else if (key === 'y') {
         peaks[i][key] = value * maxY;
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (peaks[i].shape as any)[key] = value;
       }
     }

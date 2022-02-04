@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 const isValidKey = (key: string) => {
   return key !== '__proto__' && key !== 'constructor' && key !== 'prototype';
 };

@@ -1,25 +1,10 @@
-/* eslint-disable @typescript-eslint/switch-exhaustiveness-check */
-import {
-  levenbergMarquardt,
-  Data,
-  FittedFunction,
-  Options,
-  Result,
-} from 'ml-levenberg-marquardt';
+import { levenbergMarquardt } from 'ml-levenberg-marquardt';
 
 import { OptimizationOptions } from '../spectra-fitting';
 
 const LEVENBERG_MARQUARDT = 1;
 
-export function selectMethod(optimizationOptions: OptimizationOptions = {}): {
-  algorithm: (
-    d: Data,
-    fn: FittedFunction,
-    o?: Partial<Options> | undefined,
-  ) => Result;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  optimizationOptions: any;
-} {
+export function selectMethod(optimizationOptions: OptimizationOptions = {}) {
   let { kind, options } = optimizationOptions;
   kind = getKind(kind);
   switch (kind) {
@@ -41,11 +26,12 @@ function checkOptions(
     maxIterations?: number;
     errorTolerance?: number;
   } = {},
-) {
-  // eslint-disable-next-line default-case
+): any {
   switch (kind) {
     case LEVENBERG_MARQUARDT:
       return Object.assign({}, lmOptions, options);
+    default:
+      throw new Error(`unknown kind: ${ kind}`);
   }
 }
 
