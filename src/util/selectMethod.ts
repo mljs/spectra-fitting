@@ -31,7 +31,7 @@ function checkOptions(
     case LEVENBERG_MARQUARDT:
       return Object.assign({}, lmOptions, options);
     default:
-      throw new Error(`unknown kind: ${ kind}`);
+      throw new Error(`unknown kind: ${kind}`);
   }
 }
 
