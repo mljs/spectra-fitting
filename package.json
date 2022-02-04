@@ -11,7 +11,7 @@
     "lib-esm"
   ],
   "scripts": {
-    "build": "cheminfo-build --entry lib-esm/index.js --root SpectraFitting",
+    "build": "npm run tsc && cheminfo-build --entry lib-esm/index.js --root SpectraFitting",
     "check-types": "tsc --noEmit",
     "clean": "rimraf lib lib-esm",
     "eslint": "eslint src",
