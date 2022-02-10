@@ -1,9 +1,9 @@
 import { DataXY, DoubleArray } from 'cheminfo-types';
 import getMaxValue from 'ml-array-max';
 
-import { sumOfGaussianLorentzians } from '../shapes/sumOfGaussianLorentzians';
 import { sumOfGaussians } from '../shapes/sumOfGaussians';
 import { sumOfLorentzians } from '../shapes/sumOfLorentzians';
+import { sumOfPseudoVoigts } from '../shapes/sumOfPseudoVoigts';
 import { OptimizeOptions, Peak1D } from '../spectra-fitting';
 
 import { assignDeep } from './assignDeep';
@@ -78,7 +78,7 @@ export function checkInput(
       };
       break;
     case 'pseudovoigt':
-      paramsFunc = sumOfGaussianLorentzians;
+      paramsFunc = sumOfPseudoVoigts;
       defaultParameters = {
         x: {
           init: (peak: Peak1D) => peak.x,

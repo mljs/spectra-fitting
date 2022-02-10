@@ -1,7 +1,7 @@
 import { optimize } from '../index';
-import { sumOfGaussianLorentzians } from '../shapes/sumOfGaussianLorentzians';
 import { sumOfGaussians } from '../shapes/sumOfGaussians';
 import { sumOfLorentzians } from '../shapes/sumOfLorentzians';
+import { sumOfPseudoVoigts } from '../shapes/sumOfPseudoVoigts';
 
 let nbPoints = 31;
 let xFactor = 0.1;
@@ -70,7 +70,7 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
       (xFactor * nbPoints) / 10,
       (xFactor * nbPoints) / 10,
     ];
-    let func = sumOfGaussianLorentzians(pTrue);
+    let func = sumOfPseudoVoigts(pTrue);
     let result = optimize(
       { x, y: x.map(func) },
       [
