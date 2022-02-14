@@ -4,6 +4,10 @@ import { OptimizationOptions } from '../spectra-fitting';
 
 const LEVENBERG_MARQUARDT = 1;
 
+/** Algorithm to select the method.
+ * @param optimizationOptions - Optimization options
+ * @returns - The algorithm and optimization options
+ */
 export function selectMethod(optimizationOptions: OptimizationOptions = {}) {
   let { kind, options } = optimizationOptions;
   kind = getKind(kind);

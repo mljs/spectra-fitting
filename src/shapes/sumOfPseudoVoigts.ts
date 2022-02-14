@@ -6,7 +6,6 @@ import { PseudoVoigt } from 'ml-peak-shape-generator';
  * @param parameters Lorentzian parameters
  * @returns {*}
  */
-
 export function sumOfPseudoVoigts(parameters: number[]) {
   const pseudoVoigt = new PseudoVoigt();
   return (x: number) => {

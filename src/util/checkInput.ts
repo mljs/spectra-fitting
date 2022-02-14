@@ -8,6 +8,11 @@ import { OptimizeOptions, Peak1D } from '../spectra-fitting';
 
 import { assignDeep } from './assignDeep';
 
+/** Algorithm to check the input
+ * @param data - Data to check
+ * @param peakList - List of peaks
+ * @param options - Options for optimization
+*/
 export function checkInput(
   data: DataXY<DoubleArray>,
   peakList: Peak1D[],
