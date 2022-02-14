@@ -12,7 +12,7 @@ import { assignDeep } from './assignDeep';
  * @param data - Data to check
  * @param peakList - List of peaks
  * @param options - Options for optimization
-*/
+ */
 export function checkInput(
   data: DataXY<DoubleArray>,
   peakList: Peak1D[],

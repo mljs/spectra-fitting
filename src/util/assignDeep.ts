@@ -11,7 +11,7 @@ const isPrimitive = (val: any) => {
 
 /** Algorithm to assign deep
  * @param target
-*/
+ */
 export function assignDeep(target: Record<string, any>, ...args: any) {
   let index = 0;
   if (isPrimitive(target)) target = args[index++];

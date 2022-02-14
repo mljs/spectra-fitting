@@ -20,12 +20,14 @@ export function optimize(
     /**
      * kind of shape used to fitting
      **/
-    shape?: Shape1D | {
-      /**
-       * kind of shape; lorentzian, gaussian and pseudovoigt are supported.
-      */
-      kind: string
-    };
+    shape?:
+      | Shape1D
+      | {
+          /**
+           * kind of shape; lorentzian, gaussian and pseudovoigt are supported.
+           */
+          kind: string;
+        };
     /**
      * the kind and options of the algorithm use to optimize parameters
      */
@@ -44,18 +46,18 @@ export function optimize(
         /** options for x parameter */
         x?: {
           /** definition of the starting point of the parameter (the guess),
-          *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the guess of the first peak and so on. */
+           *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the guess of the first peak and so on. */
           init?: number;
           /** definition of the lower limit of the parameter,
-          *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the min of the first peak and so on. */
+           *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the min of the first peak and so on. */
           min?: number;
           /** definition of the upper limit of the parameter,
-          *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the max of the first peak and so on. */
+           *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the max of the first peak and so on. */
           max?: number;
           /** definition of  the step size to approximate the jacobian matrix of the parameter,
-          *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the gradientDifference of the first peak and so on. */
+           *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the gradientDifference of the first peak and so on. */
           gradientDifference?: number;
-        }
+        };
       };
       /** options for the specific kind of algorithm */
       options?: {
