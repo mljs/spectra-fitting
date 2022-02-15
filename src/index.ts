@@ -77,7 +77,7 @@ export function optimize(
         errorTolerance?: number;
       };
     };
-  } = {}
+  } = {},
 ): {
   error: number;
   peaks: Peak1D[];
