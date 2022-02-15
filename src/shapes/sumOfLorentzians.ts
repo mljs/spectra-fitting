@@ -12,6 +12,7 @@ export function sumOfLorentzians(parameters: number[]) {
     let nL = parameters.length / 3;
     let y = 0;
     for (let i = 0; i < nL; i++) {
+      // fwhm parameter for ith lorentzian
       lorentzian.fwhm = parameters[i + nL * 2];
       y += parameters[i + nL] * lorentzian.fct(x - parameters[i]);
     }

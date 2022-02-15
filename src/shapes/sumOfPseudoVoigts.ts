@@ -9,9 +9,11 @@ import { PseudoVoigt } from 'ml-peak-shape-generator';
 export function sumOfPseudoVoigts(parameters: number[]) {
   const pseudoVoigt = new PseudoVoigt();
   return (x: number) => {
+    // There are 4 batches and each batch has nL parameters for the different distributions
     let nL = parameters.length / 4;
     let y = 0;
     for (let i = 0; i < nL; i++) {
+      // public parameters of PseudoVoigt
       pseudoVoigt.fwhm = parameters[i + nL * 2];
       pseudoVoigt.mu = parameters[i + nL * 3];
       y += parameters[i + nL] * pseudoVoigt.fct(x - parameters[i]);

@@ -18,7 +18,7 @@ export function optimize(
   peakList: Peak1D[],
   options: {
     /**
-     * kind of shape used to fitting
+     * kind of shape used for fitting
      **/
     shape?:
       | Shape1D
@@ -37,8 +37,8 @@ export function optimize(
        */
       kind?: string | number;
       /**
-       * options of each parameter to be optimized e.g. For a gaussian shape
-       *  it could have x, y and with properties, each of which could contain init, min, max and gradientDifference, those options will define the guess,
+       *  options of each parameter to be optimized e.g. For a gaussian shape
+       *  it could have x, y and width properties, each of which could contain init, min, max and gradientDifference, those options will define the guess,
        *  the min and max value of the parameter (search space) and the step size to approximate the jacobian matrix respectively. Those options could be a number,
        *  array of numbers, callback, or array of callbacks. Each kind of shape has default parameters so it could be undefined
        */
@@ -77,7 +77,7 @@ export function optimize(
         errorTolerance?: number;
       };
     };
-  },
+  } = {}
 ): {
   error: number;
   peaks: Peak1D[];
@@ -91,22 +91,30 @@ export function optimize(
 
   let parameters = optimization.parameters;
 
+  // number of peaks
   let nbShapes = peaks.length;
   let parameterKey = Object.keys(parameters);
+  // number of peaks times the number of parameters for optimization
   let nbParams = nbShapes * parameterKey.length;
   let pMin = new Float64Array(nbParams);
   let pMax = new Float64Array(nbParams);
   let pInit = new Float64Array(nbParams);
   let gradientDifference = new Float64Array(nbParams);
 
+  // iterating over the number of peaks
   for (let i = 0; i < nbShapes; i++) {
+    // Peak1D
     let peak = peaks[i];
+    // iterating over the different possible parameters
     for (let k = 0; k < parameterKey.length; k++) {
       let key = parameterKey[k];
       let init = parameters[key].init;
       let min = parameters[key].min;
       let max = parameters[key].max;
       let gradientDifferenceValue = parameters[key].gradientDifference;
+
+      // i is the peak number + parameter_number*number_peaks
+      // init function evaluated at the peak
       pInit[i + k * nbShapes] = init[i % init.length](peak);
       pMin[i + k * nbShapes] = min[i % min.length](peak);
       pMax[i + k * nbShapes] = max[i % max.length](peak);
@@ -117,22 +125,27 @@ export function optimize(
 
   let { algorithm, optimizationOptions } = selectMethod(optimization);
 
+  // assigning float64array to these
   optimizationOptions.minValues = pMin;
   optimizationOptions.maxValues = pMax;
   optimizationOptions.initialValues = pInit;
   optimizationOptions.gradientDifference = gradientDifference;
 
+  // sum of gaussians for example for the algorithm
   let pFit = algorithm({ x, y }, paramsFunc, optimizationOptions);
 
   let { parameterError: error, iterations } = pFit;
+  // peaks Peak1D[]
   let result = { error, iterations, peaks };
   for (let i = 0; i < nbShapes; i++) {
     for (let k = 0; k < parameterKey.length; k++) {
       const key = parameterKey[k];
+      // parameter k for the ith distribution/peak
       const value = pFit.parameterValues[i + k * nbShapes];
       if (key === 'x' || key === 'fwhm') {
         peaks[i][key] = value;
       } else if (key === 'y') {
+        // multiplied by the maximum y value
         peaks[i][key] = value * maxY;
       } else {
         (peaks[i].shape as any)[key] = value;

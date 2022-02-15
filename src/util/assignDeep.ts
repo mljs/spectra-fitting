@@ -6,6 +6,8 @@ const isObject = (val: any) => {
   return typeof val === 'object';
 };
 const isPrimitive = (val: any) => {
+  // if the type is object, we return whether val is null or not
+  // otherwise we return whether val is a function or not
   return typeof val === 'object' ? val === null : typeof val !== 'function';
 };
 
@@ -14,6 +16,7 @@ const isPrimitive = (val: any) => {
  */
 export function assignDeep(target: Record<string, any>, ...args: any) {
   let index = 0;
+  // target is the first element in args
   if (isPrimitive(target)) target = args[index++];
   if (!target) target = {};
   for (; index < args.length; index++) {

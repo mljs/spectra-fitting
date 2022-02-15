@@ -7,21 +7,29 @@ let nbPoints = 31;
 let xFactor = 0.1;
 let x = new Float64Array(nbPoints);
 for (let i = 0; i < nbPoints; i++) {
+  // from -nbPoints/2*xFactor to nbPoints/2*xFactor
   x[i] = (i - nbPoints / 2) * xFactor;
 }
 
 describe('Optimize sum of Lorentzian', () => {
   it('group of two GL', () => {
+    // centers are -0.5 and 0.5
+    // heights are 0.001, 0.001
+    // fwhm are 0.31, 0.31
     let pTrue = [-0.5, 0.5, 0.001, 0.001, 0.31, 0.31];
+    // sum of two lorentzians with the parameters above
     let yData = sumOfLorentzians(pTrue);
+    // 0.1*31/8
     let peakList = [
       { x: -0.5, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
       { x: 0.52, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
     ];
+    // function yData
     let result = optimize({ x, y: x.map((i) => yData(i)) }, peakList, {
       shape: { kind: 'lorentzian' },
     });
 
+    // In this case nL = 2, nL is presumably number of Lorentzians
     let nL = pTrue.length / 3;
     for (let i = 0; i < nL; i++) {
       let pFit = result.peaks[i];
