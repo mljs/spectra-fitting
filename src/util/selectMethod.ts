@@ -19,7 +19,7 @@ export function selectMethod(optimizationOptions: OptimizationOptions = {}) {
         optimizationOptions: checkOptions(kind, options),
       };
     default:
-      throw new Error(`Unknown kind of algorithm`);
+      throw new Error(`Unknown kind algorithm`);
   }
 }
 

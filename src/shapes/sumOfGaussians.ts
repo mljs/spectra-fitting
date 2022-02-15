@@ -19,7 +19,7 @@ export function sumOfGaussians(parameters: number[]) {
       // nL*2 indicates the 3rd batch so the fwhm widths, for the different gaussians
       gaussian.fwhm = parameters[i + nL * 2];
       // y_parameter_for_ith_gaussian * gaussianFunction(x - center_for_ith_gaussian)
-      // fct reference : 
+      // fct reference :
       // export function gaussianFct(x: number, fwhm: number) {
       // return Math.exp(GAUSSIAN_EXP_FACTOR * Math.pow(x / fwhm, 2));
       // }
