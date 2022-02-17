@@ -3,12 +3,8 @@ import { Lorentzian } from 'ml-peak-shape-generator';
 /**
  * This function calculates the spectrum as a sum of lorentzian functions. The Lorentzian
  * parameters are divided in 3 batches. 1st: centers; 2nd: heights; 3th: widths;
- * @param parameters Lorentzian parameters
- * @returns {*}
+ * @param parameters - Lorentzian parameters
  */
-
-// const lorentzianFct = Lorentzian.fct;
-
 export function sumOfLorentzians(parameters: number[]) {
   const lorentzian = new Lorentzian();
   return (x: number) => {

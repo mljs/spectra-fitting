@@ -8,6 +8,42 @@ import { OptimizeOptions, Peak1D } from '../spectra-fitting';
 
 import { assignDeep } from './assignDeep';
 
+let xObject = {
+  init: (peak: Peak1D) => peak.x,
+  max: (peak: Peak1D) => peak.x + peak.fwhm * 2,
+  min: (peak: Peak1D) => peak.x - peak.fwhm * 2,
+  gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
+};
+
+let yObject = {
+  init: (peak: Peak1D) => peak.y,
+  max: () => 1.5,
+  min: () => 0,
+  gradientDifference: () => 1e-3,
+};
+
+let fwhmObject = {
+  init: (peak: Peak1D) => peak.fwhm,
+  max: (peak: Peak1D) => peak.fwhm * 4,
+  min: (peak: Peak1D) => peak.fwhm * 0.25,
+  gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
+};
+
+let muObject = {
+  init: (peak: Peak1D) =>
+    peak.shape && (peak.shape as { mu: number }).mu !== undefined
+      ? (peak.shape as { mu: number }).mu
+      : 0.5,
+  min: () => 0,
+  max: () => 1,
+  gradientDifference: () => 0.01,
+};
+
+/** Algorithm to check the input
+ * @param data - Data to check
+ * @param peakList - List of peaks
+ * @param options - Options for optimization
+ */
 export function checkInput(
   data: DataXY<DoubleArray>,
   peakList: Peak1D[],
@@ -21,11 +57,6 @@ export function checkInput(
   } = options;
 
   let peaks: Peak1D[] = JSON.parse(JSON.stringify(peakList));
-
-  if (typeof shape.kind !== 'string') {
-    throw new Error('kind should be a string');
-  }
-
   let kind = shape.kind.toLowerCase().replace(/[^a-z]/g, '');
 
   let paramsFunc;
@@ -33,80 +64,28 @@ export function checkInput(
   switch (kind) {
     case 'gaussian':
       paramsFunc = sumOfGaussians;
+
       defaultParameters = {
-        x: {
-          init: (peak: Peak1D) => peak.x,
-          max: (peak: Peak1D) => peak.x + peak.fwhm * 2,
-          min: (peak: Peak1D) => peak.x - peak.fwhm * 2,
-          gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
-        },
-        y: {
-          init: (peak: Peak1D) => peak.y,
-          max: () => 1.5,
-          min: () => 0,
-          gradientDifference: () => 1e-3,
-        },
-        fwhm: {
-          init: (peak: Peak1D) => peak.fwhm,
-          max: (peak: Peak1D) => peak.fwhm * 4,
-          min: (peak: Peak1D) => peak.fwhm * 0.25,
-          gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
-        },
+        x: xObject,
+        y: yObject,
+        fwhm: fwhmObject,
       };
       break;
     case 'lorentzian':
       paramsFunc = sumOfLorentzians;
       defaultParameters = {
-        x: {
-          init: (peak: Peak1D) => peak.x,
-          max: (peak: Peak1D) => peak.x + peak.fwhm * 2,
-          min: (peak: Peak1D) => peak.x - peak.fwhm * 2,
-          gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
-        },
-        y: {
-          init: (peak: Peak1D) => peak.y,
-          max: () => 1.5,
-          min: () => 0,
-          gradientDifference: () => 1e-3,
-        },
-        fwhm: {
-          init: (peak: Peak1D) => peak.fwhm,
-          max: (peak: Peak1D) => peak.fwhm * 4,
-          min: (peak: Peak1D) => peak.fwhm * 0.25,
-          gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
-        },
+        x: xObject,
+        y: yObject,
+        fwhm: fwhmObject,
       };
       break;
     case 'pseudovoigt':
       paramsFunc = sumOfPseudoVoigts;
       defaultParameters = {
-        x: {
-          init: (peak: Peak1D) => peak.x,
-          max: (peak: Peak1D) => peak.x + peak.fwhm * 2,
-          min: (peak: Peak1D) => peak.x - peak.fwhm * 2,
-          gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
-        },
-        y: {
-          init: (peak: Peak1D) => peak.y,
-          max: () => 1.5,
-          min: () => 0,
-          gradientDifference: () => 1e-3,
-        },
-        fwhm: {
-          init: (peak: Peak1D) => peak.fwhm,
-          max: (peak: Peak1D) => peak.fwhm * 4,
-          min: (peak: Peak1D) => peak.fwhm * 0.25,
-          gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
-        },
-        mu: {
-          init: (peak: Peak1D) =>
-            peak.shape && (peak.shape as { mu: number }).mu !== undefined
-              ? (peak.shape as { mu: number }).mu
-              : 0.5,
-          min: () => 0,
-          max: () => 1,
-          gradientDifference: () => 0.01,
-        },
+        x: xObject,
+        y: yObject,
+        fwhm: fwhmObject,
+        mu: muObject,
       };
       break;
     default:
@@ -116,8 +95,18 @@ export function checkInput(
   let x = data.x;
   let maxY = getMaxValue(data.y);
   let y = new Array<number>(x.length);
+  let minY = Number.MAX_VALUE;
+
+  // we need to move the data down to the baseline 0
   for (let i = 0; i < x.length; i++) {
-    y[i] = data.y[i] / maxY;
+    y[i] = data.y[i];
+    if (data.y[i] < minY) {
+      minY = data.y[i];
+    }
+  }
+  // removing minY from each y, dividing by max
+  for (let i = 0; i < x.length; i++) {
+    y[i] = (y[i] - minY) / maxY;
   }
 
   peaks.forEach((peak) => {
@@ -152,6 +141,7 @@ export function checkInput(
     y,
     x,
     maxY,
+    minY,
     peaks,
     paramsFunc,
     optimization,

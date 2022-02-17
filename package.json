@@ -56,6 +56,7 @@
     "eslint-config-cheminfo-typescript": "^10.3.0",
     "esm": "^3.2.25",
     "jest": "^27.5.1",
+    "jest-matcher-deep-close-to": "^3.0.2",
     "prettier": "^2.5.1",
     "spectrum-generator": "^6.0.4",
     "ts-jest": "^27.1.3",

@@ -4,9 +4,7 @@ import { PseudoVoigt } from 'ml-peak-shape-generator';
  * This function calculates the spectrum as a sum of linear combination of gaussian and lorentzian functions. The pseudo voigt
  * parameters are divided in 4 batches. 1st: centers; 2nd: heights; 3th: widths; 4th: mu's ;
  * @param parameters Lorentzian parameters
- * @returns {*}
  */
-
 export function sumOfPseudoVoigts(parameters: number[]) {
   const pseudoVoigt = new PseudoVoigt();
   return (x: number) => {
