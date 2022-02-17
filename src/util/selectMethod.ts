@@ -15,7 +15,6 @@ export function selectMethod(optimizationOptions: OptimizationOptions = {}) {
     case LEVENBERG_MARQUARDT:
       return {
         algorithm: levenbergMarquardt,
-        // check the options
         optimizationOptions: checkOptions(kind, options),
       };
     default:
@@ -34,7 +33,6 @@ function checkOptions(
 ): any {
   switch (kind) {
     case LEVENBERG_MARQUARDT:
-      // append the levenberg_marquadt options to the options
       return Object.assign({}, lmOptions, options);
     default:
       throw new Error(`unknown kind: ${kind}`);
@@ -42,7 +40,6 @@ function checkOptions(
 }
 
 function getKind(kind?: string | number) {
-  // return kind when kind is not a string
   if (typeof kind !== 'string') return kind;
   switch (kind.toLowerCase().replace(/[^a-z]/g, '')) {
     case 'lm':
