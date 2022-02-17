@@ -20,15 +20,7 @@ export function optimize(
     /**
      * kind of shape used for fitting
      **/
-    shape?:
-      | Shape1D
-      | {
-          /**
-           * kind of shape; lorentzian, gaussian and pseudovoigt are supported.
-           * @default gaussian
-           */
-          kind: string;
-        };
+    shape?: Shape1D;
     /**
      * the kind and options of the algorithm use to optimize parameters
      */
