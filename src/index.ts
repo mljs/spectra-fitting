@@ -79,7 +79,7 @@ export function optimize(
   if (!options.shape) {
     options = { ...options, ...{ shape: { kind: 'gaussian' } } };
   }
-  const { y, x, maxY, peaks, paramsFunc, optimization } = checkInput(
+  const { y, x, maxY, minY, peaks, paramsFunc, optimization } = checkInput(
     data,
     peakList,
     options,
@@ -129,7 +129,7 @@ export function optimize(
       if (key === 'x' || key === 'fwhm') {
         peaks[i][key] = value;
       } else if (key === 'y') {
-        peaks[i][key] = value * maxY;
+        peaks[i][key] = value * maxY + minY;
       } else {
         (peaks[i].shape as any)[key] = value;
       }

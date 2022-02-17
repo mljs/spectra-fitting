@@ -57,10 +57,6 @@ export function checkInput(
   } = options;
 
   let peaks: Peak1D[] = JSON.parse(JSON.stringify(peakList));
-
-  if (typeof shape.kind !== 'string') {
-    throw new Error('kind should be a string');
-  }
   let kind = shape.kind.toLowerCase().replace(/[^a-z]/g, '');
 
   let paramsFunc;
@@ -99,8 +95,18 @@ export function checkInput(
   let x = data.x;
   let maxY = getMaxValue(data.y);
   let y = new Array<number>(x.length);
+  let minY = Number.MAX_VALUE;
+
+  // we need to move the data down to the baseline 0
   for (let i = 0; i < x.length; i++) {
-    y[i] = data.y[i] / maxY;
+    y[i] = data.y[i];
+    if (data.y[i] < minY) {
+      minY = data.y[i];
+    }
+  }
+  // removing minY from each y, dividing by max
+  for (let i = 0; i < x.length; i++) {
+    y[i] = (y[i] - minY) / maxY;
   }
 
   peaks.forEach((peak) => {
@@ -135,6 +141,7 @@ export function checkInput(
     y,
     x,
     maxY,
+    minY,
     peaks,
     paramsFunc,
     optimization,

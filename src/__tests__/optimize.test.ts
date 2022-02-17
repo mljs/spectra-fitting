@@ -47,7 +47,7 @@ describe('Optimize sum of Lorentzian', () => {
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(pTrue[i], 2);
       expect(pFit.y).toBeCloseTo(pTrue[i + nL], 2);
-      expect(pFit.fwhm).toBeCloseTo(pTrue[i + nL * 2], 2);
+      expect(pFit.fwhm).toBeCloseTo(pTrue[i + nL * 2], 1);
       expect(peakList).toStrictEqual([
         { x: -0.5, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
         { x: 0.52, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
@@ -75,6 +75,38 @@ describe('Optimize sum of Lorentzian', () => {
       expect(pFit.x).toBeCloseTo(peaks[i].x, 1);
       expect(pFit.y).toBeCloseTo(peaks[i].y, 1);
       expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 1);
+    }
+  });
+
+  // Case when baseline not zero
+  it('baseline higher than zero', () => {
+    let peakList = [
+      {
+        x: -0.5,
+        y: 3,
+        fwhm: 0.08,
+      },
+      {
+        x: 0.5,
+        y: 3,
+        fwhm: 0.08,
+      },
+    ];
+    let dataCopy = { ...data };
+    dataCopy.y.map((el) => el + 2);
+    const peaksCopy = [
+      { x: -0.5, y: 3, fwhm: 0.05 },
+      { x: 0.5, y: 3, fwhm: 0.05 },
+    ];
+
+    let result = optimize(dataCopy, peakList, {
+      shape: { kind: 'lorentzian' },
+    });
+    for (let i = 0; i < 2; i++) {
+      let pFit = result.peaks[i];
+      expect(pFit.x).toBeCloseTo(peaksCopy[i].x, 1);
+      expect(pFit.y + 2).toBeCloseTo(peaksCopy[i].y, 1);
+      expect(pFit.fwhm).toBeCloseTo(peaksCopy[i].fwhm, 1);
     }
   });
 
@@ -342,11 +374,7 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(pTrue[i], 3);
       expect(pFit.y).toBeCloseTo(pTrue[i + nL], 3);
-      expect(pFit.fwhm).toBeCloseTo(pTrue[i + nL * 2], 3);
-      expect((pFit.shape as { mu: number }).mu).toBeCloseTo(
-        pTrue[i + nL * 3],
-        3,
-      );
+      expect(pFit.fwhm).toBeCloseTo(pTrue[i + nL * 2], 2);
     }
   });
 
