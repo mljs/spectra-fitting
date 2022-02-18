@@ -4,6 +4,7 @@ import getMaxValue from 'ml-array-max';
 import { sumOfGaussians } from '../shapes/sumOfGaussians';
 import { sumOfLorentzians } from '../shapes/sumOfLorentzians';
 import { sumOfPseudoVoigts } from '../shapes/sumOfPseudoVoigts';
+import { sumOfShapes } from '../shapes/sumOfShapes';
 import { OptimizeOptions, Peak1D } from '../spectra-fitting';
 
 import { assignDeep } from './assignDeep';
@@ -46,11 +47,13 @@ let muObject = {
  */
 export function checkInput(
   data: DataXY<DoubleArray>,
+  // Peak1D : y, x, width, fwhm
   peakList: Peak1D[],
   options: OptimizeOptions,
 ) {
+  // gaussian by default, but lorentzian, pseudoVoigt and mixture exist
   let {
-    shape = { kind: 'gaussian' },
+    shape = { kind: 'mixture' },
     optimization = {
       kind: 'lm',
     },
@@ -88,6 +91,15 @@ export function checkInput(
         mu: muObject,
       };
       break;
+    case 'mixture':
+      paramsFunc = sumOfShapes;
+      defaultParameters = {
+        x: xObject,
+        y: yObject,
+        fwhm: fwhmObject,
+        mu: muObject,
+      };
+      break;
     default:
       throw new Error('kind of shape is not supported');
   }
@@ -109,6 +121,8 @@ export function checkInput(
     y[i] = (y[i] - minY) / maxY;
   }
 
+  // divide the y by maxY
+  // in the case of mixture, we map peak to peak.shape = { kind : "mixture", ...peak.shape}
   peaks.forEach((peak) => {
     peak.y /= maxY;
     peak.shape = {
@@ -145,5 +159,6 @@ export function checkInput(
     peaks,
     paramsFunc,
     optimization,
+    kind,
   };
 }

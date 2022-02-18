@@ -15,12 +15,13 @@ import { selectMethod } from './util/selectMethod';
  */
 export function optimize(
   data: DataXY<DoubleArray>,
+  // peakList will contain also the kind
   peakList: Peak1D[],
   options: {
     /**
      * kind of shape used for fitting
      **/
-    shape?: Shape1D;
+    shape?: Shape1D | { kind: string };
     /**
      * the kind and options of the algorithm use to optimize parameters
      */
@@ -73,22 +74,29 @@ export function optimize(
   } = {},
 ): {
   error: number;
+  // x, y, width, fwhm
   peaks: Peak1D[];
   iterations: number;
 } {
-  if (!options.shape) {
-    options = { ...options, ...{ shape: { kind: 'gaussian' } } };
+  // options.shape.kind could be a mixture of the shapes, 'mixture'
+  const { y, x, maxY, minY, peaks, paramsFunc, optimization, kind } =
+    checkInput(data, peakList, options);
+
+  let kinds = [];
+  for (const peak of peaks) {
+    if (peaks && peak && peak.shape !== undefined) {
+      let shape = peak.shape;
+      if (shape) {
+        kinds.push(shape.kind);
+      }
+    }
   }
-  const { y, x, maxY, minY, peaks, paramsFunc, optimization } = checkInput(
-    data,
-    peakList,
-    options,
-  );
 
   let parameters = optimization.parameters;
 
   let nbShapes = peaks.length;
   let parameterKey = Object.keys(parameters);
+  // number of peaks times number of parameters
   let nbParams = nbShapes * parameterKey.length;
   let pMin = new Float64Array(nbParams);
   let pMax = new Float64Array(nbParams);
@@ -98,6 +106,7 @@ export function optimize(
   for (let i = 0; i < nbShapes; i++) {
     let peak = peaks[i];
     for (let k = 0; k < parameterKey.length; k++) {
+      // getting the kth key
       let key = parameterKey[k];
       let init = parameters[key].init;
       let min = parameters[key].min;
@@ -111,12 +120,14 @@ export function optimize(
     }
   }
 
+  // only one method so far, levenberg maquadt either way
   let { algorithm, optimizationOptions } = selectMethod(optimization);
 
   optimizationOptions.minValues = pMin;
   optimizationOptions.maxValues = pMax;
   optimizationOptions.initialValues = pInit;
   optimizationOptions.gradientDifference = gradientDifference;
+  optimizationOptions = { ...optimizationOptions, kind: kind, kinds: kinds };
 
   let pFit = algorithm({ x, y }, paramsFunc, optimizationOptions);
 

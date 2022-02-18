@@ -6,6 +6,7 @@ import { optimize } from '../index';
 import { sumOfGaussians } from '../shapes/sumOfGaussians';
 import { sumOfLorentzians } from '../shapes/sumOfLorentzians';
 import { sumOfPseudoVoigts } from '../shapes/sumOfPseudoVoigts';
+import { sumOfShapes } from '../shapes/sumOfShapes';
 
 expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
 
@@ -16,7 +17,7 @@ for (let i = 0; i < nbPoints; i++) {
   x[i] = (i - nbPoints / 2) * xFactor;
 }
 
-describe('Optimize sum of Lorentzian', () => {
+describe('Optimize sum of Lorentzians', () => {
   const peaks = [
     { x: -0.5, y: 1, fwhm: 0.05 },
     { x: 0.5, y: 1, fwhm: 0.05 },
@@ -327,7 +328,7 @@ describe('Optimize sum of Gaussians', () => {
   });
 });
 
-describe('Optimize 4 parameters of a linear combination of gaussian and lorentzians', () => {
+describe('Sum of Pseudo Voigts', () => {
   const peaks = [
     { x: 0, y: 0.001, fwhm: 0.31, mu: (xFactor * nbPoints) / 10 },
     { x: 0, y: 0.001, fwhm: 0.31, mu: (xFactor * nbPoints) / 10 },
@@ -502,6 +503,73 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
       expect(pFit.x).toBeCloseTo(peaks[i].x, 1);
       expect(pFit.y).toBeCloseTo(peaks[i].y, 1);
       expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 1);
+    }
+  });
+});
+
+describe('Sum of a mix of distributions', () => {
+  it('group of two GL', () => {
+    let pTrue = [
+      0,
+      0,
+      -0.5,
+      0.5,
+      -0.5,
+      0.5,
+      0.001,
+      0.001,
+      0.001,
+      0.001,
+      0.001,
+      0.001,
+      0.31,
+      0.31,
+      0.31,
+      0.31,
+      0.31,
+      0.31,
+      (xFactor * nbPoints) / 10,
+      (xFactor * nbPoints) / 10,
+      0,
+      0,
+      0,
+      0,
+    ];
+
+    let kinds = [
+      'pseudovoigt',
+      'pseudovoigt',
+      'gaussian',
+      'gaussian',
+      'lorentzian',
+      'lorentzian',
+    ];
+    let func = sumOfShapes(pTrue, kinds);
+
+    let result = optimize(
+      { x, y: x.map(func) },
+      [
+        { x: 0.1, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
+        { x: 0.1, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
+        { x: -0.5, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
+        { x: 0.52, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
+        { x: -0.5, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
+        { x: 0.52, y: 0.0009, fwhm: (xFactor * nbPoints) / 8 },
+      ],
+      {
+        shape: { kind: 'mixture' },
+        optimization: {
+          kind: 'lm',
+          options: { maxIterations: 10000, errorTolerance: 1e-8 },
+        },
+      },
+    );
+    let nL = pTrue.length / 4;
+    for (let i = 0; i < nL; i++) {
+      let pFit = result.peaks[i];
+      expect(pFit.x).toBeCloseTo(pTrue[i], 0);
+      expect(pFit.y).toBeCloseTo(pTrue[i + nL], 0);
+      expect(pFit.fwhm).toBeCloseTo(pTrue[i + nL * 2], 0);
     }
   });
 });
