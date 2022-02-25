@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.1.0](https://www.github.com/mljs/spectra-fitting/compare/v3.0.4...v3.1.0) (2022-02-25)
+
+
+### Features
+
+* setup typescript ([50bd164](https://www.github.com/mljs/spectra-fitting/commit/50bd1645fab2de6fc4ab1c0f317a0c9696cf131c))
+
+
+### Bug Fixes
+
+* remove old github actions ([26ebaad](https://www.github.com/mljs/spectra-fitting/commit/26ebaaddc904fe855666113e7ae73c0da314fe4e))
+* update dependencies ([2359831](https://www.github.com/mljs/spectra-fitting/commit/2359831b2ba9a5dca0a048b5890423bab72833ea))
+
 ### [3.0.4](https://www.github.com/mljs/spectra-fitting/compare/v3.0.3...v3.0.4) (2022-01-23)
 
 
