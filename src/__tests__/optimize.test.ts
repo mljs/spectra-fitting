@@ -27,7 +27,7 @@ describe('Optimize sum of Lorentzian', () => {
       to: 1,
       nbPoints: 101,
     },
-    peaks: {
+    peakOptions: {
       factor: 6,
     },
   });
@@ -200,7 +200,7 @@ describe('Optimize sum of Gaussians', () => {
       to: 1,
       nbPoints: 101,
     },
-    peaks: {
+    peakOptions: {
       factor: 6,
     },
   });
@@ -338,7 +338,7 @@ describe('Optimize 4 parameters of a linear combination of gaussian and lorentzi
       to: 1,
       nbPoints: 101,
     },
-    peaks: {
+    peakOptions: {
       factor: 6,
     },
   });
