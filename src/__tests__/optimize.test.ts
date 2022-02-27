@@ -506,10 +506,7 @@ describe('Sum of a mix of distributions', () => {
         from: -1,
         to: 1,
         nbPoints: 101,
-      },
-      peaks: {
-        factor: 6,
-      },
+      }
     });
 
     let result = optimize(
