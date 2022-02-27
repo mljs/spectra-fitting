@@ -21,7 +21,7 @@
     "prettier": "prettier --check src",
     "prettier-write": "prettier --write src",
     "test-coverage": "jest --coverage",
-    "test-only": "jest --coverage",
+    "test-only": "jest --coverage --silent=false",
     "tsc": "npm run clean && npm run tsc-cjs && npm run tsc-esm",
     "tsc-cjs": "tsc --project tsconfig.cjs.json",
     "tsc-esm": "tsc --project tsconfig.esm.json",
@@ -66,6 +66,6 @@
     "cheminfo-types": "^0.10.0",
     "ml-array-max": "^1.2.4",
     "ml-levenberg-marquardt": "^4.0.0",
-    "ml-peak-shape-generator": "^4.0.3"
+    "ml-peak-shape-generator": "^4.1.0"
   }
 }
