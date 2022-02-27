@@ -74,22 +74,24 @@ export function optimize(
   peaks: Peak1D[];
   iterations: number;
 } {
-
   let peakList = JSON.parse(JSON.stringify(peakListInitial));
   for (const peak of peakList) {
-    if(!peak.shape.kind) {
-      peak.shape.kind = options.defaultPeakShape || "gaussian";
+    if (!peak.shape.kind) {
+      peak.shape.kind = options.defaultPeakShape || 'gaussian';
     }
     let kind = peak.shape.kind;
-    peak.shape = getShape1D({kind : peak.shape.kind});
+    peak.shape = getShape1D({ kind: peak.shape.kind });
     peak.shape.kind = kind;
     peak.parameters = ['height', 'x', ...peak.shape.getParameters()];
     peak.fromIndex = 0;
     peak.toIndex = peak.parameters.length - 1;
   }
 
-  const { y, x, maxY, minY, peaks, paramsFunc, optimization } =
-    checkInput(data, peakList, options);
+  const { y, x, maxY, minY, peaks, paramsFunc, optimization } = checkInput(
+    data,
+    peakList,
+    options,
+  );
 
   let parameters = optimization.parameters;
 
@@ -109,10 +111,10 @@ export function optimize(
       let min = parameters[key].min;
       let max = parameters[key].max;
       let gradientDifferenceValue = parameters[key].gradientDifference;
-      pInit[ i*keysOfParameters.length + k ] = init[i % init.length](peak);
-      pMin[ i*keysOfParameters.length + k ] = min[i % min.length](peak);
-      pMax[ i*keysOfParameters.length + k ] = max[i % max.length](peak);
-      gradientDifference[ i*keysOfParameters.length + k ] =
+      pInit[i * keysOfParameters.length + k] = init[i % init.length](peak);
+      pMin[i * keysOfParameters.length + k] = min[i % min.length](peak);
+      pMax[i * keysOfParameters.length + k] = max[i % max.length](peak);
+      gradientDifference[i * keysOfParameters.length + k] =
         gradientDifferenceValue[i % gradientDifferenceValue.length](peak);
     }
   }
@@ -123,7 +125,7 @@ export function optimize(
   optimizationOptions.maxValues = pMax;
   optimizationOptions.initialValues = pInit;
   optimizationOptions.gradientDifference = gradientDifference;
-  optimizationOptions = { ...optimizationOptions};
+  optimizationOptions = { ...optimizationOptions };
 
   let pFit = algorithm({ x, y }, paramsFunc, optimizationOptions);
   let { parameterError: error, iterations } = pFit;
@@ -132,8 +134,8 @@ export function optimize(
   for (let i = 0; i < nbShapes; i++) {
     for (let k = 0; k < keysOfParameters.length; k++) {
       const key = keysOfParameters[k];
-      const value = pFit.parameterValues[ i*keysOfParameters.length + k ];
-      if (key === 'x' || key === 'fwhm' ) {
+      const value = pFit.parameterValues[i * keysOfParameters.length + k];
+      if (key === 'x' || key === 'fwhm') {
         peaks[i][key] = value;
       } else if (key === 'y') {
         peaks[i][key] = value * maxY + minY;

@@ -46,18 +46,17 @@ let muObject = {
 export function checkInput(
   data: DataXY<DoubleArray>,
   peakList: {
-    x: number,
-    y: number,
-    width?: number,
-    fwhm: number,
-    shape?: Shape1D,
-    parameters?: string[],
-    fromIndex?: number,
-    toIndex? : number
+    x: number;
+    y: number;
+    width?: number;
+    fwhm: number;
+    shape?: Shape1D;
+    parameters?: string[];
+    fromIndex?: number;
+    toIndex?: number;
   }[],
   options: OptimizeOptions,
 ) {
-
   let {
     optimization = {
       kind: 'lm',
@@ -65,14 +64,14 @@ export function checkInput(
   } = options;
 
   let peaks: {
-    x: number,
-    y: number,
-    width?: number,
-    fwhm: number,
-    shape: Shape1D,
-    parameters : string[],
-    fromIndex : number,
-    toIndex : number
+    x: number;
+    y: number;
+    width?: number;
+    fwhm: number;
+    shape: Shape1D;
+    parameters: string[];
+    fromIndex: number;
+    toIndex: number;
   }[] = JSON.parse(JSON.stringify(peakList));
 
   let paramsFunc = getSumOfShapes(peaks);
