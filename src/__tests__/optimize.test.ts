@@ -30,7 +30,7 @@ describe('Optimize sum of Lorentzians', () => {
       to: 1,
       nbPoints: 101,
     },
-    peaks: {
+    peakOptions: {
       factor: 6,
     },
   });
@@ -187,7 +187,7 @@ describe('Optimize sum of Gaussians', () => {
       to: 2,
       nbPoints: 101,
     },
-    peaks: {
+    peakOptions: {
       factor: 6,
     },
   });
@@ -320,7 +320,7 @@ describe('Sum of Pseudo Voigts', () => {
       to: 1,
       nbPoints: 101,
     },
-    peaks: {
+    peakOptions: {
       factor: 6,
     },
   });
