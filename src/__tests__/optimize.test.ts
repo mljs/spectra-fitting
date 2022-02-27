@@ -29,10 +29,7 @@ describe('Optimize sum of Lorentzians', () => {
       from: -1,
       to: 1,
       nbPoints: 101,
-    },
-    peakOptions: {
-      factor: 6,
-    },
+    }
   });
 
   it('positive maxima peaks', () => {
@@ -186,10 +183,7 @@ describe('Optimize sum of Gaussians', () => {
       from: -2,
       to: 2,
       nbPoints: 101,
-    },
-    peakOptions: {
-      factor: 6,
-    },
+    }
   });
 
   it('positive maxima peaks', () => {
@@ -319,10 +313,7 @@ describe('Sum of Pseudo Voigts', () => {
       from: -1,
       to: 1,
       nbPoints: 101,
-    },
-    peakOptions: {
-      factor: 6,
-    },
+    }
   });
 
   it('positive maxima peaks', () => {
