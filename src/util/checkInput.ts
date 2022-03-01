@@ -1,6 +1,6 @@
 import { DataXY, DoubleArray } from 'cheminfo-types';
 import getMaxValue from 'ml-array-max';
-import { getShape1D, Shape1D } from 'ml-peak-shape-generator';
+import { Shape1D } from 'ml-peak-shape-generator';
 
 import { getSumOfShapes } from '../shapes/getSumOfShapes';
 import { OptimizeOptions, Peak1D } from '../spectra-fitting';
@@ -75,7 +75,7 @@ peakList: {
   }[],
 
   let peaks : any = [];
-  // making a peaks object just for getSumOfShapes, where we remove the range considerations 
+  // making a peaks object just for getSumOfShapes, where we remove the range considerations
   peakList.forEach(peak => {
     let peakToAdd : any = {};
     if(peak.x) {
@@ -105,7 +105,7 @@ peakList: {
  */
 export function checkInput(
   data: DataXY<DoubleArray>,
-  peakList : Peak1D[],
+  peakList: Peak1D[],
   options: OptimizeOptions,
 ) {
   let {
@@ -148,7 +148,7 @@ export function checkInput(
     y[i] = (y[i] - minY) / maxY;
   }
 
-  peaks.forEach((peak : any) => {
+  peaks.forEach((peak: any) => {
     peak.y /= maxY;
   });
 

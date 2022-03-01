@@ -37,7 +37,7 @@ describe('Optimize sum of Lorentzians', () => {
       {
         x: -0.52,
         y: 0.9,
-        fwhm:0.08,
+        fwhm: 0.08,
         shape: { kind: 'lorentzian' } as Shape1D,
       },
       {
@@ -59,13 +59,13 @@ describe('Optimize sum of Lorentzians', () => {
   it('baseline higher than zero', () => {
     let peakList = [
       {
-        x:  -0.52,
+        x: -0.52,
         y: 2.9,
         fwhm: 0.08,
         shape: { kind: 'lorentzian' } as Shape1D,
       },
       {
-        x:  0.52,
+        x: 0.52,
         y: 2.9,
         fwhm: 0.08,
         shape: { kind: 'lorentzian' } as Shape1D,

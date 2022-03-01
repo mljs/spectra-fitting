@@ -76,26 +76,26 @@ export function optimize(
   error: number;
   // not using Peak1D directly because it has additional parameters that we do not need
   peaks: {
-        x: number;
-        y: number;
-        width?: number;
-        fwhm: number;
-        shape: Shape1D;
-        parameters: string[];
-        fromIndex: number;
-        toIndex: number;
+    x: number;
+    y: number;
+    width?: number;
+    fwhm: number;
+    shape: Shape1D;
+    parameters: string[];
+    fromIndex: number;
+    toIndex: number;
   }[];
   iterations: number;
 } {
   let peakList = JSON.parse(JSON.stringify(peakListInitial));
 
-  // initial beginning index is set to zero 
+  // initial beginning index is set to zero
   let index = 0;
   for (const peak of peakList) {
     if (!peak.shape.kind) {
-      if(options.shape){
+      if (options.shape) {
         peak.shape.kind = options.shape.kind;
-      } else{
+      } else {
         peak.shape.kind = 'gaussian';
       }
     }
