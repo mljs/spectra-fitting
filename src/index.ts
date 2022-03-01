@@ -1,5 +1,5 @@
 import { DataXY, DoubleArray } from 'cheminfo-types';
-import { getShape1D } from 'ml-peak-shape-generator';
+import { getShape1D, Shape1D } from 'ml-peak-shape-generator';
 
 import { Peak1D } from './spectra-fitting';
 import { checkInput } from './util/checkInput';
@@ -19,9 +19,9 @@ export function optimize(
   peakListInitial: Peak1D[],
   options: {
     /**
-     * the default peak shape if not specified
-     */
-    defaultPeakShape?: string;
+     * kind of shape used for fitting
+     **/
+    shape?: Shape1D;
     /**
      * the kind and options of the algorithm use to optimize parameters
      */
@@ -36,7 +36,10 @@ export function optimize(
        *  the min and max value of the parameter (search space) and the step size to approximate the jacobian matrix respectively. Those options could be a number,
        *  array of numbers, callback, or array of callbacks. Each kind of shape has default parameters so it could be undefined
        */
+      // not sure if parameters should be an array or one set of parameters only?
       parameters?: {
+        /** name of the parameter for which we define the followig parameters */
+        name?: string;
         /** definition of the starting point of the parameter (the guess),
          *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the guess of the first peak and so on. */
         init?: number;
@@ -71,20 +74,39 @@ export function optimize(
   } = {},
 ): {
   error: number;
-  peaks: Peak1D[];
+  // not using Peak1D directly because it has additional parameters that we do not need
+  peaks: {
+        x: number;
+        y: number;
+        width?: number;
+        fwhm: number;
+        shape: Shape1D;
+        parameters: string[];
+        fromIndex: number;
+        toIndex: number;
+  }[];
   iterations: number;
 } {
   let peakList = JSON.parse(JSON.stringify(peakListInitial));
+
+  // initial beginning index is set to zero 
+  let index = 0;
   for (const peak of peakList) {
     if (!peak.shape.kind) {
-      peak.shape.kind = options.defaultPeakShape || 'gaussian';
+      if(options.shape){
+        peak.shape.kind = options.shape.kind;
+      } else{
+        peak.shape.kind = 'gaussian';
+      }
     }
     let kind = peak.shape.kind;
     peak.shape = getShape1D({ kind: peak.shape.kind });
     peak.shape.kind = kind;
     peak.parameters = ['height', 'x', ...peak.shape.getParameters()];
-    peak.fromIndex = 0;
-    peak.toIndex = peak.parameters.length - 1;
+
+    peak.fromIndex = index;
+    peak.toIndex = peak.fromIndex + peak.parameters.length - 1;
+    index += peak.toIndex - peak.fromIndex + 1;
   }
 
   const { y, x, maxY, minY, peaks, paramsFunc, optimization } = checkInput(

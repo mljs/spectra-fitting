@@ -1,6 +1,6 @@
 import { DataXY, DoubleArray } from 'cheminfo-types';
 import getMaxValue from 'ml-array-max';
-import { Shape1D } from 'ml-peak-shape-generator';
+import { getShape1D, Shape1D } from 'ml-peak-shape-generator';
 
 import { getSumOfShapes } from '../shapes/getSumOfShapes';
 import { OptimizeOptions, Peak1D } from '../spectra-fitting';
@@ -38,6 +38,66 @@ let muObject = {
   gradientDifference: () => 0.01,
 };
 
+/*
+peakList: {
+    x: {
+      val : number;
+      init?: number;
+      min?: number;
+      max?: number;
+      gradientDifference?: number;
+    };
+    y: {
+      val : number;
+      init?: number;
+      min?: number;
+      max?: number;
+      gradientDifference?: number;
+    };
+    width?: {
+      val : number;
+      init?: number;
+      min?: number;
+      max?: number;
+      gradientDifference?: number;
+    };
+    fwhm: {
+      val : number;
+      init?: number;
+      min?: number;
+      max?: number;
+      gradientDifference?: number;
+    };
+    shape?: Shape1D;
+    parameters?: string[];
+    fromIndex?: number;
+    toIndex?: number;
+  }[],
+
+  let peaks : any = [];
+  // making a peaks object just for getSumOfShapes, where we remove the range considerations 
+  peakList.forEach(peak => {
+    let peakToAdd : any = {};
+    if(peak.x) {
+      peakToAdd.x = peak.x.val;
+    } if (peak.y) {
+      peakToAdd.y = peak.y.val;
+    } if (peak.width) {
+      peakToAdd.width = peak.width.val;
+    } if (peak.fwhm) {
+      peakToAdd.fwhm = peak.fwhm.val;
+    } if (peak.shape) {
+      peakToAdd.shape = peak.shape;
+    } if(peak.parameters) {
+      peakToAdd.parameters = peak.parameters;
+    } if(peak.fromIndex) {
+      peakToAdd.fromIndex = peak.fromIndex;
+    } if(peak.toIndex) {
+      peakToAdd.toIndex = peak.toIndex;
+    }
+    peaks.append(peakToAdd);
+  });
+*/
 /** Algorithm to check the input
  * @param data - Data to check
  * @param peakList - List of peaks
@@ -45,16 +105,7 @@ let muObject = {
  */
 export function checkInput(
   data: DataXY<DoubleArray>,
-  peakList: {
-    x: number;
-    y: number;
-    width?: number;
-    fwhm: number;
-    shape?: Shape1D;
-    parameters?: string[];
-    fromIndex?: number;
-    toIndex?: number;
-  }[],
+  peakList : Peak1D[],
   options: OptimizeOptions,
 ) {
   let {
@@ -97,7 +148,7 @@ export function checkInput(
     y[i] = (y[i] - minY) / maxY;
   }
 
-  peaks.forEach((peak) => {
+  peaks.forEach((peak : any) => {
     peak.y /= maxY;
   });
 
