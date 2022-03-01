@@ -109,7 +109,7 @@ export function optimize(
     index += peak.toIndex - peak.fromIndex + 1;
   }
 
-  const { y, x, maxY, minY, peaks, paramsFunc, optimization } = checkInput(
+  const { y, x, maxY, minY, peaks, sumOfShapes, optimization } = checkInput(
     data,
     peakList,
     options,
@@ -149,23 +149,25 @@ export function optimize(
   optimizationOptions.gradientDifference = gradientDifference;
   optimizationOptions = { ...optimizationOptions };
 
-  let pFit = algorithm({ x, y }, paramsFunc, optimizationOptions);
+  let pFit = algorithm({ x, y }, sumOfShapes, optimizationOptions);
   let { parameterError: error, iterations } = pFit;
-  let result = { error, iterations, peaks };
+  let result = { error, iterations };
 
+  const newPeaks: any[] = [];
   for (let i = 0; i < nbShapes; i++) {
     for (let k = 0; k < keysOfParameters.length; k++) {
       const key = keysOfParameters[k];
       const value = pFit.parameterValues[i * keysOfParameters.length + k];
       if (key === 'x' || key === 'fwhm') {
-        peaks[i][key] = value;
+        newPeaks[i][key] = value;
       } else if (key === 'y') {
-        peaks[i][key] = value * maxY + minY;
+        newPeaks[i][key] = value * maxY + minY;
       } else {
-        (peaks[i].shape as any)[key] = value;
+        newPeaks[i].shape[key] = value;
       }
     }
   }
 
+  result.peaks = newPeaks;
   return result;
 }

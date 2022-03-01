@@ -125,7 +125,7 @@ export function checkInput(
     toIndex: number;
   }[] = JSON.parse(JSON.stringify(peakList));
 
-  let paramsFunc = getSumOfShapes(peaks);
+  let sumOfShapes = getSumOfShapes(peaks);
   let defaultParameters = {
     x: xObject,
     y: yObject,
@@ -179,7 +179,7 @@ export function checkInput(
     maxY,
     minY,
     peaks,
-    paramsFunc,
+    sumOfShapes,
     optimization,
   };
 }
