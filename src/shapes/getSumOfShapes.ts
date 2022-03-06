@@ -1,8 +1,7 @@
 import {
-  Gaussian,
   PseudoVoigt,
-  Lorentzian,
   Shape1D,
+  getShape1D,
 } from 'ml-peak-shape-generator';
 
 /**
@@ -24,31 +23,20 @@ export function getSumOfShapes(
   }[],
 ) {
   return function sumOfShapes(parameters: number[]) {
-    const pseudoVoigt = new PseudoVoigt();
-    const lorentzian = new Lorentzian();
-    const gaussian = new Gaussian();
 
     return (x: number) => {
       let y = 0;
       let offset = 0;
       peaks.forEach((peak) => {
         let kind = peak.shape.kind;
-        if (kind === 'pseudoVoigt') {
-          pseudoVoigt.fwhm = parameters[offset + 2];
-          pseudoVoigt.mu = parameters[offset + 3];
-          y += parameters[offset + 1] * pseudoVoigt.fct(x - parameters[offset]);
-          offset += 4;
-        } else if (kind === 'lorentzian') {
-          lorentzian.fwhm = parameters[offset + 2];
-          y += parameters[offset + 1] * lorentzian.fct(x - parameters[offset]);
-          offset += 4;
-        } else if (kind === 'gaussian') {
-          gaussian.fwhm = parameters[offset + 2];
-          y += parameters[offset + 1] * gaussian.fct(x - parameters[offset]);
-          offset += 4;
+        let shape = getShape1D({kind : kind} as Shape1D);
+        shape.fwhm = parameters[offset + 2];
+        if(shape instanceof PseudoVoigt) {
+          shape.mu = parameters[offset + 3];
         }
+        y += parameters[offset + 1] * shape.fct(x - parameters[offset]);
+        offset += 4;
       });
-
       return y;
     };
   };

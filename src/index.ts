@@ -151,9 +151,11 @@ export function optimize(
 
   let pFit = algorithm({ x, y }, sumOfShapes, optimizationOptions);
   let { parameterError: error, iterations } = pFit;
-  let result = { error, iterations };
+  let result : any = { error, iterations };
 
-  const newPeaks: any[] = [];
+  const newPeaks = JSON.parse(JSON.stringify(peaks));
+  delete newPeaks.fromIndex;
+  delete newPeaks.toIndex;
   for (let i = 0; i < nbShapes; i++) {
     for (let k = 0; k < keysOfParameters.length; k++) {
       const key = keysOfParameters[k];
