@@ -14,6 +14,8 @@ for (let i = 0; i < nbPoints; i++) {
   x[i] = (i - nbPoints / 2) * xFactor;
 }
 
+// closing issue 80
+
 describe('Optimize sum of Lorentzians', () => {
   const peaks = [
     { x: -0.5, y: 1, fwhm: 0.05, shape: { kind: 'lorentzian' } },
