@@ -303,14 +303,20 @@ describe('Sum of Pseudo Voigts', () => {
       x: 0,
       y: 0.001,
       fwhm: 0.31,
-      shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D,
+      shape: {
+        kind: 'pseudoVoigt',
+        options: { mu: (xFactor * nbPoints) / 10 },
+      } as Shape1D,
     },
     {
       x: 0,
       y: 0.001,
       fwhm: 0.31,
       mu: (xFactor * nbPoints) / 10,
-      shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D,
+      shape: {
+        kind: 'pseudoVoigt',
+        options: { mu: (xFactor * nbPoints) / 10 },
+      } as Shape1D,
     },
   ];
   const peaksGenerator = [
@@ -331,13 +337,19 @@ describe('Sum of Pseudo Voigts', () => {
         x: 0.001,
         y: 0.0009,
         fwhm: (xFactor * nbPoints) / 6,
-        shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D,
+        shape: {
+          kind: 'pseudoVoigt',
+          options: { mu: (xFactor * nbPoints) / 10 },
+        } as Shape1D,
       },
       {
         x: 0.001,
         y: 0.0009,
         fwhm: (xFactor * nbPoints) / 6,
-        shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D,
+        shape: {
+          kind: 'pseudoVoigt',
+          options: { mu: (xFactor * nbPoints) / 10 },
+        } as Shape1D,
       },
     ];
     let result = optimize(data, peakList, {
@@ -360,13 +372,19 @@ describe('Sum of Pseudo Voigts', () => {
         x: 0.001,
         y: -0.0009,
         fwhm: (xFactor * nbPoints) / 6,
-        shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D,
+        shape: {
+          kind: 'pseudoVoigt',
+          options: { mu: (xFactor * nbPoints) / 10 },
+        } as Shape1D,
       },
       {
         x: 0.001,
         y: -0.0009,
         fwhm: (xFactor * nbPoints) / 6,
-        shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D,
+        shape: {
+          kind: 'pseudoVoigt',
+          options: { mu: (xFactor * nbPoints) / 10 },
+        } as Shape1D,
       },
     ];
     let modifiedData = data;
@@ -391,13 +409,19 @@ describe('Sum of Pseudo Voigts', () => {
         x: 0.001,
         y: -0.0009,
         fwhm: (xFactor * nbPoints) / 6,
-        shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D,
+        shape: {
+          kind: 'pseudoVoigt',
+          options: { mu: (xFactor * nbPoints) / 10 },
+        } as Shape1D,
       },
       {
         x: 0.001,
         y: -0.0009,
         fwhm: (xFactor * nbPoints) / 6,
-        shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D,
+        shape: {
+          kind: 'pseudoVoigt',
+          options: { mu: (xFactor * nbPoints) / 10 },
+        } as Shape1D,
       },
     ];
     let modifiedData = data;
@@ -422,13 +446,19 @@ describe('Sum of Pseudo Voigts', () => {
         x: 0.001,
         y: 0.0009,
         fwhm: (xFactor * nbPoints) / 6,
-        shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D,
+        shape: {
+          kind: 'pseudoVoigt',
+          options: { mu: (xFactor * nbPoints) / 10 },
+        } as Shape1D,
       },
       {
         x: 0.001,
         y: 0.0009,
         fwhm: (xFactor * nbPoints) / 6,
-        shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D,
+        shape: {
+          kind: 'pseudoVoigt',
+          options: { mu: (xFactor * nbPoints) / 10 },
+        } as Shape1D,
       },
     ];
     let modifiedData = data;
@@ -456,13 +486,19 @@ describe('Sum of a mix of distributions', () => {
         x: 0,
         y: 0.001,
         fwhm: 0.31,
-        shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D
+        shape: {
+          kind: 'pseudoVoigt',
+          options: { mu: (xFactor * nbPoints) / 10 },
+        } as Shape1D,
       },
       {
         x: 0,
         y: 0.001,
         fwhm: 0.31,
-        shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D
+        shape: {
+          kind: 'pseudoVoigt',
+          options: { mu: (xFactor * nbPoints) / 10 },
+        } as Shape1D,
       },
       { x: -0.5, y: 0.001, fwhm: 0.31, shape: { kind: 'gaussian' } },
       { x: 0.5, y: 0.001, fwhm: 0.31, shape: { kind: 'gaussian' } },
@@ -517,13 +553,19 @@ describe('Sum of a mix of distributions', () => {
           x: 0.001,
           y: 0.0009,
           fwhm: (xFactor * nbPoints) / 8,
-          shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D,
+          shape: {
+            kind: 'pseudoVoigt',
+            options: { mu: (xFactor * nbPoints) / 10 },
+          } as Shape1D,
         },
         {
           x: 0.001,
           y: 0.0009,
           fwhm: (xFactor * nbPoints) / 8,
-          shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D,
+          shape: {
+            kind: 'pseudoVoigt',
+            options: { mu: (xFactor * nbPoints) / 10 },
+          } as Shape1D,
         },
         {
           x: -0.52,

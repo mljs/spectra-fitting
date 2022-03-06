@@ -16,16 +16,9 @@ for (let i = 0; i < nbPoints; i++) {
 
 describe('One Shape tested', () => {
   it('Gaussian', () => {
+    let pTrue = [-0.5, 0.001, 0.31];
 
-    let pTrue = [
-      -0.5,
-      0.001,
-      0.31,
-    ];
-
-    const peaksGenerator = [
-      { x: -0.5, y: 0.001, fwhm: 0.31 },
-    ];
+    const peaksGenerator = [{ x: -0.5, y: 0.001, fwhm: 0.31 }];
 
     const data: DataXY = generateSpectrum(peaksGenerator, {
       generator: {
@@ -43,7 +36,7 @@ describe('One Shape tested', () => {
           y: 0.0009,
           fwhm: (xFactor * nbPoints) / 8,
           shape: { kind: 'gaussian' } as Shape1D,
-        }
+        },
       ],
       {
         optimization: {
@@ -60,16 +53,9 @@ describe('One Shape tested', () => {
   });
 
   it('Lorentzian', () => {
+    let pTrue = [-0.5, 0.001, 0.31];
 
-    let pTrue = [
-      -0.5,
-      0.001,
-      0.31,
-    ];
-
-    const peaksGenerator = [
-      { x: -0.5, y: 0.001, fwhm: 0.31 },
-    ];
+    const peaksGenerator = [{ x: -0.5, y: 0.001, fwhm: 0.31 }];
 
     const data: DataXY = generateSpectrum(peaksGenerator, {
       generator: {
@@ -87,7 +73,7 @@ describe('One Shape tested', () => {
           y: 0.0009,
           fwhm: (xFactor * nbPoints) / 8,
           shape: { kind: 'lorentzian' } as Shape1D,
-        }
+        },
       ],
       {
         optimization: {
@@ -104,16 +90,10 @@ describe('One Shape tested', () => {
   });
 
   it('Pseudo Voigt', () => {
-
-    let pTrue = [
-      0,
-      0.001,
-      0.31,
-      (xFactor * nbPoints) / 10,
-    ];
+    let pTrue = [0, 0.001, 0.31, (xFactor * nbPoints) / 10];
 
     const peaksGenerator = [
-      { x: 0, y: 0.001, fwhm: 0.31, mu: (xFactor * nbPoints) / 10 }
+      { x: 0, y: 0.001, fwhm: 0.31, mu: (xFactor * nbPoints) / 10 },
     ];
 
     const data: DataXY = generateSpectrum(peaksGenerator, {
@@ -131,8 +111,11 @@ describe('One Shape tested', () => {
           x: 0.001,
           y: 0.0009,
           fwhm: (xFactor * nbPoints) / 8,
-          shape: {kind: 'pseudoVoigt', options: {mu: (xFactor * nbPoints) / 10 }} as Shape1D,
-        }
+          shape: {
+            kind: 'pseudoVoigt',
+            options: { mu: (xFactor * nbPoints) / 10 },
+          } as Shape1D,
+        },
       ],
       {
         optimization: {
@@ -148,4 +131,3 @@ describe('One Shape tested', () => {
     expect(pFit.fwhm).toBeCloseTo(pTrue[index + 2], 0);
   });
 });
-

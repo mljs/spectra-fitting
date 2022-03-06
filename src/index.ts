@@ -151,7 +151,7 @@ export function optimize(
 
   let pFit = algorithm({ x, y }, sumOfShapes, optimizationOptions);
   let { parameterError: error, iterations } = pFit;
-  let result : any = { error, iterations };
+  let result: any = { error, iterations };
 
   const newPeaks = JSON.parse(JSON.stringify(peaks));
   delete newPeaks.fromIndex;
