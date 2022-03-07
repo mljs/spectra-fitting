@@ -16,7 +16,15 @@ for (let i = 0; i < nbPoints; i++) {
 
 describe('One Shape tested', () => {
   it('Gaussian', () => {
-    let pTrue = [-0.5, 0.001, 0.31];
+
+    let peaks = [
+      {
+        x: -0.5,
+        y: 0.001,
+        fwhm: 0.31,
+        shape: { kind: 'gaussian' } as Shape1D,
+      }
+    ];
 
     const peaksGenerator = [{ x: -0.5, y: 0.001, fwhm: 0.31 }];
 
@@ -45,15 +53,22 @@ describe('One Shape tested', () => {
         },
       },
     );
-    let index = 0;
     let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(pTrue[index], 0);
-    expect(pFit.y).toBeCloseTo(pTrue[index + 1], 0);
-    expect(pFit.fwhm).toBeCloseTo(pTrue[index + 2], 0);
+    expect(pFit.x).toBeCloseTo(peaks[0].x, 0);
+    expect(pFit.y).toBeCloseTo(peaks[0].y, 0);
+    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 0);
   });
 
   it('Lorentzian', () => {
-    let pTrue = [-0.5, 0.001, 0.31];
+
+    let peaks = [
+      {
+        x: -0.5,
+        y: 0.001,
+        fwhm: 0.31,
+        shape: { kind: 'lorentzian' } as Shape1D,
+      }
+    ];
 
     const peaksGenerator = [{ x: -0.5, y: 0.001, fwhm: 0.31 }];
 
@@ -82,18 +97,25 @@ describe('One Shape tested', () => {
         },
       },
     );
-    let index = 0;
     let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(pTrue[index], 0);
-    expect(pFit.y).toBeCloseTo(pTrue[index + 1], 0);
-    expect(pFit.fwhm).toBeCloseTo(pTrue[index + 2], 0);
+    expect(pFit.x).toBeCloseTo(peaks[0].x, 0);
+    expect(pFit.y).toBeCloseTo(peaks[0].y, 0);
+    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 0);
   });
 
   it('Pseudo Voigt', () => {
-    let pTrue = [0, 0.001, 0.31, (xFactor * nbPoints) / 10];
+
+    let peaks = [
+      {
+        x: 0,
+        y: 0.001,
+        fwhm: 0.31,
+        shape: { kind: 'pseudoVoigt', options: { mu: 0.5 }} as Shape1D,
+      }
+    ];
 
     const peaksGenerator = [
-      { x: 0, y: 0.001, fwhm: 0.31, mu: (xFactor * nbPoints) / 10 },
+      { x: 0, y: 0.001, fwhm: 0.31, mu: 0.5 },
     ];
 
     const data: DataXY = generateSpectrum(peaksGenerator, {
@@ -113,7 +135,7 @@ describe('One Shape tested', () => {
           fwhm: (xFactor * nbPoints) / 8,
           shape: {
             kind: 'pseudoVoigt',
-            options: { mu: (xFactor * nbPoints) / 10 },
+            options: { mu: 0.52 },
           } as Shape1D,
         },
       ],
@@ -124,10 +146,9 @@ describe('One Shape tested', () => {
         },
       },
     );
-    let index = 0;
     let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(pTrue[index], 0);
-    expect(pFit.y).toBeCloseTo(pTrue[index + 1], 0);
-    expect(pFit.fwhm).toBeCloseTo(pTrue[index + 2], 0);
+    expect(pFit.x).toBeCloseTo(peaks[0].x, 0);
+    expect(pFit.y).toBeCloseTo(peaks[0].y, 0);
+    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 0);
   });
 });

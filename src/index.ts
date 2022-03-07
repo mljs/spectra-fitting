@@ -92,10 +92,12 @@ export function optimize(
   // initial beginning index is set to zero
   let index = 0;
   for (const peak of peakList) {
-    if (!peak.shape.kind) {
+    if (!peak.shape) {
       if (options.shape) {
+        peak.shape = {};
         peak.shape.kind = options.shape.kind;
       } else {
+        peak.shape = {};
         peak.shape.kind = 'gaussian';
       }
     }
