@@ -16,14 +16,13 @@ for (let i = 0; i < nbPoints; i++) {
 
 describe('One Shape tested', () => {
   it('Gaussian', () => {
-
     let peaks = [
       {
         x: -0.5,
         y: 0.001,
         fwhm: 0.31,
         shape: { kind: 'gaussian' } as Shape1D,
-      }
+      },
     ];
 
     const peaksGenerator = [{ x: -0.5, y: 0.001, fwhm: 0.31 }];
@@ -60,14 +59,13 @@ describe('One Shape tested', () => {
   });
 
   it('Lorentzian', () => {
-
     let peaks = [
       {
         x: -0.5,
         y: 0.001,
         fwhm: 0.31,
         shape: { kind: 'lorentzian' } as Shape1D,
-      }
+      },
     ];
 
     const peaksGenerator = [{ x: -0.5, y: 0.001, fwhm: 0.31 }];
@@ -104,19 +102,16 @@ describe('One Shape tested', () => {
   });
 
   it('Pseudo Voigt', () => {
-
     let peaks = [
       {
         x: 0,
         y: 0.001,
         fwhm: 0.31,
-        shape: { kind: 'pseudoVoigt', options: { mu: 0.5 }} as Shape1D,
-      }
+        shape: { kind: 'pseudoVoigt', options: { mu: 0.5 } } as Shape1D,
+      },
     ];
 
-    const peaksGenerator = [
-      { x: 0, y: 0.001, fwhm: 0.31, mu: 0.5 },
-    ];
+    const peaksGenerator = [{ x: 0, y: 0.001, fwhm: 0.31, mu: 0.5 }];
 
     const data: DataXY = generateSpectrum(peaksGenerator, {
       generator: {

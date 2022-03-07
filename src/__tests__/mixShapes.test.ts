@@ -113,10 +113,10 @@ describe('Sum of a mix of distributions', () => {
     );
 
     for (let i = 0; i < 6; i++) {
-        let pFit = result.peaks[i];
-        expect(pFit.x).toBeCloseTo(peaks[i].x, 0);
-        expect(pFit.y).toBeCloseTo(peaks[i].y, 0);
-        expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 0);
+      let pFit = result.peaks[i];
+      expect(pFit.x).toBeCloseTo(peaks[i].x, 0);
+      expect(pFit.y).toBeCloseTo(peaks[i].y, 0);
+      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 0);
     }
   });
 });

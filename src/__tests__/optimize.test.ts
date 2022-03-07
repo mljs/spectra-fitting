@@ -61,15 +61,17 @@ describe('Optimize sum of Lorentzians', () => {
       {
         x: -0.52,
         y: 0.9,
-        fwhm: 0.08
+        fwhm: 0.08,
       },
       {
         x: 0.52,
         y: 0.9,
-        fwhm: 0.08
+        fwhm: 0.08,
       },
     ];
-    let result = optimize(data, peakList, {shape: { kind: 'lorentzian' } as Shape1D});
+    let result = optimize(data, peakList, {
+      shape: { kind: 'lorentzian' } as Shape1D,
+    });
     for (let i = 0; i < 2; i++) {
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(peaks[i].x, 1);
