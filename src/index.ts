@@ -36,7 +36,6 @@ export function optimize(
        *  the min and max value of the parameter (search space) and the step size to approximate the jacobian matrix respectively. Those options could be a number,
        *  array of numbers, callback, or array of callbacks. Each kind of shape has default parameters so it could be undefined
        */
-      // not sure if parameters should be an array or one set of parameters only?
       parameters?: {
         /** name of the parameter for which we define the followig parameters */
         name?: string;
@@ -74,7 +73,6 @@ export function optimize(
   } = {},
 ): {
   error: number;
-  // not using Peak1D directly because it has additional parameters that we do not need
   peaks: {
     x: number;
     y: number;
@@ -89,7 +87,6 @@ export function optimize(
 } {
   let peakList = JSON.parse(JSON.stringify(peakListInitial));
 
-  // initial beginning index is set to zero
   let index = 0;
   for (const peak of peakList) {
     if (!peak.shape) {
@@ -152,6 +149,7 @@ export function optimize(
   optimizationOptions = { ...optimizationOptions };
 
   let pFit = algorithm({ x, y }, sumOfShapes, optimizationOptions);
+
   let { parameterError: error, iterations } = pFit;
   let result: any = { error, iterations };
 

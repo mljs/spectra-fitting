@@ -125,7 +125,6 @@ export function checkInput(
     toIndex: number;
   }[] = JSON.parse(JSON.stringify(peakList));
 
-  let sumOfShapes = getSumOfShapes(peaks);
   let defaultParameters = {
     x: xObject,
     y: yObject,
@@ -138,19 +137,22 @@ export function checkInput(
   let y = new Array<number>(x.length);
   let minY = Number.MAX_VALUE;
 
-  for (let i = 0; i < x.length; i++) {
+  for (let i = 0; i < y.length; i++) {
     y[i] = data.y[i];
-    if (data.y[i] < minY) {
-      minY = data.y[i];
+    if (y[i] < minY) {
+      minY = y[i];
     }
   }
-  for (let i = 0; i < x.length; i++) {
-    y[i] = (y[i] - minY) / maxY;
-  }
 
+  for (let i = 0; i < x.length; i++) {
+    y[i] = (y[i] - minY) / (maxY - minY);
+  }
   peaks.forEach((peak: any) => {
-    peak.y /= maxY;
+    peak.y = (peak.y - minY) / (maxY - minY);
   });
+
+  maxY = maxY - minY;
+  let sumOfShapes = getSumOfShapes(peaks);
 
   let parameters = assignDeep({}, defaultParameters, optimization.parameters);
 
@@ -172,7 +174,6 @@ export function checkInput(
   }
 
   optimization.parameters = parameters;
-
   return {
     y,
     x,
