@@ -15,43 +15,56 @@ for (let i = 0; i < nbPoints; i++) {
 }
 
 describe('Optimize sum of Lorentzians', () => {
-  const peaks = [
-    { x: -0.5, y: 1, fwhm: 0.05, shape: { kind: 'lorentzian' } },
-    { x: 0.5, y: 1, fwhm: 0.05, shape: { kind: 'lorentzian' } },
-  ];
-  const peaksGenerator = [
-    { x: -0.5, y: 1, fwhm: 0.05 },
-    { x: 0.5, y: 1, fwhm: 0.05 },
-  ];
-
-  const data: DataXY = generateSpectrum(peaksGenerator, {
-    generator: {
-      from: -1,
-      to: 1,
-      nbPoints: 101,
-    },
-  });
-
-  it('positive maxima peaks, specifying shape at the top', () => {
-    let peakList = [
-      {
-        x: -0.52,
-        y: 0.9,
-        fwhm: 0.08,
-      },
-      {
-        x: 0.52,
-        y: 0.9,
-        fwhm: 0.08,
-      },
+  it('positive maxima peaks, default value', () => {
+    const peaks = [
+      { x: -0.5, y: 1, fwhm: 0.05 },
+      { x: 0.5, y: 1, fwhm: 0.05 },
     ];
-    let result = optimize(data, peakList, {
-      shape: { kind: 'lorentzian' } as Shape1D,
+
+    const data: DataXY = generateSpectrum(peaks, {
+      generator: {
+        from: -1,
+        to: 1,
+        nbPoints: 101,
+      },
     });
+
+    let initialPeaks = [
+      { x: -0.52, y: 0.9, fwhm: 0.08 },
+      { x: 0.52, y: 0.9, fwhm: 0.08 },
+    ];
+    let result = optimize(data, initialPeaks);
     for (let i = 0; i < 2; i++) {
       let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 1);
-      expect(pFit.y).toBeCloseTo(peaks[i].y, 1);
+      expect(pFit.x).toBeCloseTo(peaks[i].x, 5);
+      expect(pFit.y).toBeCloseTo(peaks[i].y, 4);
+      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 5);
+    }
+  });
+
+  it('positive maxima peaks, wide peaks, default value', () => {
+    const peaks = [
+      { x: -0.5, y: 1, fwhm: 0.4 },
+      { x: 0.5, y: 1, fwhm: 0.4 },
+    ];
+
+    const data: DataXY = generateSpectrum(peaks, {
+      generator: {
+        from: -1,
+        to: 1,
+        nbPoints: 101,
+      },
+    });
+
+    let initialPeaks = [
+      { x: -0.52, y: 0.9, fwhm: 0.2 },
+      { x: 0.52, y: 0.9, fwhm: 0.6 },
+    ];
+    let result = optimize(data, initialPeaks);
+    for (let i = 0; i < 2; i++) {
+      let pFit = result.peaks[i];
+      expect(pFit.x).toBeCloseTo(peaks[i].x, 4);
+      expect(pFit.y).toBeCloseTo(peaks[i].y, 2);
       expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 1);
     }
   });
