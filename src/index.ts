@@ -139,7 +139,6 @@ export function optimize(
         gradientDifferenceValue[i % gradientDifferenceValue.length](peak);
     }
   }
-
   let { algorithm, optimizationOptions } = selectMethod(optimization);
 
   optimizationOptions.minValues = pMin;
