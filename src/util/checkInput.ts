@@ -1,9 +1,8 @@
 import { DataXY, DoubleArray } from 'cheminfo-types';
 import getMaxValue from 'ml-array-max';
+import { Shape1D } from 'ml-peak-shape-generator';
 
-import { sumOfGaussians } from '../shapes/sumOfGaussians';
-import { sumOfLorentzians } from '../shapes/sumOfLorentzians';
-import { sumOfPseudoVoigts } from '../shapes/sumOfPseudoVoigts';
+import { getSumOfShapes } from '../shapes/getSumOfShapes';
 import { OptimizeOptions, Peak1D } from '../spectra-fitting';
 
 import { assignDeep } from './assignDeep';
@@ -39,6 +38,66 @@ let muObject = {
   gradientDifference: () => 0.01,
 };
 
+/*
+peakList: {
+    x: {
+      val : number;
+      init?: number;
+      min?: number;
+      max?: number;
+      gradientDifference?: number;
+    };
+    y: {
+      val : number;
+      init?: number;
+      min?: number;
+      max?: number;
+      gradientDifference?: number;
+    };
+    width?: {
+      val : number;
+      init?: number;
+      min?: number;
+      max?: number;
+      gradientDifference?: number;
+    };
+    fwhm: {
+      val : number;
+      init?: number;
+      min?: number;
+      max?: number;
+      gradientDifference?: number;
+    };
+    shape?: Shape1D;
+    parameters?: string[];
+    fromIndex?: number;
+    toIndex?: number;
+  }[],
+
+  let peaks : any = [];
+  // making a peaks object just for getSumOfShapes, where we remove the range considerations
+  peakList.forEach(peak => {
+    let peakToAdd : any = {};
+    if(peak.x) {
+      peakToAdd.x = peak.x.val;
+    } if (peak.y) {
+      peakToAdd.y = peak.y.val;
+    } if (peak.width) {
+      peakToAdd.width = peak.width.val;
+    } if (peak.fwhm) {
+      peakToAdd.fwhm = peak.fwhm.val;
+    } if (peak.shape) {
+      peakToAdd.shape = peak.shape;
+    } if(peak.parameters) {
+      peakToAdd.parameters = peak.parameters;
+    } if(peak.fromIndex) {
+      peakToAdd.fromIndex = peak.fromIndex;
+    } if(peak.toIndex) {
+      peakToAdd.toIndex = peak.toIndex;
+    }
+    peaks.append(peakToAdd);
+  });
+*/
 /** Algorithm to check the input
  * @param data - Data to check
  * @param peakList - List of peaks
@@ -50,71 +109,47 @@ export function checkInput(
   options: OptimizeOptions,
 ) {
   let {
-    shape = { kind: 'gaussian' },
     optimization = {
       kind: 'lm',
     },
   } = options;
 
-  let peaks: Peak1D[] = JSON.parse(JSON.stringify(peakList));
-  let kind = shape.kind.toLowerCase().replace(/[^a-z]/g, '');
+  let peaks: {
+    x: number;
+    y: number;
+    width?: number;
+    fwhm: number;
+    shape: Shape1D;
+    parameters: string[];
+    fromIndex: number;
+    toIndex: number;
+  }[] = JSON.parse(JSON.stringify(peakList));
 
-  let paramsFunc;
-  let defaultParameters;
-  switch (kind) {
-    case 'gaussian':
-      paramsFunc = sumOfGaussians;
-
-      defaultParameters = {
-        x: xObject,
-        y: yObject,
-        fwhm: fwhmObject,
-      };
-      break;
-    case 'lorentzian':
-      paramsFunc = sumOfLorentzians;
-      defaultParameters = {
-        x: xObject,
-        y: yObject,
-        fwhm: fwhmObject,
-      };
-      break;
-    case 'pseudovoigt':
-      paramsFunc = sumOfPseudoVoigts;
-      defaultParameters = {
-        x: xObject,
-        y: yObject,
-        fwhm: fwhmObject,
-        mu: muObject,
-      };
-      break;
-    default:
-      throw new Error('kind of shape is not supported');
-  }
+  let sumOfShapes = getSumOfShapes(peaks);
+  let defaultParameters = {
+    x: xObject,
+    y: yObject,
+    fwhm: fwhmObject,
+    mu: muObject,
+  };
 
   let x = data.x;
   let maxY = getMaxValue(data.y);
   let y = new Array<number>(x.length);
   let minY = Number.MAX_VALUE;
 
-  // we need to move the data down to the baseline 0
   for (let i = 0; i < x.length; i++) {
     y[i] = data.y[i];
     if (data.y[i] < minY) {
       minY = data.y[i];
     }
   }
-  // removing minY from each y, dividing by max
   for (let i = 0; i < x.length; i++) {
     y[i] = (y[i] - minY) / maxY;
   }
 
-  peaks.forEach((peak) => {
+  peaks.forEach((peak: any) => {
     peak.y /= maxY;
-    peak.shape = {
-      kind: shape.kind,
-      ...peak.shape,
-    };
   });
 
   let parameters = assignDeep({}, defaultParameters, optimization.parameters);
@@ -135,6 +170,7 @@ export function checkInput(
       }
     }
   }
+
   optimization.parameters = parameters;
 
   return {
@@ -143,7 +179,7 @@ export function checkInput(
     maxY,
     minY,
     peaks,
-    paramsFunc,
+    sumOfShapes,
     optimization,
   };
 }

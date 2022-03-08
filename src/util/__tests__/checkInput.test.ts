@@ -4,7 +4,7 @@ import { checkInput } from '../checkInput';
 describe('change default parameters', () => {
   it('change the max value of x parameter', () => {
     let data = { x: [-1, 0, 1], y: [1, 2, 1] };
-    let peaks: Peak1D[] = [{ x: 0, y: 1, fwhm: 2 }];
+    let peaks = [{ x: 0, y: 1, fwhm: 2 }];
     let options = {
       optimization: {
         parameters: {
