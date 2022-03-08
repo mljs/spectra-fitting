@@ -95,19 +95,16 @@ describe('Optimize sum of Lorentzians', () => {
         shape: { kind: 'lorentzian' } as Shape1D,
       },
     ];
-    let dataCopy = { ...data };
-    dataCopy.y.map((el: number) => el + 2);
-    const peaksCopy = [
-      { x: -0.5, y: 3, fwhm: 0.05 },
-      { x: 0.5, y: 3, fwhm: 0.05 },
-    ];
-
-    let result = optimize(dataCopy, peakList);
+    let yShiftedData = {
+      x: data.x.slice(),
+      y: data.y.map((el) => el + 2),
+    };
+    let result = optimize(yShiftedData, peakList);
     for (let i = 0; i < 2; i++) {
       let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaksCopy[i].x, 1);
-      expect(pFit.y + 2).toBeCloseTo(peaksCopy[i].y, 1);
-      expect(pFit.fwhm).toBeCloseTo(peaksCopy[i].fwhm, 1);
+      expect(pFit.x).toBeCloseTo(peaks[i].x, 1);
+      expect(pFit.y).toBeCloseTo(peaks[i].y + 2, 1);
+      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 1);
     }
   });
 
