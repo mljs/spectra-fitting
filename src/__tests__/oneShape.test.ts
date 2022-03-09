@@ -32,6 +32,7 @@ describe('One Shape tested', () => {
         from: -1,
         to: 1,
         nbPoints: 101,
+        shape: { kind: 'gaussian' },
       },
     });
 
@@ -53,9 +54,9 @@ describe('One Shape tested', () => {
       },
     );
     let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(peaks[0].x, 0);
-    expect(pFit.y).toBeCloseTo(peaks[0].y, 0);
-    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 0);
+    expect(pFit.x).toBeCloseTo(peaks[0].x, 3);
+    expect(pFit.y).toBeCloseTo(peaks[0].y, 3);
+    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 3);
   });
 
   it('Lorentzian', () => {
@@ -75,6 +76,7 @@ describe('One Shape tested', () => {
         from: -1,
         to: 1,
         nbPoints: 101,
+        shape: { kind: 'lorentzian' },
       },
     });
 
@@ -84,7 +86,7 @@ describe('One Shape tested', () => {
         {
           x: -0.52,
           y: 0.0009,
-          fwhm: (xFactor * nbPoints) / 8,
+          fwhm: 0.29,
           shape: { kind: 'lorentzian' } as Shape1D,
         },
       ],
@@ -96,9 +98,9 @@ describe('One Shape tested', () => {
       },
     );
     let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(peaks[0].x, 0);
-    expect(pFit.y).toBeCloseTo(peaks[0].y, 0);
-    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 0);
+    expect(pFit.x).toBeCloseTo(peaks[0].x, 3);
+    expect(pFit.y).toBeCloseTo(peaks[0].y, 3);
+    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 1);
   });
 
   it('Pseudo Voigt', () => {
@@ -118,6 +120,7 @@ describe('One Shape tested', () => {
         from: -1,
         to: 1,
         nbPoints: 101,
+        shape: { kind: 'pseudoVoigt' },
       },
     });
 
@@ -142,8 +145,8 @@ describe('One Shape tested', () => {
       },
     );
     let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(peaks[0].x, 0);
-    expect(pFit.y).toBeCloseTo(peaks[0].y, 0);
-    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 0);
+    expect(pFit.x).toBeCloseTo(peaks[0].x, 3);
+    expect(pFit.y).toBeCloseTo(peaks[0].y, 3);
+    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 3);
   });
 });

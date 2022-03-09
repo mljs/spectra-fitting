@@ -19,6 +19,7 @@ describe('Optimize sum of Lorentzians', () => {
     { x: -0.5, y: 1, fwhm: 0.05, shape: { kind: 'lorentzian' } },
     { x: 0.5, y: 1, fwhm: 0.05, shape: { kind: 'lorentzian' } },
   ];
+
   const peaksGenerator = [
     { x: -0.5, y: 1, fwhm: 0.05 },
     { x: 0.5, y: 1, fwhm: 0.05 },
@@ -29,11 +30,14 @@ describe('Optimize sum of Lorentzians', () => {
       from: -1,
       to: 1,
       nbPoints: 101,
+      shape: {
+        kind: 'lorentzian',
+      },
     },
   });
 
   it('positive maxima peaks', () => {
-    let peakList = [
+    let initialPeaks = [
       {
         x: -0.52,
         y: 0.9,
@@ -47,16 +51,16 @@ describe('Optimize sum of Lorentzians', () => {
         shape: { kind: 'lorentzian' } as Shape1D,
       },
     ];
-    let result = optimize(data, peakList);
+    let result = optimize(data, initialPeaks);
     for (let i = 0; i < 2; i++) {
       let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 1);
-      expect(pFit.y).toBeCloseTo(peaks[i].y, 1);
-      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 1);
+      expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
+      expect(pFit.y).toBeCloseTo(peaks[i].y, 2);
+      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 3);
     }
   });
 
-  it('shifted baseline', () => {
+  it('shifted baseline up by two', () => {
     let yShiftedPeaks = [
       {
         x: -0.52,
@@ -73,14 +77,14 @@ describe('Optimize sum of Lorentzians', () => {
     ];
     let yShiftedData = {
       x: data.x.slice(),
-      y: data.y.map((el) => el + 2),
+      y: data.y.map((el: number) => el + 2),
     };
     let result = optimize(yShiftedData, yShiftedPeaks);
     for (let i = 0; i < 2; i++) {
       let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 1);
-      expect(pFit.y).toBeCloseTo(peaks[i].y + 2, 1);
-      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 1);
+      expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
+      expect(pFit.y).toBeCloseTo(peaks[i].y + 2, 2);
+      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 3);
     }
   });
 
@@ -102,15 +106,15 @@ describe('Optimize sum of Lorentzians', () => {
 
     let yShiftedData = {
       x: data.x.slice(),
-      y: data.y.map((el) => el - 2),
+      y: data.y.map((el: number) => el - 2),
     };
 
     let result = optimize(yShiftedData, yShiftedPeaks);
     for (let i = 0; i < 2; i++) {
       let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 0);
-      expect(pFit.y).toBeCloseTo(peaks[i].y - 2, 1);
-      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 1);
+      expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
+      expect(pFit.y).toBeCloseTo(peaks[i].y - 2, 2);
+      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 3);
     }
   });
 });
@@ -131,6 +135,9 @@ describe('Optimize sum of Gaussians', () => {
       from: -2,
       to: 2,
       nbPoints: 101,
+      shape: {
+        kind: 'gaussian',
+      },
     },
   });
 
@@ -152,11 +159,12 @@ describe('Optimize sum of Gaussians', () => {
     let result = optimize(data, peakList);
     for (let i = 0; i < 2; i++) {
       let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 1);
+      expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
       expect(pFit.y).toBeCloseTo(peaks[i].y, 1);
-      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 1);
+      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 2);
     }
   });
+
   it('negative maxima peaks', () => {
     let yShiftedPeaks = [
       {
@@ -174,7 +182,7 @@ describe('Optimize sum of Gaussians', () => {
     ];
     let yShiftedData = {
       x: data.x.slice(),
-      y: data.y.map((el) => el - 2),
+      y: data.y.map((el: number) => el - 2),
     };
     let result = optimize(yShiftedData, yShiftedPeaks, {
       optimization: {
@@ -184,9 +192,9 @@ describe('Optimize sum of Gaussians', () => {
     });
     for (let i = 0; i < 2; i++) {
       let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 0);
+      expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
       expect(pFit.y).toBeCloseTo(peaks[i].y - 2, 1);
-      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 1);
+      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 2);
     }
   });
 });
@@ -221,6 +229,9 @@ describe('Sum of Pseudo Voigts', () => {
       from: -1,
       to: 1,
       nbPoints: 101,
+      shape: {
+        kind: 'pseudoVoigt',
+      },
     },
   });
 
@@ -229,7 +240,7 @@ describe('Sum of Pseudo Voigts', () => {
       {
         x: 0.001,
         y: 0.0009,
-        fwhm: (xFactor * nbPoints) / 6,
+        fwhm: 0.29,
         shape: {
           kind: 'pseudoVoigt',
           options: { mu: 0.52 },
@@ -238,7 +249,7 @@ describe('Sum of Pseudo Voigts', () => {
       {
         x: 0.001,
         y: 0.0009,
-        fwhm: (xFactor * nbPoints) / 6,
+        fwhm: 0.29,
         shape: {
           kind: 'pseudoVoigt',
           options: { mu: 0.52 },
@@ -253,9 +264,9 @@ describe('Sum of Pseudo Voigts', () => {
     });
     for (let i = 0; i < 2; i++) {
       let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 1);
-      expect(pFit.y).toBeCloseTo(peaks[i].y, 1);
-      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 1);
+      expect(pFit.x).toBeCloseTo(peaks[i].x, 2);
+      expect(pFit.y).toBeCloseTo(peaks[i].y, 2);
+      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 0);
     }
   });
 });

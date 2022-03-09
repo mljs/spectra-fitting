@@ -5,6 +5,8 @@ import { Peak1D } from './spectra-fitting';
 import { checkInput } from './util/checkInput';
 import { selectMethod } from './util/selectMethod';
 
+export * from './spectra-fitting';
+
 /**
  * Fits a set of points to the sum of a set of bell functions.
  *
@@ -13,7 +15,6 @@ import { selectMethod } from './util/selectMethod';
  * @param options - Options.
  * @returns - An object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
-
 export function optimize(
   data: DataXY<DoubleArray>,
   peakListInitial: Peak1D[],
@@ -108,7 +109,7 @@ export function optimize(
     index += peak.toIndex - peak.fromIndex + 1;
   }
 
-  const { y, x, maxY, minY, peaks, sumOfShapes, optimization } = checkInput(
+  const { y, x, max, min, peaks, sumOfShapes, optimization } = checkInput(
     data,
     peakList,
     options,
@@ -162,7 +163,7 @@ export function optimize(
       if (key === 'x' || key === 'fwhm') {
         newPeaks[i][key] = value;
       } else if (key === 'y') {
-        newPeaks[i][key] = value * maxY + minY;
+        newPeaks[i][key] = value * (max - min) + min;
       } else {
         newPeaks[i].shape[key] = value;
       }
