@@ -1,77 +1,80 @@
 import { DataXY, DoubleArray } from 'cheminfo-types';
 import { getShape1D, Shape1D } from 'ml-peak-shape-generator';
 
-import { Peak1D } from './spectra-fitting';
 import { checkInput } from './util/checkInput';
 import { selectMethod } from './util/selectMethod';
 
-export * from './spectra-fitting';
+export interface Peak1D {
+  x: number;
+  y: number;
+  width?: number;
+  fwhm: number;
+  shape?: Shape1D;
+}
+
+export interface OptimizationOptions {
+  /**
+   * kind of algorithm. By default it's levenberg-marquardt
+   */
+  kind?: string;
+  /**
+   *  options of each parameter to be optimized e.g. For a gaussian shape
+   *  it could have x, y, fwhm and mu properties, each of which could contain init, min, max and gradientDifference, those options will define the guess,
+   *  the min and max value of the parameter (search space) and the step size to approximate the jacobian matrix respectively. Those options could be a number,
+   *  array of numbers, callback, or array of callbacks. Each kind of shape has default parameters so it could be undefined
+   */
+  parameters?: {
+    /** name of the parameter for which we define the followig parameters */
+    name: string;
+    /** definition of the starting point of the parameter (the guess),
+     *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the guess of the first peak and so on. */
+    init: number | ((peak: Peak1D) => number) | (() => number);
+    /** definition of the lower limit of the parameter,
+     *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the min of the first peak and so on. */
+    min: number | ((peak: Peak1D) => number) | (() => number);
+    /** definition of the upper limit of the parameter,
+     *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the max of the first peak and so on. */
+    max: number | ((peak: Peak1D) => number) | (() => number);
+    /** definition of  the step size to approximate the jacobian matrix of the parameter,
+     *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the gradientDifference of the first peak and so on. */
+    gradientDifference: number | ((peak: Peak1D) => number) | (() => number);
+  }[];
+  /** options for the specific kind of algorithm */
+  options?: {
+    /** maximum time running before break in seconds */
+    timeout?: number;
+    /** damping factor
+     * @default 1.5
+     */
+    damping?: number;
+    /** number of max iterations
+     * @default 100
+     */
+    maxIterations?: number;
+    /** error tolerance
+     * @default 1e-8
+     */
+    errorTolerance?: number;
+  };
+}
+
+export interface OptimizeOptions {
+  shape?: Shape1D;
+  optimization?: OptimizationOptions;
+}
 
 /**
  * Fits a set of points to the sum of a set of bell functions.
  *
  * @param data - An object containing the x and y data to be fitted.
  * @param peakList - A list of initial parameters to be optimized. e.g. coming from a peak picking [{x, y, width}].
- * @param options - Options.
+ * @param options - Options for optimize
  * @returns - An object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
 export function optimize(
   data: DataXY<DoubleArray>,
   peakListInitial: Peak1D[],
-  options: {
-    /**
-     * kind of shape used for fitting
-     **/
-    shape?: Shape1D;
-    /**
-     * the kind and options of the algorithm use to optimize parameters
-     */
-    optimization?: {
-      /**
-       * kind of algorithm. By default it's levenberg-marquardt
-       */
-      kind?: string;
-      /**
-       *  options of each parameter to be optimized e.g. For a gaussian shape
-       *  it could have x, y and width properties, each of which could contain init, min, max and gradientDifference, those options will define the guess,
-       *  the min and max value of the parameter (search space) and the step size to approximate the jacobian matrix respectively. Those options could be a number,
-       *  array of numbers, callback, or array of callbacks. Each kind of shape has default parameters so it could be undefined
-       */
-      parameters?: {
-        /** name of the parameter for which we define the followig parameters */
-        name?: string;
-        /** definition of the starting point of the parameter (the guess),
-         *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the guess of the first peak and so on. */
-        init?: number;
-        /** definition of the lower limit of the parameter,
-         *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the min of the first peak and so on. */
-        min?: number;
-        /** definition of the upper limit of the parameter,
-         *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the max of the first peak and so on. */
-        max?: number;
-        /** definition of  the step size to approximate the jacobian matrix of the parameter,
-         *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the gradientDifference of the first peak and so on. */
-        gradientDifference?: number;
-      };
-      /** options for the specific kind of algorithm */
-      options?: {
-        /** maximum time running before break in seconds */
-        timeout?: number;
-        /** damping factor
-         * @default 1.5
-         */
-        damping?: number;
-        /** number of max iterations
-         * @default 100
-         */
-        maxIterations?: number;
-        /** error tolerance
-         * @default 1e-8
-         */
-        errorTolerance?: number;
-      };
-    };
-  } = {},
+  options: OptimizeOptions = {},
 ): {
   error: number;
   peaks: {
@@ -109,13 +112,13 @@ export function optimize(
     index += peak.toIndex - peak.fromIndex + 1;
   }
 
-  const { y, x, max, min, peaks, sumOfShapes, optimization } = checkInput(
+  const { y, x, max, min, peaks, sumOfShapes, newOptimization } = checkInput(
     data,
     peakList,
     options,
   );
 
-  let parameters = optimization.parameters;
+  let parameters = newOptimization.parameters;
 
   let nbShapes = peaks.length;
   let keysOfParameters = Object.keys(parameters);
@@ -140,7 +143,8 @@ export function optimize(
         gradientDifferenceValue[i % gradientDifferenceValue.length](peak);
     }
   }
-  let { algorithm, optimizationOptions } = selectMethod(optimization);
+
+  let { algorithm, optimizationOptions } = selectMethod(newOptimization);
 
   optimizationOptions.minValues = pMin;
   optimizationOptions.maxValues = pMax;

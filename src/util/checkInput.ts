@@ -2,8 +2,8 @@ import { DataXY, DoubleArray } from 'cheminfo-types';
 import { Shape1D } from 'ml-peak-shape-generator';
 import { xMinMaxValues } from 'ml-spectra-processing';
 
+import { OptimizeOptions, Peak1D } from '../index';
 import { getSumOfShapes } from '../shapes/getSumOfShapes';
-import { OptimizeOptions, Peak1D } from '../spectra-fitting';
 
 import { assignDeep } from './assignDeep';
 
@@ -89,7 +89,6 @@ export function checkInput(
   });
 
   let sumOfShapes = getSumOfShapes(peaks);
-
   let parameters = assignDeep({}, defaultParameters, optimization.parameters);
 
   for (let key in parameters) {
@@ -109,7 +108,9 @@ export function checkInput(
     }
   }
 
-  optimization.parameters = parameters;
+  let newOptimization = JSON.parse(JSON.stringify(optimization));
+  newOptimization.parameters = parameters;
+
   return {
     y,
     x,
@@ -117,6 +118,6 @@ export function checkInput(
     min,
     peaks,
     sumOfShapes,
-    optimization,
+    newOptimization,
   };
 }

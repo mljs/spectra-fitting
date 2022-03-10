@@ -1,6 +1,6 @@
 import { levenbergMarquardt } from 'ml-levenberg-marquardt';
 
-import { OptimizationOptions } from '../spectra-fitting';
+import { OptimizationOptions } from '../index';
 
 const LEVENBERG_MARQUARDT = 1;
 
@@ -10,12 +10,13 @@ const LEVENBERG_MARQUARDT = 1;
  */
 export function selectMethod(optimizationOptions: OptimizationOptions = {}) {
   let { kind, options } = optimizationOptions;
-  kind = getKind(kind);
-  switch (kind) {
+  let kindVar = getKind(kind);
+
+  switch (kindVar) {
     case LEVENBERG_MARQUARDT:
       return {
         algorithm: levenbergMarquardt,
-        optimizationOptions: checkOptions(kind, options),
+        optimizationOptions: checkOptions(kindVar, options),
       };
     default:
       throw new Error(`Unknown kind algorithm`);
