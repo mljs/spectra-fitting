@@ -94,8 +94,20 @@ describe('Optimize Options test', () => {
         optimization: {
           kind: 'lm',
           parameters: [
-            {name : "y", init: 0.9, min : 0, max: 1.5, gradientDifference : 0.0005},
-            {name : "fwhm", init: 0.4, min : 0.1, max: 1.6, gradientDifference : 0.0008}
+            {
+              name: 'y',
+              init: 0.9,
+              min: 0,
+              max: 1.5,
+              gradientDifference: 0.0005,
+            },
+            {
+              name: 'fwhm',
+              init: 0.4,
+              min: 0.1,
+              max: 1.6,
+              gradientDifference: 0.0008,
+            },
           ],
           options: { maxIterations: 10000, errorTolerance: 1e-8 },
         },

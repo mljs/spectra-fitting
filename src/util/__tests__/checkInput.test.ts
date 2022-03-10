@@ -8,12 +8,13 @@ describe('change default parameters', () => {
     let options = {
       optimization: {
         parameters: [
-          { name : "x",
+          {
+            name: 'x',
             init: (peak: Peak1D) => peak.x,
             min: (peak: Peak1D) => peak.x - peak.fwhm * 2,
             max: (peak: Peak1D) => peak.x + peak.fwhm * 0.1,
             gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
-          }
+          },
         ],
       },
     };
