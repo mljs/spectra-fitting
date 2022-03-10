@@ -152,7 +152,6 @@ export function optimize(
   optimizationOptions.gradientDifference = gradientDifference;
   optimizationOptions = { ...optimizationOptions };
 
-  console.log('optimization options passed to LM', optimizationOptions);
   let pFit = algorithm({ x, y }, sumOfShapes, optimizationOptions);
 
   let { parameterError: error, iterations } = pFit;
