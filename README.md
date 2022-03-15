@@ -120,7 +120,7 @@ let peaks = [
 
 // the function receive an array of peak with {x, y, fwhm} as a guess
 // and return a list of objects
-let fittedParams = optimize(data, peaks, { shape: { kind: 'pseudovoigt' } });
+let fittedParams = optimize(data, peaks, { shape: { kind: 'pseudoVoigt' } });
 
 console.log(fittedParams);
 /**
