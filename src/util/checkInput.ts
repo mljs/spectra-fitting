@@ -9,9 +9,9 @@ import { assignDeep } from './assignDeep';
 
 let xObject = {
   init: (peak: Peak1D) => peak.x,
-  max: (peak: Peak1D) => peak.x + peak.fwhm * 2,
-  min: (peak: Peak1D) => peak.x - peak.fwhm * 2,
-  gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
+  max: (peak: Peak1D) => peak.x + (peak.fwhm as number) * 2,
+  min: (peak: Peak1D) => peak.x - (peak.fwhm as number) * 2,
+  gradientDifference: (peak: Peak1D) => (peak.fwhm as number) * 2e-3,
 };
 
 let yObject = {
@@ -23,9 +23,9 @@ let yObject = {
 
 let fwhmObject = {
   init: (peak: Peak1D) => peak.fwhm,
-  max: (peak: Peak1D) => peak.fwhm * 4,
-  min: (peak: Peak1D) => peak.fwhm * 0.25,
-  gradientDifference: (peak: Peak1D) => peak.fwhm * 2e-3,
+  max: (peak: Peak1D) => (peak.fwhm as number)* 4,
+  min: (peak: Peak1D) => (peak.fwhm as number)* 0.25,
+  gradientDifference: (peak: Peak1D) => (peak.fwhm as number)* 2e-3,
 };
 
 let muObject = {

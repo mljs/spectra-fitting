@@ -1,6 +1,5 @@
 import type { DataXY } from 'cheminfo-types';
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
-import { Shape1D } from 'ml-peak-shape-generator';
 import { generateSpectrum } from 'spectrum-generator';
 
 import { optimize } from '../index';
@@ -20,14 +19,11 @@ describe('Optimize Options test', () => {
       {
         x: -0.5,
         y: 0.001,
-        fwhm: 0.31,
-        shape: { kind: 'gaussian' } as Shape1D,
+        shape: { kind: 'gaussian' as const, fwhm: 0.31}
       },
     ];
 
-    const peaksGenerator = [{ x: -0.5, y: 0.001, fwhm: 0.31 }];
-
-    const data: DataXY = generateSpectrum(peaksGenerator, {
+    const data: DataXY = generateSpectrum(peaks, {
       generator: {
         from: -1,
         to: 1,
@@ -42,8 +38,7 @@ describe('Optimize Options test', () => {
         {
           x: -0.52,
           y: 0.0009,
-          fwhm: (xFactor * nbPoints) / 8,
-          shape: { kind: 'gaussian' } as Shape1D,
+          shape: { kind: 'gaussian', fwhm: (xFactor * nbPoints) / 8 },
         },
       ],
       {
@@ -56,7 +51,7 @@ describe('Optimize Options test', () => {
     let pFit = result.peaks[0];
     expect(pFit.x).toBeCloseTo(peaks[0].x, 3);
     expect(pFit.y).toBeCloseTo(peaks[0].y, 3);
-    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 3);
+    expect(pFit.shape.fwhm).toBeCloseTo(peaks[0].shape.fwhm, 3);
   });
 
   it('Specify our own optimization options', () => {
@@ -64,14 +59,11 @@ describe('Optimize Options test', () => {
       {
         x: -0.5,
         y: 0.001,
-        fwhm: 0.31,
-        shape: { kind: 'gaussian' } as Shape1D,
+        shape: { kind: 'gaussian' as const, fwhm: 0.31 },
       },
     ];
 
-    const peaksGenerator = [{ x: -0.5, y: 0.001, fwhm: 0.31 }];
-
-    const data: DataXY = generateSpectrum(peaksGenerator, {
+    const data: DataXY = generateSpectrum(peaks, {
       generator: {
         from: -1,
         to: 1,
@@ -86,8 +78,7 @@ describe('Optimize Options test', () => {
         {
           x: -0.52,
           y: 0.0009,
-          fwhm: (xFactor * nbPoints) / 8,
-          shape: { kind: 'gaussian' } as Shape1D,
+          shape: { kind: 'gaussian', fwhm: (xFactor * nbPoints) / 8 },
         },
       ],
       {
@@ -116,6 +107,6 @@ describe('Optimize Options test', () => {
     let pFit = result.peaks[0];
     expect(pFit.x).toBeCloseTo(peaks[0].x, 3);
     expect(pFit.y).toBeCloseTo(peaks[0].y, 3);
-    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 3);
+    expect(pFit.shape.fwhm).toBeCloseTo(peaks[0].shape.fwhm, 3);
   });
 });

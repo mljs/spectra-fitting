@@ -16,16 +16,11 @@ for (let i = 0; i < nbPoints; i++) {
 
 describe('Optimize sum of Lorentzians', () => {
   const peaks = [
-    { x: -0.5, y: 1, fwhm: 0.05, shape: { kind: 'lorentzian' } },
-    { x: 0.5, y: 1, fwhm: 0.05, shape: { kind: 'lorentzian' } },
+    { x: -0.5, y: 1, shape: { kind: 'lorentzian' as const, fwhm: 0.05 }},
+    { x: 0.5, y: 1, shape: { kind: 'lorentzian' as const, fwhm: 0.05 }},
   ];
 
-  const peaksGenerator = [
-    { x: -0.5, y: 1, fwhm: 0.05 },
-    { x: 0.5, y: 1, fwhm: 0.05 },
-  ];
-
-  const data: DataXY = generateSpectrum(peaksGenerator, {
+  const data: DataXY = generateSpectrum(peaks, {
     generator: {
       from: -1,
       to: 1,
@@ -42,13 +37,13 @@ describe('Optimize sum of Lorentzians', () => {
         x: -0.52,
         y: 0.9,
         fwhm: 0.08,
-        shape: { kind: 'lorentzian' } as Shape1D,
+        shape: { kind: 'lorentzian' as const},
       },
       {
         x: 0.52,
         y: 0.9,
         fwhm: 0.08,
-        shape: { kind: 'lorentzian' } as Shape1D,
+        shape: { kind: 'lorentzian' as const},
       },
     ];
     let result = optimize(data, initialPeaks);
@@ -56,7 +51,7 @@ describe('Optimize sum of Lorentzians', () => {
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
       expect(pFit.y).toBeCloseTo(peaks[i].y, 2);
-      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 3);
+      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 3);
     }
   });
 
@@ -65,14 +60,12 @@ describe('Optimize sum of Lorentzians', () => {
       {
         x: -0.52,
         y: 2.9,
-        fwhm: 0.08,
-        shape: { kind: 'lorentzian' } as Shape1D,
+        shape: { kind: 'lorentzian' as const, fwhm: 0.08},
       },
       {
         x: 0.52,
         y: 2.9,
-        fwhm: 0.08,
-        shape: { kind: 'lorentzian' } as Shape1D,
+        shape: { kind: 'lorentzian' as const, fwhm: 0.08},
       },
     ];
     let yShiftedData = {
@@ -84,7 +77,7 @@ describe('Optimize sum of Lorentzians', () => {
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
       expect(pFit.y).toBeCloseTo(peaks[i].y + 2, 2);
-      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 3);
+      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 3);
     }
   });
 
@@ -93,14 +86,12 @@ describe('Optimize sum of Lorentzians', () => {
       {
         x: -0.52,
         y: -1,
-        fwhm: 0.08,
-        shape: { kind: 'lorentzian' } as Shape1D,
+        shape: { kind: 'lorentzian' as const, fwhm: 0.08 },
       },
       {
         x: 0.52,
         y: -1,
-        fwhm: 0.08,
-        shape: { kind: 'lorentzian' } as Shape1D,
+        shape: { kind: 'lorentzian' as const, fwhm: 0.08},
       },
     ];
 
@@ -114,23 +105,18 @@ describe('Optimize sum of Lorentzians', () => {
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
       expect(pFit.y).toBeCloseTo(peaks[i].y - 2, 2);
-      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 3);
+      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 3);
     }
   });
 });
 
 describe('Optimize sum of Gaussians', () => {
   const peaks = [
-    { x: -0.5, y: 1, fwhm: 0.05, shape: { kind: 'gaussian' } },
-    { x: 0.5, y: 1, fwhm: 0.05, shape: { kind: 'gaussian' } },
+    { x: -0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
+    { x: 0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
   ];
 
-  const peaksGenerator = [
-    { x: -0.5, y: 1, fwhm: 0.05 },
-    { x: 0.5, y: 1, fwhm: 0.05 },
-  ];
-
-  const data: DataXY = generateSpectrum(peaksGenerator, {
+  const data: DataXY = generateSpectrum(peaks, {
     generator: {
       from: -2,
       to: 2,
@@ -146,14 +132,12 @@ describe('Optimize sum of Gaussians', () => {
       {
         x: -0.52,
         y: 0.9,
-        fwhm: 0.08,
-        shape: { kind: 'gaussian' } as Shape1D,
+        shape: { kind: 'gaussian' as const, fwhm: 0.08 },
       },
       {
         x: 0.52,
         y: 0.9,
-        fwhm: 0.08,
-        shape: { kind: 'gaussian' } as Shape1D,
+        shape: { kind: 'gaussian' as const, fwhm: 0.08 },
       },
     ];
     let result = optimize(data, peakList);
@@ -161,7 +145,7 @@ describe('Optimize sum of Gaussians', () => {
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
       expect(pFit.y).toBeCloseTo(peaks[i].y, 1);
-      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 2);
+      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 2);
     }
   });
 
@@ -170,14 +154,12 @@ describe('Optimize sum of Gaussians', () => {
       {
         x: -0.52,
         y: -1,
-        fwhm: 0.08,
-        shape: { kind: 'gaussian' } as Shape1D,
+        shape: { kind: 'gaussian' as const, fwhm: 0.08 },
       },
       {
         x: 0.52,
         y: -1,
-        fwhm: 0.08,
-        shape: { kind: 'gaussian' } as Shape1D,
+        shape: { kind: 'gaussian' as const, fwhm: 0.08,},
       },
     ];
     let yShiftedData = {
@@ -194,7 +176,7 @@ describe('Optimize sum of Gaussians', () => {
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
       expect(pFit.y).toBeCloseTo(peaks[i].y - 2, 1);
-      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 2);
+      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 2);
     }
   });
 });
@@ -204,27 +186,24 @@ describe('Sum of Pseudo Voigts', () => {
     {
       x: 0,
       y: 0.001,
-      fwhm: 0.31,
       shape: {
-        kind: 'pseudoVoigt',
-        options: { mu: 0.5 },
-      } as Shape1D,
+        kind: 'pseudoVoigt' as const,
+        fwhm: 0.31,
+        mu: 0.5
+      },
     },
     {
       x: 0,
       y: 0.001,
-      fwhm: 0.31,
       shape: {
-        kind: 'pseudoVoigt',
-        options: { mu: 0.5 },
-      } as Shape1D,
+        kind: 'pseudoVoigt' as const,
+        fwhm: 0.31,
+        mu: 0.5,
+      },
     },
   ];
-  const peaksGenerator = [
-    { x: 0, y: 0.001, fwhm: 0.31, mu: 0.5 },
-    { x: 0, y: 0.001, fwhm: 0.31, mu: 0.5 },
-  ];
-  const data: DataXY = generateSpectrum(peaksGenerator, {
+
+  const data: DataXY = generateSpectrum(peaks, {
     generator: {
       from: -1,
       to: 1,
@@ -240,20 +219,21 @@ describe('Sum of Pseudo Voigts', () => {
       {
         x: 0.001,
         y: 0.0009,
-        fwhm: 0.29,
         shape: {
-          kind: 'pseudoVoigt',
-          options: { mu: 0.52 },
-        } as Shape1D,
+          kind: 'pseudoVoigt' as const,
+          fwhm: 0.29,
+          mu: 0.52
+        },
       },
       {
         x: 0.001,
         y: 0.0009,
         fwhm: 0.29,
         shape: {
-          kind: 'pseudoVoigt',
-          options: { mu: 0.52 },
-        } as Shape1D,
+          kind: 'pseudoVoigt' as const,
+          mu: 0.52,
+          fwhm: 0.29
+        },
       },
     ];
     let result = optimize(data, peakList, {
@@ -266,7 +246,7 @@ describe('Sum of Pseudo Voigts', () => {
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(peaks[i].x, 2);
       expect(pFit.y).toBeCloseTo(peaks[i].y, 2);
-      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 0);
+      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 0);
     }
   });
 });

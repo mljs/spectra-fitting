@@ -1,6 +1,5 @@
 import type { DataXY } from 'cheminfo-types';
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
-import { Shape1D } from 'ml-peak-shape-generator';
 import { generateSpectrum } from 'spectrum-generator';
 
 import { optimize } from '../index';
@@ -20,37 +19,28 @@ describe('Sum of a mix of distributions', () => {
       {
         x: 0,
         y: 0.001,
-        fwhm: 0.31,
         shape: {
-          kind: 'pseudoVoigt',
-          options: { mu: 0.5 },
-        } as Shape1D,
+          kind: 'pseudoVoigt' as const,
+          fwhm: 0.31,
+          mu: 0.5
+        },
       },
       {
         x: 0,
         y: 0.001,
-        fwhm: 0.31,
         shape: {
-          kind: 'pseudoVoigt',
-          options: { mu: 0.5 },
-        } as Shape1D,
+          kind: 'pseudoVoigt' as const,
+          fwhm: 0.31,
+          mu: 0.5
+        },
       },
-      { x: -0.5, y: 0.001, fwhm: 0.31, shape: { kind: 'gaussian' } },
-      { x: 0.5, y: 0.001, fwhm: 0.31, shape: { kind: 'gaussian' } },
-      { x: -0.5, y: 0.001, fwhm: 0.31, shape: { kind: 'lorentzian' } },
-      { x: 0.5, y: 0.001, fwhm: 0.31, shape: { kind: 'lorentzian' } },
+      { x: -0.5, y: 0.001, shape: { kind: 'gaussian' as const, fwhm: 0.31 } },
+      { x: 0.5, y: 0.001, shape: { kind: 'gaussian' as const, fwhm: 0.31 } },
+      { x: -0.5, y: 0.001, shape: { kind: 'lorentzian' as const, fwhm: 0.31 } },
+      { x: 0.5, y: 0.001, shape: { kind: 'lorentzian' as const, fwhm: 0.31 } },
     ];
 
-    const peaksGenerator = [
-      { x: 0, y: 0.001, fwhm: 0.31, mu: 0.5 },
-      { x: 0, y: 0.001, fwhm: 0.31, mu: 0.5 },
-      { x: -0.5, y: 0.001, fwhm: 0.31 },
-      { x: 0.5, y: 0.001, fwhm: 0.31 },
-      { x: -0.5, y: 0.001, fwhm: 0.31 },
-      { x: 0.5, y: 0.001, fwhm: 0.31 },
-    ];
-
-    const data: DataXY = generateSpectrum(peaksGenerator, {
+    const data: DataXY = generateSpectrum(peaks, {
       generator: {
         from: -1,
         to: 1,
@@ -64,44 +54,40 @@ describe('Sum of a mix of distributions', () => {
         {
           x: 0.001,
           y: 0.0009,
-          fwhm: (xFactor * nbPoints) / 8,
           shape: {
             kind: 'pseudoVoigt',
-            options: { mu: 0.52 },
-          } as Shape1D,
+            mu : 0.52,
+            fwhm: (xFactor * nbPoints) / 8,
+          },
         },
         {
           x: 0.001,
           y: 0.0009,
-          fwhm: (xFactor * nbPoints) / 8,
           shape: {
             kind: 'pseudoVoigt',
-            options: { mu: 0.52 },
-          } as Shape1D,
+            fwhm: (xFactor * nbPoints) / 8,
+            mu: 0.52,
+          },
         },
         {
           x: -0.52,
           y: 0.0009,
-          fwhm: (xFactor * nbPoints) / 8,
-          shape: { kind: 'gaussian' } as Shape1D,
+          shape: { kind: 'gaussian', fwhm: (xFactor * nbPoints) / 8},
         },
         {
           x: 0.52,
           y: 0.0009,
-          fwhm: (xFactor * nbPoints) / 8,
-          shape: { kind: 'gaussian' } as Shape1D,
+          shape: { kind: 'gaussian', fwhm: (xFactor * nbPoints) / 8},
         },
         {
           x: -0.52,
           y: 0.0009,
-          fwhm: (xFactor * nbPoints) / 8,
-          shape: { kind: 'lorentzian' } as Shape1D,
+          shape: { kind: 'lorentzian', fwhm: (xFactor * nbPoints) / 8},
         },
         {
           x: 0.52,
           y: 0.0009,
-          fwhm: (xFactor * nbPoints) / 8,
-          shape: { kind: 'lorentzian' } as Shape1D,
+          shape: { kind: 'lorentzian', fwhm: (xFactor * nbPoints) / 8},
         },
       ],
       {
@@ -116,7 +102,7 @@ describe('Sum of a mix of distributions', () => {
       let pFit = result.peaks[i];
       expect(pFit.x).toBeCloseTo(peaks[i].x, 0);
       expect(pFit.y).toBeCloseTo(peaks[i].y, 0);
-      expect(pFit.fwhm).toBeCloseTo(peaks[i].fwhm, 0);
+      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 0);
     }
   });
 });

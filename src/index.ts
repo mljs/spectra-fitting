@@ -8,7 +8,7 @@ export interface Peak1D {
   x: number;
   y: number;
   width?: number;
-  fwhm: number;
+  fwhm?: number;
   shape?: Shape1D;
 }
 
@@ -90,19 +90,21 @@ export function optimize(
   iterations: number;
 } {
   let peakList = JSON.parse(JSON.stringify(peakListInitial));
-
   let index = 0;
   for (const peak of peakList) {
     if (!peak.shape) {
       if (options.shape) {
         peak.shape = {};
         peak.shape.kind = options.shape.kind;
+        peak.shape.fwhm = options.shape.fwhm;
       } else {
         peak.shape = {};
         peak.shape.kind = 'gaussian';
+        peak.shape.fwhm = 0.5;
       }
     }
     let kind = peak.shape.kind;
+    peak.fwhm = peak.shape.fwhm;
     peak.shape = getShape1D({ kind: peak.shape.kind });
     peak.shape.kind = kind;
     peak.parameters = ['height', 'x', ...peak.shape.getParameters()];
@@ -158,13 +160,15 @@ export function optimize(
   let result: any = { error, iterations };
 
   const newPeaks = JSON.parse(JSON.stringify(peaks));
-  delete newPeaks.fromIndex;
-  delete newPeaks.toIndex;
   for (let i = 0; i < nbShapes; i++) {
+    delete newPeaks[i].fromIndex;
+    delete newPeaks[i].toIndex;
+    delete newPeaks[i].fwhm;
+    delete newPeaks[i].parameters;
     for (let k = 0; k < keysOfParameters.length; k++) {
       const key = keysOfParameters[k];
       const value = pFit.parameterValues[i * keysOfParameters.length + k];
-      if (key === 'x' || key === 'fwhm') {
+      if (key === 'x') {
         newPeaks[i][key] = value;
       } else if (key === 'y') {
         newPeaks[i][key] = value * (max - min) + min;
