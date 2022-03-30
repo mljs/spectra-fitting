@@ -16,23 +16,19 @@ for (let i = 0; i < nbPoints; i++) {
 
 describe('One Shape tested', () => {
   it('Gaussian', () => {
-    let peaks = [
+    const peaks = [
       {
         x: -0.5,
         y: 0.001,
-        fwhm: 0.31,
-        shape: { kind: 'gaussian' } as Shape1D,
+        shape: { kind: 'gaussian', fwhm: 0.31 },
       },
     ];
 
-    const peaksGenerator = [{ x: -0.5, y: 0.001, fwhm: 0.31 }];
-
-    const data: DataXY = generateSpectrum(peaksGenerator, {
+    const data: DataXY = generateSpectrum(peaks, {
       generator: {
         from: -1,
         to: 1,
         nbPoints: 101,
-        shape: { kind: 'gaussian' },
       },
     });
 
@@ -42,8 +38,7 @@ describe('One Shape tested', () => {
         {
           x: -0.52,
           y: 0.0009,
-          fwhm: (xFactor * nbPoints) / 8,
-          shape: { kind: 'gaussian' } as Shape1D,
+          shape: { kind: 'gaussian', fwhm: 0.35 },
         },
       ],
       {
@@ -53,10 +48,10 @@ describe('One Shape tested', () => {
         },
       },
     );
-    let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(peaks[0].x, 3);
-    expect(pFit.y).toBeCloseTo(peaks[0].y, 3);
-    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 3);
+    let fittedPeak = result.peaks[0];
+    expect(fittedPeak.x).toBeCloseTo(peaks[0].x, 3);
+    expect(fittedPeak.y).toBeCloseTo(peaks[0].y, 3);
+    expect(fittedPeak.shape.fwhm).toBeCloseTo(peaks[0].shape.fwhm, 3);
   });
 
   it('Lorentzian', () => {
@@ -65,13 +60,11 @@ describe('One Shape tested', () => {
         x: -0.5,
         y: 0.001,
         fwhm: 0.31,
-        shape: { kind: 'lorentzian' } as Shape1D,
+        shape: { kind: 'lorentzian', fwhm: 0.31 },
       },
     ];
 
-    const peaksGenerator = [{ x: -0.5, y: 0.001, fwhm: 0.31 }];
-
-    const data: DataXY = generateSpectrum(peaksGenerator, {
+    const data: DataXY = generateSpectrum(peaks, {
       generator: {
         from: -1,
         to: 1,
@@ -97,10 +90,10 @@ describe('One Shape tested', () => {
         },
       },
     );
-    let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(peaks[0].x, 3);
-    expect(pFit.y).toBeCloseTo(peaks[0].y, 3);
-    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 1);
+    let fittedPeak = result.peaks[0];
+    expect(fittedPeak.x).toBeCloseTo(peaks[0].x, 3);
+    expect(fittedPeak.y).toBeCloseTo(peaks[0].y, 3);
+    expect(fittedPeak.fwhm).toBeCloseTo(peaks[0].fwhm, 1);
   });
 
   it('Pseudo Voigt', () => {
@@ -144,9 +137,9 @@ describe('One Shape tested', () => {
         },
       },
     );
-    let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(peaks[0].x, 3);
-    expect(pFit.y).toBeCloseTo(peaks[0].y, 3);
-    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 3);
+    let fittedPeak = result.peaks[0];
+    expect(fittedPeak.x).toBeCloseTo(peaks[0].x, 3);
+    expect(fittedPeak.y).toBeCloseTo(peaks[0].y, 3);
+    expect(fittedPeak.fwhm).toBeCloseTo(peaks[0].fwhm, 3);
   });
 });
