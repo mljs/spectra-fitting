@@ -15,7 +15,6 @@ for (let i = 0; i < nbPoints; i++) {
 
 describe('One Shape tested', () => {
   it('Gaussian', () => {
-
     const peaks = [
       {
         x: -0.5,
@@ -50,13 +49,10 @@ describe('One Shape tested', () => {
     );
 
     let fittedPeak = result.peaks[0];
-    expect(fittedPeak.x).toBeCloseTo(peaks[0].x, 3);
-    expect(fittedPeak.y).toBeCloseTo(peaks[0].y, 3);
-    expect(fittedPeak.shape.fwhm).toBeCloseTo(peaks[0].shape.fwhm, 3);
+    expect(fittedPeak).toBeCloseTo(peaks[0], 6);
   });
 
   it('Lorentzian', () => {
-
     let peaks = [
       {
         x: -0.5,
@@ -80,7 +76,7 @@ describe('One Shape tested', () => {
         {
           x: -0.52,
           y: 0.0009,
-          shape: { kind: 'lorentzian',  fwhm: 0.29},
+          shape: { kind: 'lorentzian', fwhm: 0.29 },
         },
       ],
       {
@@ -124,7 +120,7 @@ describe('One Shape tested', () => {
           shape: {
             kind: 'pseudoVoigt',
             fwhm: (xFactor * nbPoints) / 8,
-            mu: 0.52
+            mu: 0.52,
           },
         },
       ],
