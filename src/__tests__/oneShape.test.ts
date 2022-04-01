@@ -2,7 +2,7 @@ import type { DataXY } from 'cheminfo-types';
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
 import { generateSpectrum } from 'spectrum-generator';
 
-import { optimize } from '../index';
+import { optimize, Peak1D } from '../index';
 
 expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
 
@@ -15,11 +15,11 @@ for (let i = 0; i < nbPoints; i++) {
 
 describe('One Shape tested', () => {
   it('Gaussian', () => {
-    const peaks = [
+    const peaks: Peak1D[] = [
       {
         x: -0.5,
         y: 0.001,
-        shape: { kind: 'gaussian' as const, fwhm: 0.31 },
+        shape: { kind: 'gaussian', fwhm: 0.31 },
       },
     ];
 
