@@ -23,9 +23,9 @@ let yObject = {
 
 let fwhmObject = {
   init: (peak: Peak1D) => peak.fwhm,
-  max: (peak: Peak1D) => (peak.fwhm as number)* 4,
-  min: (peak: Peak1D) => (peak.fwhm as number)* 0.25,
-  gradientDifference: (peak: Peak1D) => (peak.fwhm as number)* 2e-3,
+  max: (peak: Peak1D) => (peak.fwhm as number) * 4,
+  min: (peak: Peak1D) => (peak.fwhm as number) * 0.25,
+  gradientDifference: (peak: Peak1D) => (peak.fwhm as number) * 2e-3,
 };
 
 let muObject = {

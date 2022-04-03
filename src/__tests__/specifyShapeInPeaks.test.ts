@@ -1,6 +1,5 @@
 import type { DataXY } from 'cheminfo-types';
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
-import { Shape1D } from 'ml-peak-shape-generator';
 import { generateSpectrum } from 'spectrum-generator';
 
 import { optimize } from '../index';
@@ -16,8 +15,8 @@ for (let i = 0; i < nbPoints; i++) {
 
 describe('Optimize sum of Lorentzians', () => {
   const peaks = [
-    { x: -0.5, y: 1, shape: { kind: 'lorentzian' as const, fwhm: 0.05 }},
-    { x: 0.5, y: 1, shape: { kind: 'lorentzian' as const, fwhm: 0.05 }},
+    { x: -0.5, y: 1, shape: { kind: 'lorentzian' as const, fwhm: 0.05 } },
+    { x: 0.5, y: 1, shape: { kind: 'lorentzian' as const, fwhm: 0.05 } },
   ];
 
   const data: DataXY = generateSpectrum(peaks, {
@@ -37,21 +36,21 @@ describe('Optimize sum of Lorentzians', () => {
         x: -0.52,
         y: 0.9,
         fwhm: 0.08,
-        shape: { kind: 'lorentzian' as const},
+        shape: { kind: 'lorentzian' as const },
       },
       {
         x: 0.52,
         y: 0.9,
         fwhm: 0.08,
-        shape: { kind: 'lorentzian' as const},
+        shape: { kind: 'lorentzian' as const },
       },
     ];
     let result = optimize(data, initialPeaks);
     for (let i = 0; i < 2; i++) {
-      let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
-      expect(pFit.y).toBeCloseTo(peaks[i].y, 2);
-      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 3);
+      expect(result.peaks[i]).toMatchCloseTo(
+        JSON.parse(JSON.stringify(peaks[i])),
+        3,
+      );
     }
   });
 
@@ -60,12 +59,12 @@ describe('Optimize sum of Lorentzians', () => {
       {
         x: -0.52,
         y: 2.9,
-        shape: { kind: 'lorentzian' as const, fwhm: 0.08},
+        shape: { kind: 'lorentzian' as const, fwhm: 0.08 },
       },
       {
         x: 0.52,
         y: 2.9,
-        shape: { kind: 'lorentzian' as const, fwhm: 0.08},
+        shape: { kind: 'lorentzian' as const, fwhm: 0.08 },
       },
     ];
     let yShiftedData = {
@@ -74,10 +73,10 @@ describe('Optimize sum of Lorentzians', () => {
     };
     let result = optimize(yShiftedData, yShiftedPeaks);
     for (let i = 0; i < 2; i++) {
-      let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
-      expect(pFit.y).toBeCloseTo(peaks[i].y + 2, 2);
-      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 3);
+      expect(result.peaks[i]).toMatchCloseTo(
+        JSON.parse(JSON.stringify(yShiftedPeaks[i])),
+        3,
+      );
     }
   });
 
@@ -91,7 +90,7 @@ describe('Optimize sum of Lorentzians', () => {
       {
         x: 0.52,
         y: -1,
-        shape: { kind: 'lorentzian' as const, fwhm: 0.08},
+        shape: { kind: 'lorentzian' as const, fwhm: 0.08 },
       },
     ];
 
@@ -102,10 +101,10 @@ describe('Optimize sum of Lorentzians', () => {
 
     let result = optimize(yShiftedData, yShiftedPeaks);
     for (let i = 0; i < 2; i++) {
-      let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
-      expect(pFit.y).toBeCloseTo(peaks[i].y - 2, 2);
-      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 3);
+      expect(result.peaks[i]).toMatchCloseTo(
+        JSON.parse(JSON.stringify(yShiftedPeaks[i])),
+        3,
+      );
     }
   });
 });
@@ -142,10 +141,10 @@ describe('Optimize sum of Gaussians', () => {
     ];
     let result = optimize(data, peakList);
     for (let i = 0; i < 2; i++) {
-      let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
-      expect(pFit.y).toBeCloseTo(peaks[i].y, 1);
-      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 2);
+      expect(result.peaks[i]).toMatchCloseTo(
+        JSON.parse(JSON.stringify(peaks[i])),
+        3,
+      );
     }
   });
 
@@ -159,7 +158,7 @@ describe('Optimize sum of Gaussians', () => {
       {
         x: 0.52,
         y: -1,
-        shape: { kind: 'gaussian' as const, fwhm: 0.08,},
+        shape: { kind: 'gaussian' as const, fwhm: 0.08 },
       },
     ];
     let yShiftedData = {
@@ -173,10 +172,10 @@ describe('Optimize sum of Gaussians', () => {
       },
     });
     for (let i = 0; i < 2; i++) {
-      let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 3);
-      expect(pFit.y).toBeCloseTo(peaks[i].y - 2, 1);
-      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 2);
+      expect(result.peaks[i]).toMatchCloseTo(
+        JSON.parse(JSON.stringify(yShiftedPeaks[i])),
+        3,
+      );
     }
   });
 });
@@ -189,7 +188,7 @@ describe('Sum of Pseudo Voigts', () => {
       shape: {
         kind: 'pseudoVoigt' as const,
         fwhm: 0.31,
-        mu: 0.5
+        mu: 0.5,
       },
     },
     {
@@ -222,7 +221,7 @@ describe('Sum of Pseudo Voigts', () => {
         shape: {
           kind: 'pseudoVoigt' as const,
           fwhm: 0.29,
-          mu: 0.52
+          mu: 0.52,
         },
       },
       {
@@ -232,7 +231,7 @@ describe('Sum of Pseudo Voigts', () => {
         shape: {
           kind: 'pseudoVoigt' as const,
           mu: 0.52,
-          fwhm: 0.29
+          fwhm: 0.29,
         },
       },
     ];
@@ -243,10 +242,10 @@ describe('Sum of Pseudo Voigts', () => {
       },
     });
     for (let i = 0; i < 2; i++) {
-      let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 2);
-      expect(pFit.y).toBeCloseTo(peaks[i].y, 2);
-      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 0);
+      expect(result.peaks[i]).toMatchCloseTo(
+        JSON.parse(JSON.stringify(peaks[i])),
+        3,
+      );
     }
   });
 });

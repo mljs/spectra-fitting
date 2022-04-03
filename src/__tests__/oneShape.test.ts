@@ -48,8 +48,10 @@ describe('One Shape tested', () => {
       },
     );
 
-    let fittedPeak = result.peaks[0];
-    expect(fittedPeak).toBeCloseTo(peaks[0], 6);
+    expect(result.peaks[0]).toMatchCloseTo(
+      JSON.parse(JSON.stringify(peaks[0])),
+      3,
+    );
   });
 
   it('Lorentzian', () => {
@@ -87,10 +89,10 @@ describe('One Shape tested', () => {
       },
     );
 
-    let fittedPeak = result.peaks[0];
-    expect(fittedPeak.x).toBeCloseTo(peaks[0].x, 3);
-    expect(fittedPeak.y).toBeCloseTo(peaks[0].y, 3);
-    expect(fittedPeak.shape.fwhm).toBeCloseTo(peaks[0].shape.fwhm, 1);
+    expect(result.peaks[0]).toMatchCloseTo(
+      JSON.parse(JSON.stringify(peaks[0])),
+      3,
+    );
   });
 
   it('Pseudo Voigt', () => {
@@ -132,9 +134,9 @@ describe('One Shape tested', () => {
       },
     );
 
-    let fittedPeak = result.peaks[0];
-    expect(fittedPeak.x).toBeCloseTo(peaks[0].x, 3);
-    expect(fittedPeak.y).toBeCloseTo(peaks[0].y, 3);
-    expect(fittedPeak.shape.fwhm).toBeCloseTo(peaks[0].shape.fwhm, 3);
+    expect(result.peaks[0]).toMatchCloseTo(
+      JSON.parse(JSON.stringify(peaks[0])),
+      3,
+    );
   });
 });

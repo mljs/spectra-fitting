@@ -13,7 +13,7 @@ describe('change default parameters', () => {
             init: (peak: Peak1D) => peak.x,
             min: (peak: Peak1D) => peak.x - (peak.fwhm as number) * 2,
             max: (peak: Peak1D) => peak.x + (peak.fwhm as number) * 0.1,
-            gradientDifference: (peak: Peak1D) => (peak.fwhm as number)* 2e-3,
+            gradientDifference: (peak: Peak1D) => (peak.fwhm as number) * 2e-3,
           },
         ],
       },

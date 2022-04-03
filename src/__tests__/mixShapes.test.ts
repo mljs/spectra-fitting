@@ -22,7 +22,7 @@ describe('Sum of a mix of distributions', () => {
         shape: {
           kind: 'pseudoVoigt' as const,
           fwhm: 0.31,
-          mu: 0.5
+          mu: 0.5,
         },
       },
       {
@@ -31,7 +31,7 @@ describe('Sum of a mix of distributions', () => {
         shape: {
           kind: 'pseudoVoigt' as const,
           fwhm: 0.31,
-          mu: 0.5
+          mu: 0.5,
         },
       },
       { x: -0.5, y: 0.001, shape: { kind: 'gaussian' as const, fwhm: 0.31 } },
@@ -56,7 +56,7 @@ describe('Sum of a mix of distributions', () => {
           y: 0.0009,
           shape: {
             kind: 'pseudoVoigt',
-            mu : 0.52,
+            mu: 0.52,
             fwhm: (xFactor * nbPoints) / 8,
           },
         },
@@ -72,22 +72,22 @@ describe('Sum of a mix of distributions', () => {
         {
           x: -0.52,
           y: 0.0009,
-          shape: { kind: 'gaussian', fwhm: (xFactor * nbPoints) / 8},
+          shape: { kind: 'gaussian', fwhm: (xFactor * nbPoints) / 8 },
         },
         {
           x: 0.52,
           y: 0.0009,
-          shape: { kind: 'gaussian', fwhm: (xFactor * nbPoints) / 8},
+          shape: { kind: 'gaussian', fwhm: (xFactor * nbPoints) / 8 },
         },
         {
           x: -0.52,
           y: 0.0009,
-          shape: { kind: 'lorentzian', fwhm: (xFactor * nbPoints) / 8},
+          shape: { kind: 'lorentzian', fwhm: (xFactor * nbPoints) / 8 },
         },
         {
           x: 0.52,
           y: 0.0009,
-          shape: { kind: 'lorentzian', fwhm: (xFactor * nbPoints) / 8},
+          shape: { kind: 'lorentzian', fwhm: (xFactor * nbPoints) / 8 },
         },
       ],
       {
@@ -99,10 +99,10 @@ describe('Sum of a mix of distributions', () => {
     );
 
     for (let i = 0; i < 6; i++) {
-      let pFit = result.peaks[i];
-      expect(pFit.x).toBeCloseTo(peaks[i].x, 0);
-      expect(pFit.y).toBeCloseTo(peaks[i].y, 0);
-      expect(pFit.shape.fwhm).toBeCloseTo(peaks[i].shape.fwhm, 0);
+      expect(result.peaks[i]).toMatchCloseTo(
+        JSON.parse(JSON.stringify(peaks[i])),
+        3,
+      );
     }
   });
 });

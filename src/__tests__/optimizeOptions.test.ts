@@ -19,7 +19,7 @@ describe('Optimize Options test', () => {
       {
         x: -0.5,
         y: 0.001,
-        shape: { kind: 'gaussian' as const, fwhm: 0.31}
+        shape: { kind: 'gaussian' as const, fwhm: 0.31 },
       },
     ];
 
@@ -48,10 +48,10 @@ describe('Optimize Options test', () => {
         },
       },
     );
-    let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(peaks[0].x, 3);
-    expect(pFit.y).toBeCloseTo(peaks[0].y, 3);
-    expect(pFit.shape.fwhm).toBeCloseTo(peaks[0].shape.fwhm, 3);
+    expect(result.peaks[0]).toMatchCloseTo(
+      JSON.parse(JSON.stringify(peaks[0])),
+      3,
+    );
   });
 
   it('Specify our own optimization options', () => {
@@ -104,9 +104,9 @@ describe('Optimize Options test', () => {
         },
       },
     );
-    let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(peaks[0].x, 3);
-    expect(pFit.y).toBeCloseTo(peaks[0].y, 3);
-    expect(pFit.shape.fwhm).toBeCloseTo(peaks[0].shape.fwhm, 3);
+    expect(result.peaks[0]).toMatchCloseTo(
+      JSON.parse(JSON.stringify(peaks[0])),
+      3,
+    );
   });
 });

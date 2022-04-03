@@ -107,7 +107,7 @@ export function optimize(
     peak.fwhm = peak.shape.fwhm;
     peak.shape = getShape1D({ kind: peak.shape.kind });
     peak.shape.kind = kind;
-    peak.parameters = ['height', 'x', ...peak.shape.getParameters()];
+    peak.parameters = ['x', 'y', ...peak.shape.getParameters()];
 
     peak.fromIndex = index;
     peak.toIndex = peak.fromIndex + peak.parameters.length - 1;
@@ -121,7 +121,6 @@ export function optimize(
   );
 
   let parameters = newOptimization.parameters;
-
   let nbShapes = peaks.length;
   let keysOfParameters = Object.keys(parameters);
   let nbParams = nbShapes * keysOfParameters.length;
@@ -165,8 +164,11 @@ export function optimize(
     delete newPeaks[i].toIndex;
     delete newPeaks[i].fwhm;
     delete newPeaks[i].parameters;
-    for (let k = 0; k < keysOfParameters.length; k++) {
-      const key = keysOfParameters[k];
+    let parametersOfPeak = keysOfParameters.filter((x) =>
+      peaks[i].parameters.includes(x),
+    );
+    for (let k = 0; k < parametersOfPeak.length; k++) {
+      const key = parametersOfPeak[k];
       const value = pFit.parameterValues[i * keysOfParameters.length + k];
       if (key === 'x') {
         newPeaks[i][key] = value;
