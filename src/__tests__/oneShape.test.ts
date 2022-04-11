@@ -65,9 +65,9 @@ describe('One Shape tested', () => {
 
     const data: DataXY = generateSpectrum(peaks, {
       generator: {
-        from: -1,
-        to: 1,
-        nbPoints: 101,
+        from: -5,
+        to: 5,
+        nbPoints: 1001,
         shape: { kind: 'lorentzian' },
       },
     });
@@ -106,9 +106,9 @@ describe('One Shape tested', () => {
 
     const data: DataXY = generateSpectrum(peaks, {
       generator: {
-        from: -1,
-        to: 1,
-        nbPoints: 101,
+        from: -5,
+        to: 5,
+        nbPoints: 1001,
         shape: { kind: 'pseudoVoigt' },
       },
     });

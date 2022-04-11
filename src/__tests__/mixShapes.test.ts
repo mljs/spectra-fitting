@@ -42,9 +42,9 @@ describe('Sum of a mix of distributions', () => {
 
     const data: DataXY = generateSpectrum(peaks, {
       generator: {
-        from: -1,
-        to: 1,
-        nbPoints: 101,
+        from: -5,
+        to: 5,
+        nbPoints: 1001,
       },
     });
 

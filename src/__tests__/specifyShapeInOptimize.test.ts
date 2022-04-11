@@ -8,6 +8,7 @@ expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
 
 describe('Optimize sum of Gaussians', () => {
   it('positive maxima peaks, default value', () => {
+    
     const peaks = [
       { x: -0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
       { x: 0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
@@ -15,9 +16,9 @@ describe('Optimize sum of Gaussians', () => {
 
     const data: DataXY = generateSpectrum(peaks, {
       generator: {
-        from: -1,
-        to: 1,
-        nbPoints: 101,
+        from: -5,
+        to: 5,
+        nbPoints: 1001,
         shape: { kind: 'gaussian' },
       },
     });
@@ -42,9 +43,9 @@ describe('Optimize sum of Gaussians', () => {
 
     const data: DataXY = generateSpectrum(peaks, {
       generator: {
-        from: -1,
-        to: 1,
-        nbPoints: 101,
+        from: -5,
+        to: 5,
+        nbPoints: 1001,
         shape: { kind: 'gaussian' },
       },
     });
@@ -71,9 +72,9 @@ describe('Optimize sum of Lorentzians', () => {
 
     const data: DataXY = generateSpectrum(peaks, {
       generator: {
-        from: -1,
-        to: 1,
-        nbPoints: 101,
+        from: -5,
+        to: 5,
+        nbPoints: 1001,
         shape: {
           kind: 'lorentzian',
         },
@@ -102,15 +103,15 @@ describe('Optimize sum of Lorentzians', () => {
 describe('Optimize sum of PseudoVoigts', () => {
   it('positive maxima peaks', () => {
     const peaks = [
-      { x: -0.5, y: 1, shape: { kind: 'pseudoVoigt' as const, fwhm: 0.4 } },
-      { x: 0.5, y: 1, shape: { kind: 'pseudoVoigt' as const, fwhm: 0.4 } },
+      { x: -0.5, y: 1, shape: { kind: 'pseudoVoigt' as const, fwhm: 0.05 } },
+      { x: 0.5, y: 1, shape: { kind: 'pseudoVoigt' as const, fwhm: 0.05 } },
     ];
 
     const data: DataXY = generateSpectrum(peaks, {
       generator: {
-        from: -1,
-        to: 1,
-        nbPoints: 101,
+        from: -5,
+        to: 5,
+        nbPoints: 1001,
         shape: {
           kind: 'pseudoVoigt',
         },

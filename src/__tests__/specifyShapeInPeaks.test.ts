@@ -21,9 +21,9 @@ describe('Optimize sum of Lorentzians', () => {
 
   const data: DataXY = generateSpectrum(peaks, {
     generator: {
-      from: -1,
-      to: 1,
-      nbPoints: 101,
+      from: -5,
+      to: 5,
+      nbPoints: 1001,
       shape: {
         kind: 'lorentzian',
       },
@@ -55,7 +55,15 @@ describe('Optimize sum of Lorentzians', () => {
   });
 
   it('shifted baseline up by two', () => {
-    let yShiftedPeaks = [
+    let shiftedPeaks = JSON.parse(JSON.stringify(peaks));
+    for(let i = 0; i < shiftedPeaks.length; i++) {
+      shiftedPeaks[i].y = shiftedPeaks[i].y + 2;
+    }
+    let yShiftedData = {
+      x: data.x.slice(),
+      y: data.y.map((el: number) => el + 2),
+    };
+    let result = optimize(yShiftedData, [
       {
         x: -0.52,
         y: 2.9,
@@ -66,21 +74,20 @@ describe('Optimize sum of Lorentzians', () => {
         y: 2.9,
         shape: { kind: 'lorentzian' as const, fwhm: 0.08 },
       },
-    ];
-    let yShiftedData = {
-      x: data.x.slice(),
-      y: data.y.map((el: number) => el + 2),
-    };
-    let result = optimize(yShiftedData, yShiftedPeaks);
+    ]);
     for (let i = 0; i < 2; i++) {
       expect(result.peaks[i]).toMatchCloseTo(
-        JSON.parse(JSON.stringify(yShiftedPeaks[i])),
+        JSON.parse(JSON.stringify(shiftedPeaks[i])),
         3,
       );
     }
   });
 
   it('negative maxima peaks', () => {
+    let shiftedPeaks = JSON.parse(JSON.stringify(peaks));
+    for(let i = 0; i < shiftedPeaks.length; i++) {
+      shiftedPeaks[i].y = shiftedPeaks[i].y - 2;
+    }
     let yShiftedPeaks = [
       {
         x: -0.52,
@@ -102,7 +109,7 @@ describe('Optimize sum of Lorentzians', () => {
     let result = optimize(yShiftedData, yShiftedPeaks);
     for (let i = 0; i < 2; i++) {
       expect(result.peaks[i]).toMatchCloseTo(
-        JSON.parse(JSON.stringify(yShiftedPeaks[i])),
+        JSON.parse(JSON.stringify(shiftedPeaks[i])),
         3,
       );
     }
@@ -117,9 +124,9 @@ describe('Optimize sum of Gaussians', () => {
 
   const data: DataXY = generateSpectrum(peaks, {
     generator: {
-      from: -2,
-      to: 2,
-      nbPoints: 101,
+      from: -5,
+      to: 5,
+      nbPoints: 1001,
       shape: {
         kind: 'gaussian',
       },
@@ -149,7 +156,18 @@ describe('Optimize sum of Gaussians', () => {
   });
 
   it('negative maxima peaks', () => {
-    let yShiftedPeaks = [
+
+    let shiftedPeaks = JSON.parse(JSON.stringify(peaks));
+    for(let i = 0; i < shiftedPeaks.length; i++) {
+      shiftedPeaks[i].y = shiftedPeaks[i].y - 2;
+    }
+
+    let yShiftedData = {
+      x: data.x.slice(),
+      y: data.y.map((el: number) => el - 2),
+    };
+
+    let result = optimize(yShiftedData, [
       {
         x: -0.52,
         y: -1,
@@ -160,20 +178,16 @@ describe('Optimize sum of Gaussians', () => {
         y: -1,
         shape: { kind: 'gaussian' as const, fwhm: 0.08 },
       },
-    ];
-    let yShiftedData = {
-      x: data.x.slice(),
-      y: data.y.map((el: number) => el - 2),
-    };
-    let result = optimize(yShiftedData, yShiftedPeaks, {
+    ], {
       optimization: {
         kind: 'lm',
         options: { maxIterations: 500, damping: 0.5, errorTolerance: 1e-8 },
       },
     });
+
     for (let i = 0; i < 2; i++) {
       expect(result.peaks[i]).toMatchCloseTo(
-        JSON.parse(JSON.stringify(yShiftedPeaks[i])),
+        JSON.parse(JSON.stringify(shiftedPeaks[i])),
         3,
       );
     }
@@ -204,9 +218,9 @@ describe('Sum of Pseudo Voigts', () => {
 
   const data: DataXY = generateSpectrum(peaks, {
     generator: {
-      from: -1,
-      to: 1,
-      nbPoints: 101,
+      from: -5,
+      to: 5,
+      nbPoints: 1001,
       shape: {
         kind: 'pseudoVoigt',
       },
