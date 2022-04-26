@@ -41,19 +41,3 @@ export interface Peak1D {
   fwhm: number;
   shape?: Shape1D;
 }
-
-export interface OptimizationOptions {
-  kind?: string | number;
-  parameters?: any;
-  options?: {
-    timeout?: number;
-    damping?: number;
-    maxIterations?: number;
-    errorTolerance?: number;
-  };
-}
-
-export interface OptimizeOptions {
-  shape?: Shape1D | { kind: string };
-  optimization?: OptimizationOptions;
-}

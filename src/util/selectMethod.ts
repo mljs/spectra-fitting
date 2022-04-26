@@ -1,8 +1,8 @@
 import { levenbergMarquardt } from 'ml-levenberg-marquardt';
 
-import { OptimizationOptions } from '../spectra-fitting';
+import { OptimizationOptions } from '..';
 
-const LEVENBERG_MARQUARDT = 1;
+const LEVENBERG_MARQUARDT = 'LEVENBERG_MARQUARDT';
 
 /** Algorithm to select the method.
  * @param optimizationOptions - Optimization options
@@ -39,8 +39,7 @@ function checkOptions(
   }
 }
 
-function getKind(kind?: string | number) {
-  if (typeof kind !== 'string') return kind;
+function getKind(kind = '') {
   switch (kind.toLowerCase().replace(/[^a-z]/g, '')) {
     case 'lm':
     case 'levenbergmarquardt':
