@@ -56,8 +56,8 @@ describe('Optimize sum of Lorentzians', () => {
 
   it('shifted baseline up by two', () => {
     let shiftedPeaks = JSON.parse(JSON.stringify(peaks));
-    for(let i = 0; i < shiftedPeaks.length; i++) {
-      shiftedPeaks[i].y = shiftedPeaks[i].y + 2;
+    for (const shiftedPeak of shiftedPeaks) {
+      shiftedPeak.y = shiftedPeak.y + 2;
     }
     let yShiftedData = {
       x: data.x.slice(),
@@ -85,8 +85,8 @@ describe('Optimize sum of Lorentzians', () => {
 
   it('negative maxima peaks', () => {
     let shiftedPeaks = JSON.parse(JSON.stringify(peaks));
-    for(let i = 0; i < shiftedPeaks.length; i++) {
-      shiftedPeaks[i].y = shiftedPeaks[i].y - 2;
+    for (const shiftedPeak of shiftedPeaks) {
+      shiftedPeak.y = shiftedPeak.y - 2;
     }
     let yShiftedPeaks = [
       {
@@ -156,10 +156,9 @@ describe('Optimize sum of Gaussians', () => {
   });
 
   it('negative maxima peaks', () => {
-
     let shiftedPeaks = JSON.parse(JSON.stringify(peaks));
-    for(let i = 0; i < shiftedPeaks.length; i++) {
-      shiftedPeaks[i].y = shiftedPeaks[i].y - 2;
+    for (const shiftedPeak of shiftedPeaks) {
+      shiftedPeak.y = shiftedPeak.y - 2;
     }
 
     let yShiftedData = {
@@ -167,23 +166,27 @@ describe('Optimize sum of Gaussians', () => {
       y: data.y.map((el: number) => el - 2),
     };
 
-    let result = optimize(yShiftedData, [
+    let result = optimize(
+      yShiftedData,
+      [
+        {
+          x: -0.52,
+          y: -1,
+          shape: { kind: 'gaussian' as const, fwhm: 0.08 },
+        },
+        {
+          x: 0.52,
+          y: -1,
+          shape: { kind: 'gaussian' as const, fwhm: 0.08 },
+        },
+      ],
       {
-        x: -0.52,
-        y: -1,
-        shape: { kind: 'gaussian' as const, fwhm: 0.08 },
+        optimization: {
+          kind: 'lm',
+          options: { maxIterations: 500, damping: 0.5, errorTolerance: 1e-8 },
+        },
       },
-      {
-        x: 0.52,
-        y: -1,
-        shape: { kind: 'gaussian' as const, fwhm: 0.08 },
-      },
-    ], {
-      optimization: {
-        kind: 'lm',
-        options: { maxIterations: 500, damping: 0.5, errorTolerance: 1e-8 },
-      },
-    });
+    );
 
     for (let i = 0; i < 2; i++) {
       expect(result.peaks[i]).toMatchCloseTo(

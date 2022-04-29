@@ -12,6 +12,8 @@ export interface Peak1D {
   shape?: Shape1D;
 }
 
+type OptimizationParameter = number | ((peak: Peak1D) => number);
+
 export interface OptimizationOptions {
   /**
    * kind of algorithm. By default it's levenberg-marquardt
@@ -28,16 +30,16 @@ export interface OptimizationOptions {
     name: string;
     /** definition of the starting point of the parameter (the guess),
      *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the guess of the first peak and so on. */
-    init: number | ((peak: Peak1D) => number) | (() => number);
+    init: OptimizationParameter;
     /** definition of the lower limit of the parameter,
      *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the min of the first peak and so on. */
-    min: number | ((peak: Peak1D) => number) | (() => number);
+    min: OptimizationParameter;
     /** definition of the upper limit of the parameter,
      *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the max of the first peak and so on. */
-    max: number | ((peak: Peak1D) => number) | (() => number);
+    max: OptimizationParameter;
     /** definition of  the step size to approximate the jacobian matrix of the parameter,
      *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the gradientDifference of the first peak and so on. */
-    gradientDifference: number | ((peak: Peak1D) => number) | (() => number);
+    gradientDifference: OptimizationParameter;
   }[];
   /** options for the specific kind of algorithm */
   options?: {
@@ -59,7 +61,13 @@ export interface OptimizationOptions {
 }
 
 export interface OptimizeOptions {
+  /**
+   * Kind of shape used for fitting.
+   **/
   shape?: Shape1D;
+  /**
+   * The kind and options of the algorithm use to optimize parameters.
+   */
   optimization?: OptimizationOptions;
 }
 
