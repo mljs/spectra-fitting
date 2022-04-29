@@ -15,11 +15,11 @@ for (let i = 0; i < nbPoints; i++) {
 
 describe('One Shape tested', () => {
   it('Gaussian', () => {
-    const peaks: Peak1D[] = [
+    const peaks = [
       {
         x: -0.5,
         y: 0.001,
-        shape: { kind: 'gaussian', fwhm: 0.31 },
+        shape: { kind: 'gaussian' as const, fwhm: 0.31 },
       },
     ];
 
@@ -48,10 +48,7 @@ describe('One Shape tested', () => {
       },
     );
 
-    expect(result.peaks[0]).toMatchCloseTo(
-      JSON.parse(JSON.stringify(peaks[0])),
-      3,
-    );
+    expect(result.peaks[0]).toMatchCloseTo(peaks[0], 3);
   });
 
   it('Lorentzian', () => {
@@ -63,12 +60,16 @@ describe('One Shape tested', () => {
       },
     ];
 
+    /*
+     Lorentzian functions are rather flat and if we only predict the spectrum
+     between -5 and 5 we don't cover enough of the function to obtain a nice
+     fit
+    */
     const data: DataXY = generateSpectrum(peaks, {
       generator: {
-        from: -5,
-        to: 5,
+        from: -10,
+        to: 10,
         nbPoints: 1001,
-        shape: { kind: 'lorentzian' },
       },
     });
 
@@ -89,10 +90,7 @@ describe('One Shape tested', () => {
       },
     );
 
-    expect(result.peaks[0]).toMatchCloseTo(
-      JSON.parse(JSON.stringify(peaks[0])),
-      3,
-    );
+    expect(result.peaks[0]).toMatchCloseTo(peaks[0], 3);
   });
 
   it('Pseudo Voigt', () => {
@@ -106,10 +104,9 @@ describe('One Shape tested', () => {
 
     const data: DataXY = generateSpectrum(peaks, {
       generator: {
-        from: -5,
-        to: 5,
+        from: -10,
+        to: 10,
         nbPoints: 1001,
-        shape: { kind: 'pseudoVoigt' },
       },
     });
 
@@ -121,8 +118,8 @@ describe('One Shape tested', () => {
           y: 0.0009,
           shape: {
             kind: 'pseudoVoigt',
-            fwhm: (xFactor * nbPoints) / 8,
-            mu: 0.52,
+            fwhm: 0.28,
+            mu: 1,
           },
         },
       ],
@@ -134,9 +131,10 @@ describe('One Shape tested', () => {
       },
     );
 
-    expect(result.peaks[0]).toMatchCloseTo(
-      JSON.parse(JSON.stringify(peaks[0])),
-      3,
-    );
+    expect(result.peaks[0].shape.fwhm).toBeCloseTo(0.31, 4);
+    expect(result.peaks[0].x).toBeCloseTo(0, 5);
+    expect(result.peaks[0].y).toBeCloseTo(0.001, 5);
+
+    expect(result.peaks[0]).toMatchCloseTo(peaks[0], 2);
   });
 });
