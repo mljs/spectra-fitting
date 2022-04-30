@@ -85,7 +85,7 @@ describe('Sum of a mix of distributions', () => {
           fwhm: 0.4,
         },
       },
-      { x: 0.5, y: 1.9, shape: { kind: 'lorentzian' as const, fwhm: 0.2 } },
+      { x: 0.2, y: 1.9, shape: { kind: 'lorentzian' as const, fwhm: 0.2 } },
     ]);
     // we have a little bit more error on mu
     //@ts-expect-error we ignoere this ts error
@@ -94,7 +94,7 @@ describe('Sum of a mix of distributions', () => {
       expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
-  it.only('20 peaks with overlap', () => {
+  it('20 peaks with overlap', () => {
     const nbPeaks = 5;
     let peaks = [];
     for (let i = 0; i < nbPeaks; i++) {
