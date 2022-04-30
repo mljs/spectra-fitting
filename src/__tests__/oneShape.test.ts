@@ -1,6 +1,5 @@
 import type { DataXY } from 'cheminfo-types';
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
-import { Shape1D } from 'ml-peak-shape-generator';
 import { generateSpectrum } from 'spectrum-generator';
 
 import { optimize } from '../index';
@@ -16,18 +15,15 @@ for (let i = 0; i < nbPoints; i++) {
 
 describe('One Shape tested', () => {
   it('Gaussian', () => {
-    let peaks = [
+    const peaks = [
       {
         x: -0.5,
         y: 0.001,
-        fwhm: 0.31,
-        shape: { kind: 'gaussian' } as Shape1D,
+        shape: { kind: 'gaussian' as const, fwhm: 0.31 },
       },
     ];
 
-    const peaksGenerator = [{ x: -0.5, y: 0.001, fwhm: 0.31 }];
-
-    const data: DataXY = generateSpectrum(peaksGenerator, {
+    const data: DataXY = generateSpectrum(peaks, {
       generator: {
         from: -1,
         to: 1,
@@ -35,27 +31,14 @@ describe('One Shape tested', () => {
       },
     });
 
-    let result = optimize(
-      data,
-      [
-        {
-          x: -0.52,
-          y: 0.0009,
-          fwhm: (xFactor * nbPoints) / 8,
-          shape: { kind: 'gaussian' } as Shape1D,
-        },
-      ],
+    let result = optimize(data, [
       {
-        optimization: {
-          kind: 'lm',
-          options: { maxIterations: 1000, errorTolerance: 1e-8 },
-        },
+        x: -0.52,
+        y: 0.0009,
+        shape: { kind: 'gaussian', fwhm: 0.35 },
       },
-    );
-    let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(peaks[0].x, 0);
-    expect(pFit.y).toBeCloseTo(peaks[0].y, 0);
-    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 0);
+    ]);
+    expect(result.peaks[0]).toMatchCloseTo(peaks[0], 3);
   });
 
   it('Lorentzian', () => {
@@ -63,42 +46,32 @@ describe('One Shape tested', () => {
       {
         x: -0.5,
         y: 0.001,
-        fwhm: 0.31,
-        shape: { kind: 'lorentzian' } as Shape1D,
+        shape: { kind: 'lorentzian' as const, fwhm: 0.31 },
       },
     ];
 
-    const peaksGenerator = [{ x: -0.5, y: 0.001, fwhm: 0.31 }];
-
-    const data: DataXY = generateSpectrum(peaksGenerator, {
+    /*
+     Lorentzian functions are rather flat and if we only predict the spectrum
+     between -5 and 5 we don't cover enough of the function to obtain a nice
+     fit
+    */
+    const data: DataXY = generateSpectrum(peaks, {
       generator: {
-        from: -1,
-        to: 1,
-        nbPoints: 101,
+        from: -10,
+        to: 10,
+        nbPoints: 1001,
       },
     });
 
-    let result = optimize(
-      data,
-      [
-        {
-          x: -0.52,
-          y: 0.0009,
-          fwhm: (xFactor * nbPoints) / 8,
-          shape: { kind: 'lorentzian' } as Shape1D,
-        },
-      ],
+    let result = optimize(data, [
       {
-        optimization: {
-          kind: 'lm',
-          options: { maxIterations: 1000, errorTolerance: 1e-8 },
-        },
+        x: -0.52,
+        y: 0.0009,
+        shape: { kind: 'lorentzian', fwhm: 0.29 },
       },
-    );
-    let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(peaks[0].x, 0);
-    expect(pFit.y).toBeCloseTo(peaks[0].y, 0);
-    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 0);
+    ]);
+
+    expect(result.peaks[0]).toMatchCloseTo(peaks[0], 3);
   });
 
   it('Pseudo Voigt', () => {
@@ -106,44 +79,34 @@ describe('One Shape tested', () => {
       {
         x: 0,
         y: 0.001,
-        fwhm: 0.31,
-        shape: { kind: 'pseudoVoigt', options: { mu: 0.5 } } as Shape1D,
+        shape: { kind: 'pseudoVoigt' as const, fwhm: 0.31, mu: 0.5 },
       },
     ];
 
-    const peaksGenerator = [{ x: 0, y: 0.001, fwhm: 0.31, mu: 0.5 }];
-
-    const data: DataXY = generateSpectrum(peaksGenerator, {
+    const data: DataXY = generateSpectrum(peaks, {
       generator: {
-        from: -1,
-        to: 1,
-        nbPoints: 101,
+        from: -10,
+        to: 10,
+        nbPoints: 1001,
       },
     });
 
-    let result = optimize(
-      data,
-      [
-        {
-          x: 0.001,
-          y: 0.0009,
-          fwhm: (xFactor * nbPoints) / 8,
-          shape: {
-            kind: 'pseudoVoigt',
-            options: { mu: 0.52 },
-          } as Shape1D,
-        },
-      ],
+    let result = optimize(data, [
       {
-        optimization: {
-          kind: 'lm',
-          options: { maxIterations: 1000, errorTolerance: 1e-8 },
+        x: 0.001,
+        y: 0.0009,
+        shape: {
+          kind: 'pseudoVoigt',
+          fwhm: 0.28,
+          mu: 1,
         },
       },
-    );
-    let pFit = result.peaks[0];
-    expect(pFit.x).toBeCloseTo(peaks[0].x, 0);
-    expect(pFit.y).toBeCloseTo(peaks[0].y, 0);
-    expect(pFit.fwhm).toBeCloseTo(peaks[0].fwhm, 0);
+    ]);
+
+    expect(result.peaks[0].shape?.fwhm).toBeCloseTo(0.31, 4);
+    expect(result.peaks[0].x).toBeCloseTo(0, 5);
+    expect(result.peaks[0].y).toBeCloseTo(0.001, 5);
+
+    expect(result.peaks[0]).toMatchCloseTo(peaks[0], 2);
   });
 });

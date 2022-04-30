@@ -15,7 +15,7 @@ This is a spectra fitting package to optimize the position (x), max intensity (y
 where
 
 | <img src="https://tex.cheminfo.org/?tex=%5Cdelta%20%3D%20%5Cleft(t%20-%20x%5Cright)%5E2%0A"/> | <img src="https://tex.cheminfo.org/?tex=%5Csigma%20%3D%20%5Cfrac%7BFWHM%7D%7B2%5Csqrt%7B2%20%5Ccdot%20Ln(2)%7D%7D"/> | <img src="https://tex.cheminfo.org/?tex=%5Cgamma%3D%5Cleft(FWHM%5Cright)%5E2"/> |
-| --------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------- |
+| --------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------ |
 
 It is a wrapper of [ml-levenberg-marquardt](https://github.com/mljs/levenberg-marquardt)
 
@@ -28,53 +28,79 @@ It is a wrapper of [ml-levenberg-marquardt](https://github.com/mljs/levenberg-ma
 ## Example
 
 ```js
-// import library
-import { optimizeSum } from 'ml-spectra-fitting';
-import { generateSpectrum } from 'spectrum-generator';
+import { optimize } from 'ml-spectra-fitting';
+import { SpectrumGenerator } from 'spectrum-generator';
 
-const peaks = [
-  { x: 0.5, y: 0.2, fwhm: 0.2 },
-  { x: -0.5, y: 0.2, fwhm: 0.3 },
-];
-const data = generateSpectrum(peaks, { from: -1, to: 1, nbPoints: 41 });
+const generator = new SpectrumGenerator({
+  nbPoints: 101,
+  from: -1,
+  to: 1,
+});
 
-//the approximate values to be optimized, It could come from a peak picking with ml-gsd
+// by default the kind of shape is gaussian;
+generator.addPeak({ x: 0.5, y: 0.2 }, { fwhm: 0.2 });
+generator.addPeak(
+  { x: -0.5, y: 0.2 },
+  {
+    shape: {
+      kind: 'lorentzian',
+      fwhm: 0.1,
+    },
+  },
+);
+
+//points to fit {x, y};
+let data = generator.getSpectrum();
+console.log(JSON.stringify({ x: Array.from(data.x), y: Array.from(data.y) }));
+//the approximate values to be optimized, It could coming from a peak picking with ml-gsd
 let peaks = [
   {
     x: -0.5,
-    y: 0.18,
-    fwhm: 0.18,
+    y: 0.22,
+    shape: {
+      kind: 'gaussian',
+      fwhm: 0.25,
+    },
   },
   {
     x: 0.52,
-    y: 0.17,
-    fwhm: 0.37,
+    y: 0.18,
+    shape: {
+      kind: 'gaussian',
+      fwhm: 0.18,
+    },
   },
 ];
 
-// the function receive an array of peaks {x, y, fwhm} as a guess
-// and returns an array of peaks
+// the function receive an array of peak with {x, y, fwhm} as a guess
+// and return a list of objects
+let fittedParams = optimize(data, peaks, { shape: { kind: 'pseudoVoigt' } });
 
-let fittedPeaks = optimize(data, peaks);
-console.log(fittedPeaks);
-/**
- {
-    error: 0.010502794375558983,
-    iterations: 15,
-    peaks: [
-      {
-        x: -0.49999760133593774,
-        y: 0.1999880261075537,
-        fwhm: 0.3000369491704072
+console.log(fittedParams);
+const result = {
+  error: 0.12361588652854476,
+  iterations: 100,
+  peaks: [
+    {
+      x: -0.5000014532421942,
+      y: 0.19995307937326137,
+      shape: {
+        kind: 'pseudoVoigt',
+        fwhm: 0.10007670374735196,
+        mu: 0.004731136777288483,
       },
-      {
-        x: 0.5000084944744884,
-        y: 0.20004144804853427,
-        fwhm: 0.1999731186595336
-      }
-    ]
-  }
- */
+    },
+    {
+      x: 0.5001051783652894,
+      y: 0.19960010175400406,
+      shape: {
+        kind: 'pseudoVoigt',
+        fwhm: 0.19935932346969124,
+        mu: 1,
+      },
+    },
+  ],
+};
 ```
 
 For data with and combination of signals with shapes between gaussian and lorentzians, we could use the kind pseudovoigt to fit the data.
@@ -94,9 +120,9 @@ generator.addPeak({ x: 0.5, y: 0.2 }, { fwhm: 0.2 });
 generator.addPeak(
   { x: -0.5, y: 0.2 },
   {
-    fwhm: 0.1,
     shape: {
       kind: 'lorentzian',
+      fwhm: 0.1,
     },
   },
 );
@@ -109,12 +135,18 @@ let peaks = [
   {
     x: -0.5,
     y: 0.22,
-    fwhm: 0.25,
+    shape: {
+      kind: 'gaussian',
+      fwhm: 0.25,
+    },
   },
   {
     x: 0.52,
     y: 0.18,
-    fwhm: 0.18,
+    shape: {
+      kind: 'gaussian',
+      fwhm: 0.18,
+    },
   },
 ];
 
@@ -123,26 +155,30 @@ let peaks = [
 let fittedParams = optimize(data, peaks, { shape: { kind: 'pseudoVoigt' } });
 
 console.log(fittedParams);
-/**
-{
+const result = {
   error: 0.12361588652854476,
   iterations: 100,
   peaks: [
     {
       x: -0.5000014532421942,
       y: 0.19995307937326137,
-      fwhm: 0.10007670374735196,
-      mu: 0.004731136777288483
+      shape: {
+        kind: 'pseudoVoigt',
+        fwhm: 0.10007670374735196,
+        mu: 0.004731136777288483,
+      },
     },
     {
       x: 0.5001051783652894,
       y: 0.19960010175400406,
-      fwhm: 0.19935932346969124,
-      mu: 1
-    }
-  ]
-}
-*/
+      shape: {
+        kind: 'pseudoVoigt',
+        fwhm: 0.19935932346969124,
+        mu: 1,
+      },
+    },
+  ],
+};
 ```
 
 ## License

@@ -2,9 +2,9 @@ import { selectMethod } from '../selectMethod';
 
 describe('selectMethod', () => {
   it('throw errors', () => {
-    expect(selectMethod).toThrow('Unknown kind algorithm');
     expect(() => {
+      //@ts-expect-error expected to fail
       selectMethod({ kind: 'fail' });
-    }).toThrow('Unknown kind algorithm');
+    }).toThrow('Unknown fitting algorithm');
   });
 });
