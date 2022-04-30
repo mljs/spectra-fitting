@@ -56,7 +56,7 @@ describe('Sum of a mix of distributions', () => {
       expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
-  it.only('6 peaks', () => {
+  it('6 peaks', () => {
     let peaks = [
       {
         x: 0,
@@ -106,7 +106,7 @@ describe('Sum of a mix of distributions', () => {
         {
           x: 1.05,
           y: 0.001,
-          shape: { kind: 'lorentzian' as const, fwhm: 0.0 },
+          shape: { kind: 'lorentzian' as const, fwhm: 0.09 },
         },
         {
           x: 1.51,
@@ -136,13 +136,11 @@ describe('Sum of a mix of distributions', () => {
       },
     );
 
-    console.log(result.peaks[0]);
     // we have a little bit more error on mu
     //@ts-expect-error we ignoere this ts error
     peaks.forEach((peak) => peak.shape.mu && delete peak.shape.mu);
     for (let i = 0; i < result.peaks.length; i++) {
-      console.log(i);
-      expect(result.peaks[i]).toMatchCloseTo(peaks[i], 2);
+      expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
 });

@@ -105,33 +105,29 @@ export function optimize(
   const nbParams = internalPeaks[internalPeaks.length - 1].toIndex + 1;
   const minValues = new Float64Array(nbParams);
   const maxValues = new Float64Array(nbParams);
-  const initValues = new Float64Array(nbParams);
+  const initialValues = new Float64Array(nbParams);
   const gradientDifferences = new Float64Array(nbParams);
   let index = 0;
   for (const peak of internalPeaks) {
     for (let i = 0; i < peak.parameters.length; i++) {
       minValues[index] = peak.propertiesValues.min[i];
       maxValues[index] = peak.propertiesValues.max[i];
-      initValues[index] = peak.propertiesValues.init[i];
+      initialValues[index] = peak.propertiesValues.init[i];
       gradientDifferences[index] = peak.propertiesValues.gradientDifference[i];
       index++;
     }
   }
   let { algorithm, optimizationOptions } = selectMethod(options.optimization);
 
-  optimizationOptions.minValues = minValues;
-  optimizationOptions.maxValues = maxValues;
-  optimizationOptions.initialValues = initValues;
-  optimizationOptions.gradientDifference = gradientDifferences;
-  optimizationOptions = { ...optimizationOptions };
-
   let sumOfShapes = getSumOfShapes(internalPeaks);
 
-  let fitted = algorithm(
-    { x: data.x, y: normalizedY },
-    sumOfShapes,
-    optimizationOptions,
-  );
+  let fitted = algorithm({ x: data.x, y: normalizedY }, sumOfShapes, {
+    minValues,
+    maxValues,
+    initialValues,
+    gradientDifference: gradientDifferences,
+    ...optimizationOptions,
+  });
   const fittedValues = fitted.parameterValues;
   let newPeaks: Peak[] = [];
   for (let peak of internalPeaks) {
