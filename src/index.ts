@@ -1,6 +1,6 @@
 import { DataXY, DoubleArray } from 'cheminfo-types';
 import { Shape1D } from 'ml-peak-shape-generator';
-import { xMinMaxValues, xRescale } from 'ml-spectra-processing';
+import { xMinMaxValues } from 'ml-spectra-processing';
 
 import { getSumOfShapes } from './shapes/getSumOfShapes';
 import { getInternalPeaks } from './util/internalPeaks/getInternalPeaks';
@@ -35,7 +35,7 @@ export interface OptimizationOptions {
   /**
    * kind of algorithm. By default it's levenberg-marquardt
    */
-  kind?: string;
+  kind?: 'lm' | 'levenbergMarquardt';
 
   /** options for the specific kind of algorithm */
   options?: {
@@ -91,7 +91,16 @@ export function optimize(
   peaks: Peak[];
   iterations: number;
 } {
-  const internalPeaks = getInternalPeaks(peaks, options);
+  // rescale data
+  let temp = xMinMaxValues(data.y);
+  const minMaxY = { ...temp, range: temp.max - temp.min };
+
+  const internalPeaks = getInternalPeaks(peaks, minMaxY, options);
+  // need to rescale what is related to Y
+  let normalizedY = new Float64Array(data.y.length);
+  for (let i = 0; i < data.y.length; i++) {
+    normalizedY[i] = (data.y[i] - minMaxY.min) / minMaxY.range;
+  }
 
   const nbParams = internalPeaks[internalPeaks.length - 1].toIndex + 1;
   const minValues = new Float64Array(nbParams);
@@ -108,7 +117,6 @@ export function optimize(
       index++;
     }
   }
-
   let { algorithm, optimizationOptions } = selectMethod(options.optimization);
 
   optimizationOptions.minValues = minValues;
@@ -118,9 +126,6 @@ export function optimize(
   optimizationOptions = { ...optimizationOptions };
 
   let sumOfShapes = getSumOfShapes(internalPeaks);
-
-  let minMaxY = xMinMaxValues(data.y);
-  let normalizedY = xRescale(data.y, { min: 0, max: 1 });
 
   let fitted = algorithm(
     { x: data.x, y: normalizedY },
@@ -136,7 +141,7 @@ export function optimize(
       shape: peak.shape,
     };
     newPeak.x = fittedValues[peak.fromIndex];
-    newPeak.y = fittedValues[peak.fromIndex + 1] * minMaxY.max + minMaxY.min;
+    newPeak.y = fittedValues[peak.fromIndex + 1] * minMaxY.range + minMaxY.min;
     for (let i = 2; i < peak.parameters.length; i++) {
       //@ts-expect-error should be fixed once
       newPeak.shape[peak.parameters[i]] = fittedValues[peak.fromIndex + i];

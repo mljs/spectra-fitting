@@ -35,27 +35,23 @@ describe('Optimize sum of Gaussians', () => {
   it('positive maxima peaks, wide peaks, default value', () => {
     const peaks = [
       { x: -0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.4 } },
-      { x: 0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.4 } },
+      { x: 0.5, y: 1, shape: { kind: 'lorentzian' as const, fwhm: 0.4 } },
     ];
 
     const data: DataXY = generateSpectrum(peaks, {
       generator: {
-        from: -5,
-        to: 5,
+        from: -10,
+        to: 10,
         nbPoints: 1001,
-        shape: { kind: 'gaussian' },
       },
     });
 
     let result = optimize(data, [
-      { x: -0.52, y: 0.9, fwhm: 0.2 },
-      { x: 0.52, y: 0.9, fwhm: 0.6 },
+      { x: -0.52, y: 0.9, shape: { kind: 'gaussian', fwhm: 0.2 } },
+      { x: 0.52, y: 0.9, shape: { kind: 'lorentzian', fwhm: 0.6 } },
     ]);
     for (let i = 0; i < 2; i++) {
-      expect(result.peaks[i]).toMatchCloseTo(
-        JSON.parse(JSON.stringify(peaks[i])),
-        3,
-      );
+      expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
 });
@@ -72,27 +68,21 @@ describe('Optimize sum of Lorentzians', () => {
         from: -5,
         to: 5,
         nbPoints: 1001,
-        shape: {
-          kind: 'lorentzian',
-        },
       },
     });
 
     let result = optimize(
       data,
       [
-        { x: -0.52, y: 0.9, fwhm: 0.08 },
-        { x: 0.52, y: 0.9, fwhm: 0.08 },
+        { x: -0.52, y: 0.9 },
+        { x: 0.52, y: 0.9 },
       ],
       {
-        shape: { kind: 'lorentzian' },
+        shape: { kind: 'lorentzian', fwhm: 0.08 },
       },
     );
     for (let i = 0; i < 2; i++) {
-      expect(result.peaks[i]).toMatchCloseTo(
-        JSON.parse(JSON.stringify(peaks[i])),
-        3,
-      );
+      expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
 });
@@ -118,11 +108,11 @@ describe('Optimize sum of PseudoVoigts', () => {
     let result = optimize(
       data,
       [
-        { x: -0.52, y: 0.9, fwhm: 0.08 },
-        { x: 0.52, y: 0.9, fwhm: 0.08 },
+        { x: -0.52, y: 0.9 },
+        { x: 0.52, y: 0.9 },
       ],
       {
-        shape: { kind: 'pseudoVoigt' },
+        shape: { kind: 'pseudoVoigt', fwhm: 0.08 },
       },
     );
     for (let i = 0; i < 2; i++) {

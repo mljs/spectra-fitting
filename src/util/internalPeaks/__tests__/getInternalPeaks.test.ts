@@ -8,7 +8,7 @@ expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
 describe('getInternalPeaks', () => {
   it('default values', () => {
     const peaks: Peak[] = [{ x: 0, y: 1 }];
-    const internalPeaks = getInternalPeaks(peaks);
+    const internalPeaks = getInternalPeaks(peaks, { min: 0, max: 1, range: 1 });
     expect(internalPeaks).toMatchCloseTo([
       {
         shape: { kind: 'gaussian' },
@@ -32,7 +32,7 @@ describe('getInternalPeaks', () => {
       { x: 0, y: 1 },
       { x: 1, y: 2, shape: { kind: 'pseudoVoigt' } },
     ];
-    const internalPeaks = getInternalPeaks(peaks);
+    const internalPeaks = getInternalPeaks(peaks, { min: 0, max: 1, range: 1 });
     expect(internalPeaks[1]).toMatchCloseTo({
       shape: { kind: 'pseudoVoigt' },
       shapeFct: { mu: 0.5, fwhm: 500 },
@@ -50,9 +50,13 @@ describe('getInternalPeaks', () => {
 
   it('specify a shape in the options', () => {
     const peaks: Peak[] = [{ x: 0, y: 1 }];
-    const internalPeaks = getInternalPeaks(peaks, {
-      shape: { kind: 'lorentzian' },
-    });
+    const internalPeaks = getInternalPeaks(
+      peaks,
+      { min: 0, max: 1, range: 1 },
+      {
+        shape: { kind: 'lorentzian' },
+      },
+    );
     expect(internalPeaks).toMatchCloseTo([
       {
         shape: { kind: 'lorentzian' },
@@ -73,12 +77,16 @@ describe('getInternalPeaks', () => {
 
   it('specify a parameters in the options', () => {
     const peaks: Peak[] = [{ x: 0, y: 1 }];
-    const internalPeaks = getInternalPeaks(peaks, {
-      parameters: {
-        x: { min: -1, max: 1 },
-        y: { min: -2 },
+    const internalPeaks = getInternalPeaks(
+      peaks,
+      { min: 0, max: 1, range: 1 },
+      {
+        parameters: {
+          x: { min: -1, max: 1 },
+          y: { min: -2 },
+        },
       },
-    });
+    );
     expect(internalPeaks).toMatchCloseTo([
       {
         shape: { kind: 'gaussian' },
@@ -114,7 +122,7 @@ describe('getInternalPeaks', () => {
         },
       },
     ];
-    const internalPeaks = getInternalPeaks(peaks);
+    const internalPeaks = getInternalPeaks(peaks, { min: 0, max: 1, range: 1 });
     expect(internalPeaks).toMatchCloseTo([
       {
         shape: { kind: 'gaussian' },

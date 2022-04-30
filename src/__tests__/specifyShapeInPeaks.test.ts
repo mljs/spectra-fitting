@@ -2,7 +2,7 @@ import type { DataXY } from 'cheminfo-types';
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
 import { generateSpectrum } from 'spectrum-generator';
 
-import { optimize } from '../index';
+import { optimize, Peak } from '../index';
 
 expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
 
@@ -31,26 +31,21 @@ describe('Optimize sum of Lorentzians', () => {
   });
 
   it('positive maxima peaks', () => {
-    let initialPeaks = [
+    let initialPeaks: Peak[] = [
       {
         x: -0.52,
         y: 0.9,
-        fwhm: 0.08,
-        shape: { kind: 'lorentzian' as const },
+        shape: { kind: 'lorentzian' as const, fwhm: 0.08 },
       },
       {
         x: 0.52,
         y: 0.9,
-        fwhm: 0.08,
-        shape: { kind: 'lorentzian' as const },
+        shape: { kind: 'lorentzian' as const, fwhm: 0.08 },
       },
     ];
     let result = optimize(data, initialPeaks);
     for (let i = 0; i < 2; i++) {
-      expect(result.peaks[i]).toMatchCloseTo(
-        JSON.parse(JSON.stringify(peaks[i])),
-        3,
-      );
+      expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
 
@@ -60,7 +55,7 @@ describe('Optimize sum of Lorentzians', () => {
       shiftedPeak.y = shiftedPeak.y + 2;
     }
     let yShiftedData = {
-      x: data.x.slice(),
+      x: data.x,
       y: data.y.map((el: number) => el + 2),
     };
     let result = optimize(yShiftedData, [
@@ -76,10 +71,7 @@ describe('Optimize sum of Lorentzians', () => {
       },
     ]);
     for (let i = 0; i < 2; i++) {
-      expect(result.peaks[i]).toMatchCloseTo(
-        JSON.parse(JSON.stringify(shiftedPeaks[i])),
-        3,
-      );
+      expect(result.peaks[i]).toMatchCloseTo(shiftedPeaks[i], 3);
     }
   });
 
@@ -108,10 +100,7 @@ describe('Optimize sum of Lorentzians', () => {
 
     let result = optimize(yShiftedData, yShiftedPeaks);
     for (let i = 0; i < 2; i++) {
-      expect(result.peaks[i]).toMatchCloseTo(
-        JSON.parse(JSON.stringify(shiftedPeaks[i])),
-        3,
-      );
+      expect(result.peaks[i]).toMatchCloseTo(shiftedPeaks[i], 3);
     }
   });
 });
@@ -134,7 +123,7 @@ describe('Optimize sum of Gaussians', () => {
   });
 
   it('positive maxima peaks', () => {
-    let peakList = [
+    let peakList: Peak[] = [
       {
         x: -0.52,
         y: 0.9,
@@ -148,10 +137,7 @@ describe('Optimize sum of Gaussians', () => {
     ];
     let result = optimize(data, peakList);
     for (let i = 0; i < 2; i++) {
-      expect(result.peaks[i]).toMatchCloseTo(
-        JSON.parse(JSON.stringify(peaks[i])),
-        3,
-      );
+      expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
 
@@ -189,10 +175,7 @@ describe('Optimize sum of Gaussians', () => {
     );
 
     for (let i = 0; i < 2; i++) {
-      expect(result.peaks[i]).toMatchCloseTo(
-        JSON.parse(JSON.stringify(shiftedPeaks[i])),
-        3,
-      );
+      expect(result.peaks[i]).toMatchCloseTo(shiftedPeaks[i], 3);
     }
   });
 });
@@ -200,7 +183,7 @@ describe('Optimize sum of Gaussians', () => {
 describe('Sum of Pseudo Voigts', () => {
   const peaks = [
     {
-      x: 0,
+      x: -0.5,
       y: 0.001,
       shape: {
         kind: 'pseudoVoigt' as const,
@@ -209,7 +192,7 @@ describe('Sum of Pseudo Voigts', () => {
       },
     },
     {
-      x: 0,
+      x: 0.5,
       y: 0.001,
       shape: {
         kind: 'pseudoVoigt' as const,
@@ -219,10 +202,11 @@ describe('Sum of Pseudo Voigts', () => {
     },
   ];
 
+  // in order to correctly determine the mu we need to predict a huge width
   const data: DataXY = generateSpectrum(peaks, {
     generator: {
-      from: -5,
-      to: 5,
+      from: -50,
+      to: 50,
       nbPoints: 1001,
       shape: {
         kind: 'pseudoVoigt',
@@ -231,9 +215,9 @@ describe('Sum of Pseudo Voigts', () => {
   });
 
   it('positive maxima peaks', () => {
-    let peakList = [
+    let peakList: Peak[] = [
       {
-        x: 0.001,
+        x: -0.3,
         y: 0.0009,
         shape: {
           kind: 'pseudoVoigt' as const,
@@ -242,9 +226,8 @@ describe('Sum of Pseudo Voigts', () => {
         },
       },
       {
-        x: 0.001,
+        x: 0.3,
         y: 0.0009,
-        fwhm: 0.29,
         shape: {
           kind: 'pseudoVoigt' as const,
           mu: 0.52,
@@ -255,14 +238,11 @@ describe('Sum of Pseudo Voigts', () => {
     let result = optimize(data, peakList, {
       optimization: {
         kind: 'lm',
-        options: { maxIterations: 500, damping: 0.5, errorTolerance: 1e-8 },
+        options: { maxIterations: 100, damping: 0.5, errorTolerance: 1e-8 },
       },
     });
     for (let i = 0; i < 2; i++) {
-      expect(result.peaks[i]).toMatchCloseTo(
-        JSON.parse(JSON.stringify(peaks[i])),
-        3,
-      );
+      expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
 });

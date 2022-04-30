@@ -24,7 +24,11 @@ export interface InternalPeak {
  * @param options
  * @returns
  */
-export function getInternalPeaks(peaks: Peak[], options: OptimizeOptions = {}) {
+export function getInternalPeaks(
+  peaks: Peak[],
+  minMaxY: { min: number; max: number; range: number },
+  options: OptimizeOptions = {},
+) {
   let index = 0;
   let internalPeaks: InternalPeak[] = [];
   for (const peak of peaks) {
@@ -49,21 +53,35 @@ export function getInternalPeaks(peaks: Peak[], options: OptimizeOptions = {}) {
     for (let parameter of parameters) {
       for (let property of properties) {
         // check if the property is specified in the peak
-        const propertyValue = peak.parameters?.[parameter]?.[property];
+        let propertyValue = peak.parameters?.[parameter]?.[property];
         if (propertyValue) {
+          propertyValue = getNormalizedValue(
+            propertyValue,
+            parameter,
+            property,
+            minMaxY,
+          );
+
           propertiesValues[property].push(propertyValue);
           continue;
         }
         // check if there are some global option, it could be a number or a callback
 
-        const generalParameterValue =
-          options.parameters?.[parameter]?.[property];
+        let generalParameterValue = options.parameters?.[parameter]?.[property];
         if (generalParameterValue) {
           if (typeof generalParameterValue === 'number') {
+            generalParameterValue = getNormalizedValue(
+              generalParameterValue,
+              parameter,
+              property,
+              minMaxY,
+            );
             propertiesValues[property].push(generalParameterValue);
             continue;
           } else {
-            propertiesValues[property].push(generalParameterValue(peak));
+            let value = generalParameterValue(peak);
+            value = getNormalizedValue(value, parameter, property, minMaxY);
+            propertiesValues[property].push(value);
             continue;
           }
         }
@@ -93,4 +111,20 @@ export function getInternalPeaks(peaks: Peak[], options: OptimizeOptions = {}) {
     });
   }
   return internalPeaks;
+}
+
+function getNormalizedValue(
+  value: number,
+  parameter: string,
+  property: string,
+  minMaxY: { min: number; max: number; range: number },
+): number {
+  if (parameter === 'y') {
+    if (property === 'gradientDifference') {
+      return value / minMaxY.range;
+    } else {
+      return (value - minMaxY.min) / minMaxY.range;
+    }
+  }
+  return value;
 }
