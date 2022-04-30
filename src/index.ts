@@ -1,5 +1,6 @@
 import { DataXY, DoubleArray } from 'cheminfo-types';
 import { Shape1D } from 'ml-peak-shape-generator';
+import { xMinMaxValues, xRescale } from 'ml-spectra-processing';
 
 import { getSumOfShapes } from './shapes/getSumOfShapes';
 import { getInternalPeaks } from './util/internalPeaks/getInternalPeaks';
@@ -118,7 +119,14 @@ export function optimize(
 
   let sumOfShapes = getSumOfShapes(internalPeaks);
 
-  let fitted = algorithm(data, sumOfShapes, optimizationOptions);
+  let minMaxY = xMinMaxValues(data.y);
+  let normalizedY = xRescale(data.y, { min: 0, max: 1 });
+
+  let fitted = algorithm(
+    { x: data.x, y: normalizedY },
+    sumOfShapes,
+    optimizationOptions,
+  );
   const fittedValues = fitted.parameterValues;
   let newPeaks: Peak[] = [];
   for (let peak of internalPeaks) {
@@ -127,12 +135,11 @@ export function optimize(
       y: 0,
       shape: peak.shape,
     };
-    for (let i = 0; i < peak.parameters.length; i++) {
-      if (i < 2) {
-        newPeak[peak.parameters[i]] = fittedValues[peak.fromIndex + i];
-      } else {
-        newPeak.shape[peak.parameters[i]] = fittedValues[peak.fromIndex + i];
-      }
+    newPeak.x = fittedValues[peak.fromIndex];
+    newPeak.y = fittedValues[peak.fromIndex + 1] * minMaxY.max + minMaxY.min;
+    for (let i = 2; i < peak.parameters.length; i++) {
+      //@ts-expect-error should be fixed once
+      newPeak.shape[peak.parameters[i]] = fittedValues[peak.fromIndex + i];
     }
 
     newPeaks.push(newPeak);

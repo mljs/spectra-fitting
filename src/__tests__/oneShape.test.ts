@@ -14,7 +14,7 @@ for (let i = 0; i < nbPoints; i++) {
 }
 
 describe('One Shape tested', () => {
-  it.only('Gaussian', () => {
+  it('Gaussian', () => {
     const peaks = [
       {
         x: -0.5,
@@ -38,7 +38,6 @@ describe('One Shape tested', () => {
         shape: { kind: 'gaussian', fwhm: 0.35 },
       },
     ]);
-    console.log(result.peaks[0]);
     expect(result.peaks[0]).toMatchCloseTo(peaks[0], 3);
   });
 
