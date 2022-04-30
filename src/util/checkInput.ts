@@ -7,38 +7,8 @@ import { getSumOfShapes } from '../shapes/getSumOfShapes';
 
 import { assignDeep } from './assignDeep';
 
-let xObject = {
-  init: (peak: Peak1D) => peak.x,
-  max: (peak: Peak1D) => peak.x + (peak.fwhm as number) * 2,
-  min: (peak: Peak1D) => peak.x - (peak.fwhm as number) * 2,
-  gradientDifference: (peak: Peak1D) => (peak.fwhm as number) * 2e-3,
-};
-
-let yObject = {
-  init: (peak: Peak1D) => peak.y,
-  max: () => 1.5,
-  min: () => 0,
-  gradientDifference: () => 1e-3,
-};
-
-let fwhmObject = {
-  init: (peak: Peak1D) => peak.fwhm,
-  max: (peak: Peak1D) => (peak.fwhm as number) * 4,
-  min: (peak: Peak1D) => (peak.fwhm as number) * 0.25,
-  gradientDifference: (peak: Peak1D) => (peak.fwhm as number) * 2e-3,
-};
-
-let muObject = {
-  init: (peak: Peak1D) =>
-    peak.shape && (peak.shape as { mu: number }).mu !== undefined
-      ? (peak.shape as { mu: number }).mu
-      : 0.5,
-  min: () => 0,
-  max: () => 1,
-  gradientDifference: () => 0.01,
-};
-
-/** Algorithm to check the input
+/**
+ * We will normalize the inputs add add missing
  * @param data - Data to check
  * @param peakList - List of peaks
  * @param options - Options for optimization
@@ -65,13 +35,6 @@ export function checkInput(
     toIndex: number;
   }[] = JSON.parse(JSON.stringify(peakList));
 
-  let defaultParameters = {
-    x: xObject,
-    y: yObject,
-    fwhm: fwhmObject,
-    mu: muObject,
-  };
-
   let x = data.x;
 
   let { min, max } = xMinMaxValues(data.y);
@@ -89,7 +52,7 @@ export function checkInput(
   });
 
   let sumOfShapes = getSumOfShapes(peaks);
-  let parameters = assignDeep({}, defaultParameters, optimization.parameters);
+  let parameters = assignDeep({}, DefaultParameters, optimization.parameters);
 
   for (let key in parameters) {
     for (let par in parameters[key]) {
@@ -112,10 +75,10 @@ export function checkInput(
   newOptimization.parameters = parameters;
 
   return {
-    y,
     x,
-    max,
+    y,
     min,
+    max,
     peaks,
     sumOfShapes,
     newOptimization,

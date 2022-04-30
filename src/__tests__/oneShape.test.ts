@@ -2,7 +2,7 @@ import type { DataXY } from 'cheminfo-types';
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
 import { generateSpectrum } from 'spectrum-generator';
 
-import { optimize, Peak1D } from '../index';
+import { optimize } from '../index';
 
 expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
 
@@ -31,22 +31,13 @@ describe('One Shape tested', () => {
       },
     });
 
-    let result = optimize(
-      data,
-      [
-        {
-          x: -0.52,
-          y: 0.0009,
-          shape: { kind: 'gaussian', fwhm: 0.35 },
-        },
-      ],
+    let result = optimize(data, [
       {
-        optimization: {
-          kind: 'lm',
-          options: { maxIterations: 1000, errorTolerance: 1e-8 },
-        },
+        x: -0.52,
+        y: 0.0009,
+        shape: { kind: 'gaussian', fwhm: 0.35 },
       },
-    );
+    ]);
 
     expect(result.peaks[0]).toMatchCloseTo(peaks[0], 3);
   });
@@ -73,22 +64,13 @@ describe('One Shape tested', () => {
       },
     });
 
-    let result = optimize(
-      data,
-      [
-        {
-          x: -0.52,
-          y: 0.0009,
-          shape: { kind: 'lorentzian', fwhm: 0.29 },
-        },
-      ],
+    let result = optimize(data, [
       {
-        optimization: {
-          kind: 'lm',
-          options: { maxIterations: 1000, errorTolerance: 1e-8 },
-        },
+        x: -0.52,
+        y: 0.0009,
+        shape: { kind: 'lorentzian', fwhm: 0.29 },
       },
-    );
+    ]);
 
     expect(result.peaks[0]).toMatchCloseTo(peaks[0], 3);
   });
@@ -110,26 +92,17 @@ describe('One Shape tested', () => {
       },
     });
 
-    let result = optimize(
-      data,
-      [
-        {
-          x: 0.001,
-          y: 0.0009,
-          shape: {
-            kind: 'pseudoVoigt',
-            fwhm: 0.28,
-            mu: 1,
-          },
-        },
-      ],
+    let result = optimize(data, [
       {
-        optimization: {
-          kind: 'lm',
-          options: { maxIterations: 1000, errorTolerance: 1e-8 },
+        x: 0.001,
+        y: 0.0009,
+        shape: {
+          kind: 'pseudoVoigt',
+          fwhm: 0.28,
+          mu: 1,
         },
       },
-    );
+    ]);
 
     expect(result.peaks[0].shape.fwhm).toBeCloseTo(0.31, 4);
     expect(result.peaks[0].x).toBeCloseTo(0, 5);

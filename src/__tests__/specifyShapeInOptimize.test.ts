@@ -15,22 +15,20 @@ describe('Optimize sum of Gaussians', () => {
 
     const data: DataXY = generateSpectrum(peaks, {
       generator: {
-        from: -5,
-        to: 5,
+        from: -10,
+        to: 10,
         nbPoints: 1001,
         shape: { kind: 'gaussian' },
       },
     });
 
     let result = optimize(data, [
-      { x: -0.52, y: 0.9, fwhm: 0.08 },
-      { x: 0.52, y: 0.9, fwhm: 0.08 },
+      { x: -0.55, y: 0.9, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+      { x: 0.55, y: 0.9, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
     ]);
+
     for (let i = 0; i < 2; i++) {
-      expect(result.peaks[i]).toMatchCloseTo(
-        JSON.parse(JSON.stringify(peaks[i])),
-        3,
-      );
+      expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
 
