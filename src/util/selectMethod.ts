@@ -9,7 +9,7 @@ const LEVENBERG_MARQUARDT = 1;
  * @returns - The algorithm and optimization options
  */
 export function selectMethod(optimizationOptions: OptimizationOptions = {}) {
-  let { kind, options } = optimizationOptions;
+  let { kind = 'lm', options } = optimizationOptions;
   let kindVar = getKind(kind);
 
   switch (kindVar) {

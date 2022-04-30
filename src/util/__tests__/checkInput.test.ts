@@ -1,4 +1,4 @@
-import { Peak1D } from '../../index';
+import { Peak } from '../../index';
 import { checkInput } from '../checkInput';
 
 describe('change default parameters', () => {
@@ -10,10 +10,10 @@ describe('change default parameters', () => {
         parameters: [
           {
             name: 'x',
-            init: (peak: Peak1D) => peak.x,
-            min: (peak: Peak1D) => peak.x - (peak.fwhm as number) * 2,
-            max: (peak: Peak1D) => peak.x + (peak.fwhm as number) * 0.1,
-            gradientDifference: (peak: Peak1D) => (peak.fwhm as number) * 2e-3,
+            init: (peak: Peak) => peak.x,
+            min: (peak: Peak) => peak.x - (peak.fwhm as number) * 2,
+            max: (peak: Peak) => peak.x + (peak.fwhm as number) * 0.1,
+            gradientDifference: (peak: Peak) => (peak.fwhm as number) * 2e-3,
           },
         ],
       },

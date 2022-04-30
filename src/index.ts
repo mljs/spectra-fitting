@@ -1,25 +1,24 @@
 import { DataXY, DoubleArray } from 'cheminfo-types';
-import { Shape1D, Shape1DInstance } from 'ml-peak-shape-generator';
-import { generateSpectrum } from 'spectrum-generator';
+import { Shape1D } from 'ml-peak-shape-generator';
 
-import { checkInput } from './util/checkInput';
+import { getSumOfShapes } from './shapes/getSumOfShapes';
 import { getInternalPeaks } from './util/internalPeaks/getInternalPeaks';
 import { selectMethod } from './util/selectMethod';
 
 export interface InitialParameter {
-  init: OptimizationParameter;
+  init?: OptimizationParameter;
   /** definition of the lower limit of the parameter,
    *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the min of the first peak and so on. */
-  min: OptimizationParameter;
+  min?: OptimizationParameter;
   /** definition of the upper limit of the parameter,
    *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the max of the first peak and so on. */
-  max: OptimizationParameter;
+  max?: OptimizationParameter;
   /** definition of  the step size to approximate the jacobian matrix of the parameter,
    *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the gradientDifference of the first peak and so on. */
-  gradientDifference: OptimizationParameter;
+  gradientDifference?: OptimizationParameter;
 }
 
-export interface Peak1D {
+export interface Peak {
   x: number;
   y: number;
   shape?: Shape1D;
@@ -29,7 +28,7 @@ export interface Peak1D {
   >;
 }
 
-type OptimizationParameter = number | ((peak: Peak1D) => number);
+type OptimizationParameter = number | ((peak: Peak) => number);
 
 export interface OptimizationOptions {
   /**
@@ -84,90 +83,64 @@ export interface OptimizeOptions {
  */
 export function optimize(
   data: DataXY<DoubleArray>,
-  peaks: Peak1D[],
+  peaks: Peak[],
   options: OptimizeOptions = {},
 ): {
   error: number;
-  peaks: Peak1D[];
+  peaks: Peak[];
   iterations: number;
 } {
   const internalPeaks = getInternalPeaks(peaks, options);
 
-  const { y, x, max, min, peaks, sumOfShapes, newOptimization } = checkInput(
-    data,
-    peaks,
-    options,
-  );
-
-  let parameters = newOptimization.parameters;
-  let nbShapes = peaks.length;
-  let keysOfParameters = Object.keys(parameters);
-  let nbParams = nbShapes * keysOfParameters.length;
-  let pMin = new Float64Array(nbParams);
-  let pMax = new Float64Array(nbParams);
-  let pInit = new Float64Array(nbParams);
-  let gradientDifference = new Float64Array(nbParams);
-
-  for (let i = 0; i < nbShapes; i++) {
-    let peak = peaks[i];
-    for (let k = 0; k < keysOfParameters.length; k++) {
-      let key = keysOfParameters[k];
-      let init = parameters[key].init;
-      let min = parameters[key].min;
-      let max = parameters[key].max;
-      let gradientDifferenceValue = parameters[key].gradientDifference;
-      pInit[i * keysOfParameters.length + k] = init[i % init.length](peak);
-      pMin[i * keysOfParameters.length + k] = min[i % min.length](peak);
-      pMax[i * keysOfParameters.length + k] = max[i % max.length](peak);
-      gradientDifference[i * keysOfParameters.length + k] =
-        gradientDifferenceValue[i % gradientDifferenceValue.length](peak);
+  const nbParams = internalPeaks[internalPeaks.length - 1].toIndex + 1;
+  const minValues = new Float64Array(nbParams);
+  const maxValues = new Float64Array(nbParams);
+  const initValues = new Float64Array(nbParams);
+  const gradientDifferences = new Float64Array(nbParams);
+  let index = 0;
+  for (const peak of internalPeaks) {
+    for (let i = 0; i < peak.parameters.length; i++) {
+      minValues[index] = peak.propertiesValues.min[i];
+      maxValues[index] = peak.propertiesValues.max[i];
+      initValues[index] = peak.propertiesValues.init[i];
+      gradientDifferences[index] = peak.propertiesValues.gradientDifference[i];
+      index++;
     }
   }
 
-  let { algorithm, optimizationOptions } = selectMethod(newOptimization);
+  let { algorithm, optimizationOptions } = selectMethod(options.optimization);
 
-  optimizationOptions.minValues = pMin;
-  optimizationOptions.maxValues = pMax;
-  optimizationOptions.initialValues = pInit;
-  optimizationOptions.gradientDifference = gradientDifference;
+  optimizationOptions.minValues = minValues;
+  optimizationOptions.maxValues = maxValues;
+  optimizationOptions.initialValues = initValues;
+  optimizationOptions.gradientDifference = gradientDifferences;
   optimizationOptions = { ...optimizationOptions };
 
-  let pFit = algorithm({ x, y }, sumOfShapes, optimizationOptions);
+  let sumOfShapes = getSumOfShapes(internalPeaks);
 
-  let { parameterError: error, iterations } = pFit;
-  let result: any = { error, iterations };
-
-  const newPeaks = JSON.parse(JSON.stringify(peaks));
-  for (let i = 0; i < nbShapes; i++) {
-    delete newPeaks[i].fromIndex;
-    delete newPeaks[i].toIndex;
-    delete newPeaks[i].fwhm;
-    delete newPeaks[i].parameters;
-    let parametersOfPeak = keysOfParameters.filter((x) =>
-      peaks[i].parameters.includes(x),
-    );
-    for (let k = 0; k < parametersOfPeak.length; k++) {
-      const key = parametersOfPeak[k];
-      const value = pFit.parameterValues[i * keysOfParameters.length + k];
-      if (key === 'x') {
-        newPeaks[i][key] = value;
-      } else if (key === 'y') {
-        newPeaks[i][key] = value * (max - min) + min; // rescaling the Y data
+  let fitted = algorithm(data, sumOfShapes, optimizationOptions);
+  const fittedValues = fitted.parameterValues;
+  let newPeaks: Peak[] = [];
+  for (let peak of internalPeaks) {
+    const newPeak = {
+      x: 0,
+      y: 0,
+      shape: peak.shape,
+    };
+    for (let i = 0; i < peak.parameters.length; i++) {
+      if (i < 2) {
+        newPeak[peak.parameters[i]] = fittedValues[peak.fromIndex + i];
       } else {
-        newPeaks[i].shape[key] = value;
+        newPeak.shape[peak.parameters[i]] = fittedValues[peak.fromIndex + i];
       }
     }
+
+    newPeaks.push(newPeak);
   }
 
-  result.peaks = newPeaks;
-  return result;
-}
-
-export interface InternalPeak {
-  shape: Shape1D;
-  shapeFct: Shape1DInstance;
-  parameters: string[];
-  internalPeaks: InitialParameter[];
-  fromIndex: number;
-  toIndex: number;
+  return {
+    error: fitted.parameterError,
+    iterations: fitted.iterations,
+    peaks: newPeaks,
+  };
 }

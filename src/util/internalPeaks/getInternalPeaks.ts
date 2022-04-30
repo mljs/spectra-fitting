@@ -1,14 +1,30 @@
 import { getShape1D, Shape1D, Shape1DInstance } from 'ml-peak-shape-generator';
 
-import { Peak1D, OptimizeOptions, InternalPeak } from '../../index';
+import { Peak, OptimizeOptions } from '../../index';
 import { assert } from '../assert';
 
 import { DefaultParameters } from './DefaultParameters';
 
-export function getInternalPeaks(
-  peaks: Peak1D[],
-  options: OptimizeOptions = {},
-) {
+type Parameter = 'x' | 'y' | 'fwhm' | 'mu';
+
+type Property = 'init' | 'min' | 'max' | 'gradientDifference';
+const properties: Property[] = ['init', 'min', 'max', 'gradientDifference'];
+export interface InternalPeak {
+  shape: Shape1D;
+  shapeFct: Shape1DInstance;
+  parameters: Parameter[];
+  propertiesValues: Record<Property, number[]>;
+  fromIndex: number;
+  toIndex: number;
+}
+
+/**
+ * Return an array of internalPeaks that contains the exact init, min, max values based on the options
+ * @param peaks
+ * @param options
+ * @returns
+ */
+export function getInternalPeaks(peaks: Peak[], options: OptimizeOptions = {}) {
   let index = 0;
   let internalPeaks: InternalPeak[] = [];
   for (const peak of peaks) {
@@ -20,22 +36,17 @@ export function getInternalPeaks(
 
     const shapeFct: Shape1DInstance = getShape1D(shape);
 
-    type Parameter = 'x' | 'y' | 'fwhm' | 'mu';
     //@ts-expect-error Should disappear with next release of peak-shape-generator
     const parameters: Parameter[] = ['x', 'y', ...shapeFct.getParameters()];
 
-    type Property = 'init' | 'min' | 'max' | 'gradientDifference';
-    const properties: Property[] = ['init', 'min', 'max', 'gradientDifference'];
-
-    const parametersValues = [];
+    const propertiesValues: Record<Property, number[]> = {
+      min: [],
+      max: [],
+      init: [],
+      gradientDifference: [],
+    };
 
     for (let parameter of parameters) {
-      const propertiesValues: Record<Property, number[]> = {
-        init: [],
-        min: [],
-        max: [],
-        gradientDifference: [],
-      };
       for (let property of properties) {
         // check if the property is specified in the peak
         const propertyValue = peak.parameters?.[parameter]?.[property];
@@ -66,7 +77,6 @@ export function getInternalPeaks(
         //@ts-expect-error should never happen
         propertiesValues[property].push(defaultParameterValues(peak, shapeFct));
       }
-      parametersValues.push(propertiesValues);
     }
 
     const fromIndex = index;
@@ -77,7 +87,7 @@ export function getInternalPeaks(
       shape,
       shapeFct,
       parameters,
-      parametersValues,
+      propertiesValues,
       fromIndex,
       toIndex,
     });
