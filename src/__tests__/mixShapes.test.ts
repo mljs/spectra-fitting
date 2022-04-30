@@ -56,6 +56,75 @@ describe('Sum of a mix of distributions', () => {
       expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
+  it('2 peaks same position', () => {
+    let peaks = [
+      {
+        x: 0,
+        y: 1,
+        shape: {
+          kind: 'gaussian' as const,
+          fwhm: 0.3,
+        },
+      },
+      { x: 0, y: 2, shape: { kind: 'lorentzian' as const, fwhm: 0.3 } },
+    ];
+    const data: DataXY = generateSpectrum(peaks, {
+      generator: {
+        from: -20,
+        to: 20,
+        nbPoints: 1001,
+      },
+    });
+
+    let result = optimize(data, [
+      {
+        x: -0.1,
+        y: 1.2,
+        shape: {
+          kind: 'gaussian' as const,
+          fwhm: 0.4,
+        },
+      },
+      { x: 0.5, y: 1.9, shape: { kind: 'lorentzian' as const, fwhm: 0.2 } },
+    ]);
+    // we have a little bit more error on mu
+    //@ts-expect-error we ignoere this ts error
+    peaks.forEach((peak) => peak.shape.mu && delete peak.shape.mu);
+    for (let i = 0; i < result.peaks.length; i++) {
+      expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
+    }
+  });
+  it.only('20 peaks with overlap', () => {
+    const nbPeaks = 5;
+    let peaks = [];
+    for (let i = 0; i < nbPeaks; i++) {
+      peaks.push({
+        x: i,
+        y: 2,
+        shape: { kind: 'gaussian' as const, fwhm: 0.5 },
+      });
+    }
+    const data: DataXY = generateSpectrum(peaks, {
+      generator: {
+        from: -20,
+        to: 50,
+        nbPoints: 10001,
+      },
+    });
+
+    let guess = JSON.parse(JSON.stringify(peaks));
+    guess.forEach((peak: any) => (peak.x += Math.random() / 10));
+
+    let result = optimize(data, guess, {
+      optimization: { options: { maxIterations: 10 } },
+    });
+    // we have a little bit more error on mu
+    //@ts-expect-error we ignoere this ts error
+    peaks.forEach((peak) => peak.shape.mu && delete peak.shape.mu);
+    for (let i = 0; i < result.peaks.length; i++) {
+      expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
+    }
+  });
   it('6 peaks', () => {
     let peaks = [
       {
