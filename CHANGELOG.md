@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.0.0](https://github.com/mljs/spectra-fitting/compare/v3.1.0...v4.0.0) (2022-05-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* many breaking changes
+
+### Features
+
+* allow to specify shape at the level of peak ([90704b8](https://github.com/mljs/spectra-fitting/commit/90704b88a95c9a5a8bcff51a4ead5521b42fcc98))
+* many breaking changes ([813ad04](https://github.com/mljs/spectra-fitting/commit/813ad04f1f5ac931c379b802a5273beacb2313a8))
+
 ## [3.1.0](https://www.github.com/mljs/spectra-fitting/compare/v3.0.4...v3.1.0) (2022-02-25)
 
 
