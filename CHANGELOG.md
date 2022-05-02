@@ -1,5 +1,12 @@
 # Changelog
 
+### [4.0.1](https://github.com/mljs/spectra-fitting/compare/v4.0.0...v4.0.1) (2022-05-02)
+
+
+### Bug Fixes
+
+* correctly define type of OptimizedPeak ([6776ea6](https://github.com/mljs/spectra-fitting/commit/6776ea6c02851aabbf03c91e5c47c52dd8b67ab6))
+
 ## [4.0.0](https://github.com/mljs/spectra-fitting/compare/v3.1.0...v4.0.0) (2022-05-01)
 
 
