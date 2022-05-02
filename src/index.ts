@@ -29,6 +29,12 @@ export interface Peak {
   >;
 }
 
+export interface OptimizedPeak {
+  x: number;
+  y: number;
+  shape: Shape1D;
+}
+
 type OptimizationParameter = number | ((peak: Peak) => number);
 
 export interface OptimizationOptions {
@@ -88,7 +94,7 @@ export function optimize(
   options: OptimizeOptions = {},
 ): {
   error: number;
-  peaks: Peak[];
+  peaks: OptimizedPeak[];
   iterations: number;
 } {
   // rescale data
@@ -129,7 +135,7 @@ export function optimize(
     ...optimizationOptions,
   });
   const fittedValues = fitted.parameterValues;
-  let newPeaks: Peak[] = [];
+  let newPeaks: OptimizedPeak[] = [];
   for (let peak of internalPeaks) {
     const newPeak = {
       x: 0,
