@@ -103,7 +103,7 @@ describe('One Shape tested', () => {
       },
     ]);
 
-    expect(result.peaks[0].shape?.fwhm).toBeCloseTo(0.31, 4);
+    expect(result.peaks[0].shape.fwhm).toBeCloseTo(0.31, 4);
     expect(result.peaks[0].x).toBeCloseTo(0, 5);
     expect(result.peaks[0].y).toBeCloseTo(0.001, 5);
 
