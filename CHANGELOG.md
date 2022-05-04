@@ -1,5 +1,12 @@
 # Changelog
 
+### [4.0.2](https://github.com/mljs/spectra-fitting/compare/v4.0.1...v4.0.2) (2022-05-04)
+
+
+### Bug Fixes
+
+* put back compatibility with node 12 ([a4bd8c6](https://github.com/mljs/spectra-fitting/commit/a4bd8c6304c90754c5083aad6a0111dcd67a74b6))
+
 ### [4.0.1](https://github.com/mljs/spectra-fitting/compare/v4.0.0...v4.0.1) (2022-05-02)
 
 
