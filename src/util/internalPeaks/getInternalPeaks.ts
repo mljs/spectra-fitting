@@ -1,6 +1,6 @@
 import { getShape1D, Shape1D, Shape1DInstance } from 'ml-peak-shape-generator';
 
-import { Peak, OptimizeOptions, InitialParameter } from '../../index';
+import { Peak, OptimizeOptions } from '../../index';
 import { assert } from '../assert';
 
 import { DefaultParameters } from './DefaultParameters';
@@ -53,10 +53,10 @@ export function getInternalPeaks(
     for (let parameter of parameters) {
       for (let property of properties) {
         // check if the property is specified in the peak
-        let propertyValue = getParameterByKey(parameter, property, peak);
+        let propertyValue = peak?.parameters?.[parameter]?.[property];
         if (propertyValue) {
           propertyValue = getNormalizedValue(
-            propertyValue as number,
+            propertyValue,
             parameter,
             property,
             minMaxY,
@@ -67,11 +67,8 @@ export function getInternalPeaks(
         }
         // check if there are some global option, it could be a number or a callback
 
-        let generalParameterValue = getParameterByKey(
-          parameter,
-          property,
-          options,
-        );
+        let generalParameterValue =
+          options?.parameters?.[parameter]?.[property];
         if (generalParameterValue) {
           if (typeof generalParameterValue === 'number') {
             generalParameterValue = getNormalizedValue(
@@ -131,16 +128,4 @@ function getNormalizedValue(
     }
   }
   return value;
-}
-
-function getParameterByKey<
-  Parameters extends Record<Parameter, InitialParameter>,
->(
-  parameterKey: Parameter,
-  property: Property,
-  options: {
-    parameters?: Parameters;
-  } | null,
-) {
-  return options?.parameters?.[parameterKey]?.[property];
 }
