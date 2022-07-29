@@ -133,14 +133,14 @@ function getNormalizedValue(
   return value;
 }
 
-function getParameterByKey<Parameters extends Record<string, InitialParameter>>(
-  parameterKey: string,
-  property: string,
+function getParameterByKey<
+  Parameters extends Record<Parameter, InitialParameter>,
+>(
+  parameterKey: Parameter,
+  property: Property,
   options: {
     parameters?: Parameters;
   } | null,
 ) {
-  return options?.parameters?.[parameterKey]?.[
-    property as keyof InitialParameter
-  ];
+  return options?.parameters?.[parameterKey]?.[property];
 }
