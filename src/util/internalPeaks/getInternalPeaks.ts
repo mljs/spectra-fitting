@@ -53,10 +53,7 @@ export function getInternalPeaks(
     for (let parameter of parameters) {
       for (let property of properties) {
         // check if the property is specified in the peak
-        let propertyValue =
-          peak.parameters &&
-          peak.parameters[parameter] &&
-          peak.parameters[parameter][property];
+        let propertyValue = peak?.parameters?.[parameter]?.[property];
         if (propertyValue) {
           propertyValue = getNormalizedValue(
             propertyValue,
@@ -71,9 +68,7 @@ export function getInternalPeaks(
         // check if there are some global option, it could be a number or a callback
 
         let generalParameterValue =
-          options.parameters &&
-          options.parameters[parameter] &&
-          options.parameters[parameter][property];
+          options?.parameters?.[parameter]?.[property];
         if (generalParameterValue) {
           if (typeof generalParameterValue === 'number') {
             generalParameterValue = getNormalizedValue(
