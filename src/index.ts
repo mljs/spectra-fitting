@@ -98,14 +98,12 @@ export function optimize(
   iterations: number;
 } {
   // rescale data
-  let temp = xMinMaxValues(data.y);
-  const minMaxY = { ...temp, range: temp.max - temp.min };
-
+  const minMaxY = getMinMaxY(data.y);
   const internalPeaks = getInternalPeaks(peaks, minMaxY, options);
   // need to rescale what is related to Y
   let normalizedY = new Float64Array(data.y.length);
   for (let i = 0; i < data.y.length; i++) {
-    normalizedY[i] = (data.y[i] - minMaxY.min) / minMaxY.range;
+    normalizedY[i] = data.y[i] / minMaxY.maxAbsoluteY;
   }
 
   const nbParams = internalPeaks[internalPeaks.length - 1].toIndex + 1;
@@ -123,6 +121,7 @@ export function optimize(
       index++;
     }
   }
+
   let { algorithm, optimizationOptions } = selectMethod(options.optimization);
 
   let sumOfShapes = getSumOfShapes(internalPeaks);
@@ -143,7 +142,7 @@ export function optimize(
       shape: peak.shape,
     };
     newPeak.x = fittedValues[peak.fromIndex];
-    newPeak.y = fittedValues[peak.fromIndex + 1] * minMaxY.range + minMaxY.min;
+    newPeak.y = fittedValues[peak.fromIndex + 1] * minMaxY.maxAbsoluteY;
     for (let i = 2; i < peak.parameters.length; i++) {
       //@ts-expect-error should be fixed once
       newPeak.shape[peak.parameters[i]] = fittedValues[peak.fromIndex + i];
@@ -156,5 +155,15 @@ export function optimize(
     error: fitted.parameterError,
     iterations: fitted.iterations,
     peaks: newPeaks,
+  };
+}
+
+function getMinMaxY(data: DoubleArray) {
+  const { min, max } = xMinMaxValues(data);
+  return {
+    min,
+    max,
+    maxAbsoluteY: Math.abs(-min > max ? min : max),
+    range: max - min,
   };
 }

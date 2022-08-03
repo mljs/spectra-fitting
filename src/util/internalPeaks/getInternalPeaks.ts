@@ -122,9 +122,9 @@ function getNormalizedValue(
 ): number {
   if (parameter === 'y') {
     if (property === 'gradientDifference') {
-      return value / minMaxY.range;
+      return value;
     } else {
-      return (value - minMaxY.min) / minMaxY.range;
+      return value / minMaxY.max;
     }
   }
   return value;
