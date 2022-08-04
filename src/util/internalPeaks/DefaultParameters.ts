@@ -14,8 +14,8 @@ export const DefaultParameters = {
   },
   y: {
     init: (peak: Peak) => peak.y,
-    min: () => 0,
-    max: () => 1.5,
+    min: (peak: Peak) => (peak.y < 0 ? -1.1 : 0),
+    max: (peak: Peak) => (peak.y < 0 ? 0 : 1.1),
     gradientDifference: () => 1e-3,
   },
   fwhm: {

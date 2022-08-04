@@ -31,7 +31,16 @@ export function getInternalPeaks(
 ) {
   let index = 0;
   let internalPeaks: InternalPeak[] = [];
-  for (const peak of peaks) {
+  const { baseline: shiftValue = minMaxY.min } = options;
+
+  const normalizedPeaks = peaks.map((peak) => {
+    return {
+      ...peak,
+      y: (peak.y - shiftValue) / minMaxY.range,
+    };
+  });
+
+  for (const peak of normalizedPeaks) {
     const shape: Shape1D = peak.shape
       ? peak.shape
       : options.shape
@@ -60,6 +69,7 @@ export function getInternalPeaks(
             parameter,
             property,
             minMaxY,
+            options.baseline,
           );
 
           propertiesValues[property].push(propertyValue);
@@ -76,12 +86,19 @@ export function getInternalPeaks(
               parameter,
               property,
               minMaxY,
+              options.baseline,
             );
             propertiesValues[property].push(generalParameterValue);
             continue;
           } else {
             let value = generalParameterValue(peak);
-            value = getNormalizedValue(value, parameter, property, minMaxY);
+            value = getNormalizedValue(
+              value,
+              parameter,
+              property,
+              minMaxY,
+              options.baseline,
+            );
             propertiesValues[property].push(value);
             continue;
           }
@@ -119,12 +136,15 @@ function getNormalizedValue(
   parameter: string,
   property: string,
   minMaxY: { min: number; max: number; range: number },
+  baseline?: number,
 ): number {
   if (parameter === 'y') {
     if (property === 'gradientDifference') {
-      return value / minMaxY.range;
+      return value;
     } else {
-      return (value - minMaxY.min) / minMaxY.range;
+      return baseline !== undefined
+        ? (value - baseline) / minMaxY.range
+        : (value - minMaxY.min) / minMaxY.range;
     }
   }
   return value;
