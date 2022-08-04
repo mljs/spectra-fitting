@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.1.0](https://github.com/mljs/spectra-fitting/compare/v4.0.2...v4.1.0) (2022-08-04)
+
+
+### Features
+
+* add optional baseline option ([7e9d718](https://github.com/mljs/spectra-fitting/commit/7e9d718721a0a5e0ef5d4204c9bf347f6d8092f9))
+
+
+### Bug Fixes
+
+* use optional chain operator ([#91](https://github.com/mljs/spectra-fitting/issues/91)) ([f870420](https://github.com/mljs/spectra-fitting/commit/f87042064d19e368754f446989554c65caa0678d))
+
 ### [4.0.2](https://github.com/mljs/spectra-fitting/compare/v4.0.1...v4.0.2) (2022-05-04)
 
 
