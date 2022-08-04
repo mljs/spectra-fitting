@@ -16,7 +16,7 @@ describe('getInternalPeaks', () => {
         parameters: ['x', 'y', 'fwhm'],
         propertiesValues: {
           min: [-1000, 0, 125],
-          max: [1000, 1.5, 2000],
+          max: [1000, 1.1, 2000],
           init: [0, 1, 500],
           gradientDifference: [1, 0.001, 1],
         },
@@ -39,7 +39,7 @@ describe('getInternalPeaks', () => {
       parameters: ['x', 'y', 'fwhm', 'mu'],
       propertiesValues: {
         min: [-999, 0, 125, 0],
-        max: [1001, 1.5, 2000, 1],
+        max: [1001, 1.1, 2000, 1],
         init: [1, 2, 500, 0.5],
         gradientDifference: [1, 0.001, 1, 0.01],
       },
@@ -64,7 +64,7 @@ describe('getInternalPeaks', () => {
         parameters: ['x', 'y', 'fwhm'],
         propertiesValues: {
           min: [-1000, 0, 125],
-          max: [1000, 1.5, 2000],
+          max: [1000, 1.1, 2000],
           init: [0, 1, 500],
           gradientDifference: [1, 0.001, 1],
         },
@@ -94,7 +94,7 @@ describe('getInternalPeaks', () => {
         parameters: ['x', 'y', 'fwhm'],
         propertiesValues: {
           min: [-1, -2, 125],
-          max: [1, 1.5, 2000],
+          max: [1, 1.1, 2000],
           init: [0, 1, 500],
           gradientDifference: [1, 0.001, 1],
         },
