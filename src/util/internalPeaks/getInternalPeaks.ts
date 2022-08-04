@@ -26,7 +26,7 @@ export interface InternalPeak {
  */
 export function getInternalPeaks(
   peaks: Peak[],
-  minMaxY: { min: number; max: number; range: number },
+  minMaxY: { min: number; max: number; range: number, maxAbsoluteY: number },
   options: OptimizeOptions = {},
 ) {
   let index = 0;
@@ -118,13 +118,13 @@ function getNormalizedValue(
   value: number,
   parameter: string,
   property: string,
-  minMaxY: { min: number; max: number; range: number },
+  minMaxY: { min: number; max: number; range: number, maxAbsoluteY: number },
 ): number {
   if (parameter === 'y') {
     if (property === 'gradientDifference') {
       return value;
     } else {
-      return value / minMaxY.max;
+      return value / minMaxY.maxAbsoluteY;
     }
   }
   return value;
