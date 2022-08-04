@@ -26,7 +26,7 @@ export interface InternalPeak {
  */
 export function getInternalPeaks(
   peaks: Peak[],
-  minMaxY: { min: number; max: number; range: number, maxAbsoluteY: number },
+  minMaxY: { min: number; max: number; range: number },
   options: OptimizeOptions = {},
 ) {
   let index = 0;
@@ -38,6 +38,8 @@ export function getInternalPeaks(
       ? options.shape
       : { kind: 'gaussian' };
 
+    const { baseline } = options;
+    if (baseline !== undefined) peak.y -= baseline;
     const shapeFct: Shape1DInstance = getShape1D(shape);
 
     //@ts-expect-error Should disappear with next release of peak-shape-generator
@@ -60,6 +62,7 @@ export function getInternalPeaks(
             parameter,
             property,
             minMaxY,
+            baseline,
           );
 
           propertiesValues[property].push(propertyValue);
@@ -76,12 +79,19 @@ export function getInternalPeaks(
               parameter,
               property,
               minMaxY,
+              baseline,
             );
             propertiesValues[property].push(generalParameterValue);
             continue;
           } else {
             let value = generalParameterValue(peak);
-            value = getNormalizedValue(value, parameter, property, minMaxY);
+            value = getNormalizedValue(
+              value,
+              parameter,
+              property,
+              minMaxY,
+              baseline,
+            );
             propertiesValues[property].push(value);
             continue;
           }
@@ -118,13 +128,16 @@ function getNormalizedValue(
   value: number,
   parameter: string,
   property: string,
-  minMaxY: { min: number; max: number; range: number, maxAbsoluteY: number },
+  minMaxY: { min: number; max: number; range: number },
+  baseline?: number,
 ): number {
   if (parameter === 'y') {
     if (property === 'gradientDifference') {
       return value;
     } else {
-      return value / minMaxY.maxAbsoluteY;
+      return baseline !== undefined
+        ? value / minMaxY.range
+        : (value - minMaxY.min) / minMaxY.range;
     }
   }
   return value;
