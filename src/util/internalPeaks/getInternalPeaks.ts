@@ -10,6 +10,7 @@ type Parameter = 'x' | 'y' | 'fwhm' | 'mu';
 type Property = 'init' | 'min' | 'max' | 'gradientDifference';
 const properties: Property[] = ['init', 'min', 'max', 'gradientDifference'];
 export interface InternalPeak {
+  id?: string;
   shape: Shape1D;
   shapeFct: Shape1DInstance;
   parameters: Parameter[];
@@ -41,11 +42,8 @@ export function getInternalPeaks(
   });
 
   for (const peak of normalizedPeaks) {
-    const shape: Shape1D = peak.shape
-      ? peak.shape
-      : options.shape
-      ? options.shape
-      : { kind: 'gaussian' };
+    const { id, shape = options.shape ? options.shape : { kind: 'gaussian' } } =
+      peak;
 
     const shapeFct: Shape1DInstance = getShape1D(shape);
 
@@ -120,6 +118,7 @@ export function getInternalPeaks(
     index += toIndex - fromIndex + 1;
 
     internalPeaks.push({
+      id,
       shape,
       shapeFct,
       parameters,

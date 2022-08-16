@@ -2,6 +2,8 @@ import { levenbergMarquardt } from 'ml-levenberg-marquardt';
 
 import { OptimizationOptions } from '../index';
 
+import { directOptimization } from './wrappers/directOptimization';
+
 /** Algorithm to select the method.
  * @param optimizationOptions - Optimization options
  * @returns - The algorithm and optimization options
@@ -21,6 +23,19 @@ export function selectMethod(optimizationOptions: OptimizationOptions = {}) {
           ...options,
         },
       };
+    case 'direct': {
+      return {
+        algorithm: directOptimization,
+        optimizationOptions: {
+          iterations: 20,
+          epsilon: 1e-4,
+          tolerance: 1e-16,
+          tolerance2: 1e-12,
+          initialState: {},
+          ...options,
+        },
+      };
+    }
     default:
       throw new Error(`Unknown fitting algorithm`);
   }

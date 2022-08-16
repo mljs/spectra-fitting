@@ -20,6 +20,7 @@ export interface InitialParameter {
 }
 
 export interface Peak {
+  id?: string;
   x: number;
   y: number;
   shape?: Shape1D;
@@ -37,29 +38,39 @@ export interface OptimizedPeak {
 
 type OptimizationParameter = number | ((peak: Peak) => number);
 
+export interface LMOptimizationOptions {
+  /** maximum time running before break in seconds */
+  timeout?: number;
+  /** damping factor
+   * @default 1.5
+   */
+  damping?: number;
+  /** number of max iterations
+   * @default 100
+   */
+  maxIterations?: number;
+  /** error tolerance
+   * @default 1e-8
+   */
+  errorTolerance?: number;
+}
+
+export interface DirectOptimizationOptions {
+  iterations?: number;
+  epsilon?: number;
+  tolerance?: number;
+  tolerance2?: number;
+  initialState?: any;
+}
+
 export interface OptimizationOptions {
   /**
    * kind of algorithm. By default it's levenberg-marquardt
    */
-  kind?: 'lm' | 'levenbergMarquardt';
+  kind?: 'lm' | 'levenbergMarquardt' | 'direct';
 
   /** options for the specific kind of algorithm */
-  options?: {
-    /** maximum time running before break in seconds */
-    timeout?: number;
-    /** damping factor
-     * @default 1.5
-     */
-    damping?: number;
-    /** number of max iterations
-     * @default 100
-     */
-    maxIterations?: number;
-    /** error tolerance
-     * @default 1e-8
-     */
-    errorTolerance?: number;
-  };
+  options?: DirectOptimizationOptions | LMOptimizationOptions;
 }
 
 export interface OptimizeOptions {
@@ -144,16 +155,18 @@ export function optimize(
 
   let newPeaks: OptimizedPeak[] = [];
   for (let peak of internalPeaks) {
+    const { shape, id, parameters, fromIndex } = peak;
     const newPeak = {
+      id,
       x: 0,
       y: 0,
-      shape: peak.shape,
+      shape,
     };
-    newPeak.x = fittedValues[peak.fromIndex];
-    newPeak.y = fittedValues[peak.fromIndex + 1] * minMaxY.range + shiftValue;
-    for (let i = 2; i < peak.parameters.length; i++) {
+    newPeak.x = fittedValues[fromIndex];
+    newPeak.y = fittedValues[fromIndex + 1] * minMaxY.range + shiftValue;
+    for (let i = 2; i < parameters.length; i++) {
       //@ts-expect-error should be fixed once
-      newPeak.shape[peak.parameters[i]] = fittedValues[peak.fromIndex + i];
+      newPeak.shape[parameters[i]] = fittedValues[fromIndex + i];
     }
 
     newPeaks.push(newPeak);
