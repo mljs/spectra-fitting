@@ -20,6 +20,7 @@ export interface InitialParameter {
 }
 
 export interface Peak {
+  id?: string;
   x: number;
   y: number;
   shape?: Shape1D;
@@ -144,16 +145,18 @@ export function optimize(
 
   let newPeaks: OptimizedPeak[] = [];
   for (let peak of internalPeaks) {
+    const { id, shape, parameters, fromIndex } = peak;
     const newPeak = {
+      id,
       x: 0,
       y: 0,
-      shape: peak.shape,
+      shape,
     };
-    newPeak.x = fittedValues[peak.fromIndex];
-    newPeak.y = fittedValues[peak.fromIndex + 1] * minMaxY.range + shiftValue;
-    for (let i = 2; i < peak.parameters.length; i++) {
+    newPeak.x = fittedValues[fromIndex];
+    newPeak.y = fittedValues[fromIndex + 1] * minMaxY.range + shiftValue;
+    for (let i = 2; i < parameters.length; i++) {
       //@ts-expect-error should be fixed once
-      newPeak.shape[peak.parameters[i]] = fittedValues[peak.fromIndex + i];
+      newPeak.shape[parameters[i]] = fittedValues[fromIndex + i];
     }
 
     newPeaks.push(newPeak);
