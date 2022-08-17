@@ -36,6 +36,10 @@ export interface OptimizedPeak {
   shape: Shape1D;
 }
 
+type PeakWithIDOrNot<T extends Peak> = T extends { id: string }
+  ? OptimizedPeak & { id: string }
+  : OptimizedPeak;
+
 type OptimizationParameter = number | ((peak: Peak) => number);
 
 export interface OptimizationOptions {
@@ -93,13 +97,13 @@ export interface OptimizeOptions {
  * @param options - Options for optimize
  * @returns - An object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
-export function optimize(
+export function optimize<T extends Peak>(
   data: DataXY<DoubleArray>,
-  peaks: Peak[],
+  peaks: T[],
   options: OptimizeOptions = {},
 ): {
   error: number;
-  peaks: OptimizedPeak[];
+  peaks: PeakWithIDOrNot<T>[];
   iterations: number;
 } {
   // rescale data
@@ -143,22 +147,22 @@ export function optimize(
   });
   const fittedValues = fitted.parameterValues;
 
-  let newPeaks: OptimizedPeak[] = [];
+  let newPeaks = [];
   for (let peak of internalPeaks) {
     const { id, shape, parameters, fromIndex } = peak;
-    const newPeak = {
-      id,
-      x: 0,
-      y: 0,
-      shape,
-    };
+
+    let newPeak = { x: 0, y: 0, shape } as PeakWithIDOrNot<T>;
+
+    if (id) {
+      newPeak = { ...newPeak, id } as PeakWithIDOrNot<T>;
+    }
+
     newPeak.x = fittedValues[fromIndex];
     newPeak.y = fittedValues[fromIndex + 1] * minMaxY.range + shiftValue;
     for (let i = 2; i < parameters.length; i++) {
       //@ts-expect-error should be fixed once
       newPeak.shape[parameters[i]] = fittedValues[fromIndex + i];
     }
-
     newPeaks.push(newPeak);
   }
 
