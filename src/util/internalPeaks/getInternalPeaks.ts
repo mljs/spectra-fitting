@@ -47,7 +47,6 @@ export function getInternalPeaks(
 
     const shapeFct: Shape1DInstance = getShape1D(shape);
 
-    //@ts-expect-error Should disappear with next release of peak-shape-generator
     const parameters: Parameter[] = ['x', 'y', ...shapeFct.getParameters()];
 
     const propertiesValues: Record<Property, number[]> = {
