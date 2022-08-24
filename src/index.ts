@@ -36,7 +36,7 @@ export interface OptimizedPeak {
   shape: Shape1D;
 }
 
-type PeakWithIDOrNot<T extends Peak> = T extends { id: string }
+type OptimizedPeakIDOrNot<T extends Peak> = T extends { id: string }
   ? OptimizedPeak & { id: string }
   : OptimizedPeak;
 
@@ -103,7 +103,7 @@ export function optimize<T extends Peak>(
   options: OptimizeOptions = {},
 ): {
   error: number;
-  peaks: PeakWithIDOrNot<T>[];
+  peaks: OptimizedPeakIDOrNot<T>[];
   iterations: number;
 } {
   // rescale data
@@ -151,10 +151,10 @@ export function optimize<T extends Peak>(
   for (let peak of internalPeaks) {
     const { id, shape, parameters, fromIndex } = peak;
 
-    let newPeak = { x: 0, y: 0, shape } as PeakWithIDOrNot<T>;
+    let newPeak = { x: 0, y: 0, shape } as OptimizedPeakIDOrNot<T>;
 
     if (id) {
-      newPeak = { ...newPeak, id } as PeakWithIDOrNot<T>;
+      newPeak = { ...newPeak, id } as OptimizedPeakIDOrNot<T>;
     }
 
     newPeak.x = fittedValues[fromIndex];
