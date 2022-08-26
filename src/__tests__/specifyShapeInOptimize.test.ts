@@ -9,8 +9,18 @@ expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
 describe('Optimize sum of Gaussians', () => {
   it('positive maxima peaks, default value', () => {
     const peaks = [
-      { x: -0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
-      { x: 0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
+      {
+        id: 'first',
+        x: -0.5,
+        y: 1,
+        shape: { kind: 'gaussian' as const, fwhm: 0.05 },
+      },
+      {
+        id: 'second',
+        x: 0.5,
+        y: 1,
+        shape: { kind: 'gaussian' as const, fwhm: 0.05 },
+      },
     ];
 
     const data: DataXY = generateSpectrum(peaks, {
@@ -23,8 +33,18 @@ describe('Optimize sum of Gaussians', () => {
     });
 
     let result = optimize(data, [
-      { x: -0.55, y: 0.9, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
-      { x: 0.55, y: 0.9, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+      {
+        id: 'first',
+        x: -0.55,
+        y: 0.9,
+        shape: { kind: 'gaussian' as const, fwhm: 0.08 },
+      },
+      {
+        id: 'second',
+        x: 0.55,
+        y: 0.9,
+        shape: { kind: 'gaussian' as const, fwhm: 0.08 },
+      },
     ]);
 
     for (let i = 0; i < 2; i++) {
