@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.1](https://github.com/mljs/spectra-fitting/compare/v4.1.0...v4.1.1) (2022-08-26)
+
+
+### Bug Fixes
+
+* keep id if it exists ([#100](https://github.com/mljs/spectra-fitting/issues/100)) ([be15d31](https://github.com/mljs/spectra-fitting/commit/be15d3183fc52cb0bc1091a7c8cba02d376bdb66))
+
 ## [4.1.0](https://github.com/mljs/spectra-fitting/compare/v4.0.2...v4.1.0) (2022-08-04)
 
 
