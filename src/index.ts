@@ -161,11 +161,8 @@ export function optimize<T extends Peak>(
   let newPeaks = [];
   for (let peak of internalPeaks) {
     const { shape, id, parameters, fromIndex } = peak;
-    let newPeak = {
-      x: 0,
-      y: 0,
-      shape,
-    } as OptimizedPeakIDOrNot<T>;
+
+    let newPeak = { x: 0, y: 0, shape } as OptimizedPeakIDOrNot<T>;
 
     if (id) {
       newPeak = { ...newPeak, id } as OptimizedPeakIDOrNot<T>;
