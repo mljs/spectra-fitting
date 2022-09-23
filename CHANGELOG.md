@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.0](https://github.com/mljs/spectra-fitting/compare/v4.1.1...v4.2.0) (2022-09-23)
+
+
+### Features
+
+* global optimization by direct algorithm ([#103](https://github.com/mljs/spectra-fitting/issues/103)) ([fb27ade](https://github.com/mljs/spectra-fitting/commit/fb27ade2c62000657f4f171ba192612b45c216c6)), closes [#98](https://github.com/mljs/spectra-fitting/issues/98)
+
 ## [4.1.1](https://github.com/mljs/spectra-fitting/compare/v4.1.0...v4.1.1) (2022-08-26)
 
 
