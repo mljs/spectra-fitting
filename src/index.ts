@@ -160,7 +160,7 @@ export function optimize<T extends Peak>(
 
   let newPeaks = [];
   for (let peak of internalPeaks) {
-    const { shape, id, parameters, fromIndex } = peak;
+    const { id, shape, parameters, fromIndex } = peak;
 
     let newPeak = { x: 0, y: 0, shape } as OptimizedPeakIDOrNot<T>;
 
@@ -174,7 +174,6 @@ export function optimize<T extends Peak>(
       //@ts-expect-error should be fixed once
       newPeak.shape[parameters[i]] = fittedValues[fromIndex + i];
     }
-
     newPeaks.push(newPeak);
   }
 

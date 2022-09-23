@@ -1,6 +1,6 @@
 {
   "name": "ml-spectra-fitting",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Fit spectra using gaussian or lorentzian",
   "main": "./lib/index.js",
   "module": "./lib-esm/index.js",
@@ -63,7 +63,7 @@
     "ml-array-max": "^1.2.4",
     "ml-direct": "^0.1.1",
     "ml-levenberg-marquardt": "^4.1.0",
-    "ml-peak-shape-generator": "^4.1.1",
+    "ml-peak-shape-generator": "^4.1.2",
     "ml-spectra-processing": "^11.5.0"
   }
 }
