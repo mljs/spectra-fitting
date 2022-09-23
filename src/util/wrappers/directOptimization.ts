@@ -9,7 +9,7 @@ export function directOptimization(
   const {
     minValues,
     maxValues,
-    iterations,
+    maxIterations,
     epsilon,
     tolerance,
     tolerance2,
@@ -17,7 +17,7 @@ export function directOptimization(
   } = options;
   const objectiveFunction = getObjectiveFunction(data, sumOfShapes);
   const result = direct(objectiveFunction, minValues, maxValues, {
-    iterations,
+    iterations: maxIterations,
     epsilon,
     tolerance,
     tolerance2,

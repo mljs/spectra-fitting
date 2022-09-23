@@ -36,27 +36,32 @@ export interface OptimizedPeak {
   shape: Shape1D;
 }
 
+type OptimizedPeakIDOrNot<T extends Peak> = T extends { id: string }
+  ? OptimizedPeak & { id: string }
+  : OptimizedPeak;
+
 type OptimizationParameter = number | ((peak: Peak) => number);
 
-export interface LMOptimizationOptions {
+interface GeneralAlgorithmOptions {
+  /** number of max iterations
+   * @default 100
+   */
+  maxIterations?: number;
+}
+export interface LMOptimizationOptions extends GeneralAlgorithmOptions {
   /** maximum time running before break in seconds */
   timeout?: number;
   /** damping factor
    * @default 1.5
    */
   damping?: number;
-  /** number of max iterations
-   * @default 100
-   */
-  maxIterations?: number;
   /** error tolerance
    * @default 1e-8
    */
   errorTolerance?: number;
 }
 
-export interface DirectOptimizationOptions {
-  iterations?: number;
+export interface DirectOptimizationOptions extends GeneralAlgorithmOptions {
   epsilon?: number;
   tolerance?: number;
   tolerance2?: number;
@@ -103,13 +108,13 @@ export interface OptimizeOptions {
  * @param options - Options for optimize
  * @returns - An object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
-export function optimize(
+export function optimize<T extends Peak>(
   data: DataXY<DoubleArray>,
-  peaks: Peak[],
+  peaks: T[],
   options: OptimizeOptions = {},
 ): {
   error: number;
-  peaks: OptimizedPeak[];
+  peaks: OptimizedPeakIDOrNot<T>[];
   iterations: number;
 } {
   // rescale data
@@ -153,15 +158,19 @@ export function optimize(
   });
   const fittedValues = fitted.parameterValues;
 
-  let newPeaks: OptimizedPeak[] = [];
+  let newPeaks = [];
   for (let peak of internalPeaks) {
     const { shape, id, parameters, fromIndex } = peak;
-    const newPeak = {
-      id,
+    let newPeak = {
       x: 0,
       y: 0,
       shape,
-    };
+    } as OptimizedPeakIDOrNot<T>;
+
+    if (id) {
+      newPeak = { ...newPeak, id } as OptimizedPeakIDOrNot<T>;
+    }
+
     newPeak.x = fittedValues[fromIndex];
     newPeak.y = fittedValues[fromIndex + 1] * minMaxY.range + shiftValue;
     for (let i = 2; i < parameters.length; i++) {
