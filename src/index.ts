@@ -42,29 +42,40 @@ type OptimizedPeakIDOrNot<T extends Peak> = T extends { id: string }
 
 type OptimizationParameter = number | ((peak: Peak) => number);
 
+interface GeneralAlgorithmOptions {
+  /** number of max iterations
+   * @default 100
+   */
+  maxIterations?: number;
+}
+export interface LMOptimizationOptions extends GeneralAlgorithmOptions {
+  /** maximum time running before break in seconds */
+  timeout?: number;
+  /** damping factor
+   * @default 1.5
+   */
+  damping?: number;
+  /** error tolerance
+   * @default 1e-8
+   */
+  errorTolerance?: number;
+}
+
+export interface DirectOptimizationOptions extends GeneralAlgorithmOptions {
+  epsilon?: number;
+  tolerance?: number;
+  tolerance2?: number;
+  initialState?: any;
+}
+
 export interface OptimizationOptions {
   /**
    * kind of algorithm. By default it's levenberg-marquardt
    */
-  kind?: 'lm' | 'levenbergMarquardt';
+  kind?: 'lm' | 'levenbergMarquardt' | 'direct';
 
   /** options for the specific kind of algorithm */
-  options?: {
-    /** maximum time running before break in seconds */
-    timeout?: number;
-    /** damping factor
-     * @default 1.5
-     */
-    damping?: number;
-    /** number of max iterations
-     * @default 100
-     */
-    maxIterations?: number;
-    /** error tolerance
-     * @default 1e-8
-     */
-    errorTolerance?: number;
-  };
+  options?: DirectOptimizationOptions | LMOptimizationOptions;
 }
 
 export interface OptimizeOptions {

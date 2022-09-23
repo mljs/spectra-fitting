@@ -13,7 +13,7 @@ export function getSumOfShapes(internalPeaks: InternalPeak[]) {
       for (const peak of internalPeaks) {
         const peakX = parameters[peak.fromIndex];
         const y = parameters[peak.fromIndex + 1];
-        for (let i = 2; i <= peak.toIndex; i++) {
+        for (let i = 2; i < parameters.length; i++) {
           //@ts-expect-error Not simply to solve the issue
           peak.shapeFct[peak.parameters[i]] = parameters[peak.fromIndex + i];
         }
