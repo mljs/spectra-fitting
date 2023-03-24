@@ -52,6 +52,7 @@ describe('Optimize sum of Lorentzians', () => {
   it('shifted baseline up by two', () => {
     let shiftedPeaks = JSON.parse(JSON.stringify(peaks));
     for (const shiftedPeak of shiftedPeaks) {
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       shiftedPeak.y = shiftedPeak.y + 2;
     }
     let yShiftedData = {

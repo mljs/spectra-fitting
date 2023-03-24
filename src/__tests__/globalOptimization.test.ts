@@ -57,10 +57,11 @@ describe('Optimize sum of Gaussians', () => {
   for (let i = 0; i < 2; i++) {
     const peak = peaks[i];
     for (const key in peak) {
-      //@ts-expect-error
+      //@ts-expect-error to be improved
       const value = peak[key];
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
       it(`peak at ${peak.x} key: ${key}`, () => {
-        //@ts-expect-error
+        //@ts-expect-error to be improved
         expect(result.peaks[i][key]).toMatchCloseTo(value, 2);
       });
     }
