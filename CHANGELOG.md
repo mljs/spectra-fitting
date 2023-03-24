@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.1](https://github.com/mljs/spectra-fitting/compare/v4.2.0...v4.2.1) (2023-03-24)
+
+
+### Bug Fixes
+
+* update dependencies ([ce01f15](https://github.com/mljs/spectra-fitting/commit/ce01f1554e772aa8c2628b4de46c8409e69be75a))
+
 ## [4.2.0](https://github.com/mljs/spectra-fitting/compare/v4.1.1...v4.2.0) (2022-09-23)
 
 
