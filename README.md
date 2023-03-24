@@ -187,7 +187,7 @@ const result = {
 
 [npm-image]: https://img.shields.io/npm/v/ml-spectra-fitting.svg
 [npm-url]: https://npmjs.org/package/ml-spectra-fitting
-[ci-image]: https://github.com/mljs/spectra-fitting/workflows/Node.js%20CI/badge.svg?branch=master
+[ci-image]: https://github.com/mljs/spectra-fitting/workflows/Node.js%20CI/badge.svg?branch=main
 [ci-url]: https://github.com/mljs/spectra-fitting/actions?query=workflow%3A%22Node.js+CI%22
 [download-image]: https://img.shields.io/npm/dm/ml-spectra-fitting.svg
 [download-url]: https://npmjs.org/package/ml-spectra-fitting
