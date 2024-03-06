@@ -1,4 +1,4 @@
-import { DataXY, DoubleArray } from 'cheminfo-types';
+import { DataXY } from 'cheminfo-types';
 import { Shape1D } from 'ml-peak-shape-generator';
 import { xMinMaxValues } from 'ml-spectra-processing';
 
@@ -109,23 +109,23 @@ export interface OptimizeOptions {
  * @returns - An object with fitting error and the list of optimized parameters { parameters: [ {x, y, width} ], error } if the kind of shape is pseudoVoigt mu parameter is optimized.
  */
 export function optimize<T extends Peak>(
-  data: DataXY<DoubleArray>,
+  data: DataXY,
   peaks: T[],
   options: OptimizeOptions = {},
 ): {
   error: number;
-  peaks: OptimizedPeakIDOrNot<T>[];
+  peaks: Array<OptimizedPeakIDOrNot<T>>;
   iterations: number;
 } {
   // rescale data
-  let temp = xMinMaxValues(data.y);
+  const temp = xMinMaxValues(data.y);
   const minMaxY = { ...temp, range: temp.max - temp.min };
 
   const internalPeaks = getInternalPeaks(peaks, minMaxY, options);
 
   // need to rescale what is related to Y
   const { baseline: shiftValue = minMaxY.min } = options;
-  let normalizedY = new Float64Array(data.y.length);
+  const normalizedY = new Float64Array(data.y.length);
   for (let i = 0; i < data.y.length; i++) {
     normalizedY[i] = (data.y[i] - shiftValue) / minMaxY.range;
   }
@@ -145,11 +145,11 @@ export function optimize<T extends Peak>(
       index++;
     }
   }
-  let { algorithm, optimizationOptions } = selectMethod(options.optimization);
+  const { algorithm, optimizationOptions } = selectMethod(options.optimization);
 
-  let sumOfShapes = getSumOfShapes(internalPeaks);
+  const sumOfShapes = getSumOfShapes(internalPeaks);
 
-  let fitted = algorithm({ x: data.x, y: normalizedY }, sumOfShapes, {
+  const fitted = algorithm({ x: data.x, y: normalizedY }, sumOfShapes, {
     minValues,
     maxValues,
     initialValues,
@@ -158,8 +158,8 @@ export function optimize<T extends Peak>(
   });
   const fittedValues = fitted.parameterValues;
 
-  let newPeaks = [];
-  for (let peak of internalPeaks) {
+  const newPeaks = [];
+  for (const peak of internalPeaks) {
     const { id, shape, parameters, fromIndex } = peak;
 
     let newPeak = { x: 0, y: 0, shape } as OptimizedPeakIDOrNot<T>;

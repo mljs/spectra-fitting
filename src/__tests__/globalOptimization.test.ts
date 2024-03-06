@@ -21,7 +21,7 @@ describe('Optimize sum of Gaussians', () => {
     },
   });
 
-  let result = optimize(
+  const result = optimize(
     data,
     [
       {

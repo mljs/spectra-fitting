@@ -6,9 +6,9 @@ import { optimize, Peak } from '../index';
 
 expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
 
-let nbPoints = 31;
-let xFactor = 0.1;
-let x = new Float64Array(nbPoints);
+const nbPoints = 31;
+const xFactor = 0.1;
+const x = new Float64Array(nbPoints);
 for (let i = 0; i < nbPoints; i++) {
   x[i] = (i - nbPoints / 2) * xFactor;
 }
@@ -31,7 +31,7 @@ describe('Optimize sum of Lorentzians', () => {
   });
 
   it('positive maxima peaks', () => {
-    let initialPeaks: Peak[] = [
+    const initialPeaks: Peak[] = [
       {
         x: -0.52,
         y: 0.9,
@@ -43,23 +43,23 @@ describe('Optimize sum of Lorentzians', () => {
         shape: { kind: 'lorentzian' as const, fwhm: 0.08 },
       },
     ];
-    let result = optimize(data, initialPeaks);
+    const result = optimize(data, initialPeaks);
     for (let i = 0; i < 2; i++) {
       expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
 
   it('shifted baseline up by two', () => {
-    let shiftedPeaks = JSON.parse(JSON.stringify(peaks));
+    const shiftedPeaks = JSON.parse(JSON.stringify(peaks));
     for (const shiftedPeak of shiftedPeaks) {
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+       
       shiftedPeak.y = shiftedPeak.y + 2;
     }
-    let yShiftedData = {
+    const yShiftedData = {
       x: data.x,
       y: data.y.map((el: number) => el + 2),
     };
-    let result = optimize(yShiftedData, [
+    const result = optimize(yShiftedData, [
       {
         x: -0.52,
         y: 2.9,
@@ -77,11 +77,11 @@ describe('Optimize sum of Lorentzians', () => {
   });
 
   it('negative maxima peaks', () => {
-    let shiftedPeaks = JSON.parse(JSON.stringify(peaks));
+    const shiftedPeaks = JSON.parse(JSON.stringify(peaks));
     for (const shiftedPeak of shiftedPeaks) {
       shiftedPeak.y = shiftedPeak.y - 2;
     }
-    let yShiftedPeaks = [
+    const yShiftedPeaks = [
       {
         x: -0.52,
         y: -1,
@@ -94,12 +94,12 @@ describe('Optimize sum of Lorentzians', () => {
       },
     ];
 
-    let yShiftedData = {
+    const yShiftedData = {
       x: data.x.slice(),
       y: data.y.map((el: number) => el - 2),
     };
 
-    let result = optimize(yShiftedData, yShiftedPeaks);
+    const result = optimize(yShiftedData, yShiftedPeaks);
     for (let i = 0; i < 2; i++) {
       expect(result.peaks[i]).toMatchCloseTo(shiftedPeaks[i], 3);
     }
@@ -124,7 +124,7 @@ describe('Optimize sum of Gaussians', () => {
   });
 
   it('positive maxima peaks', () => {
-    let peakList: Peak[] = [
+    const peakList: Peak[] = [
       {
         x: -0.52,
         y: 0.9,
@@ -136,24 +136,24 @@ describe('Optimize sum of Gaussians', () => {
         shape: { kind: 'gaussian' as const, fwhm: 0.08 },
       },
     ];
-    let result = optimize(data, peakList);
+    const result = optimize(data, peakList);
     for (let i = 0; i < 2; i++) {
       expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
 
   it('negative maxima peaks', () => {
-    let shiftedPeaks = JSON.parse(JSON.stringify(peaks));
+    const shiftedPeaks = JSON.parse(JSON.stringify(peaks));
     for (const shiftedPeak of shiftedPeaks) {
       shiftedPeak.y = shiftedPeak.y - 2;
     }
 
-    let yShiftedData = {
+    const yShiftedData = {
       x: data.x.slice(),
       y: data.y.map((el: number) => el - 2),
     };
 
-    let result = optimize(
+    const result = optimize(
       yShiftedData,
       [
         {
@@ -216,7 +216,7 @@ describe('Sum of Pseudo Voigts', () => {
   });
 
   it('positive maxima peaks', () => {
-    let peakList: Peak[] = [
+    const peakList: Peak[] = [
       {
         x: -0.3,
         y: 0.0009,
@@ -236,7 +236,7 @@ describe('Sum of Pseudo Voigts', () => {
         },
       },
     ];
-    let result = optimize(data, peakList, {
+    const result = optimize(data, peakList, {
       optimization: {
         kind: 'lm',
         options: { maxIterations: 100, damping: 0.5, errorTolerance: 1e-8 },
