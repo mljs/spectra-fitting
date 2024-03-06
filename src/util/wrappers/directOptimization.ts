@@ -43,7 +43,7 @@ function getObjectiveFunction(
     const fct = sumOfShapes(parameters);
     let error = 0;
     for (let i = 0; i < nbPoints; i++) {
-      error += (y[i] - fct(x[i]))**2;
+      error += (y[i] - fct(x[i])) ** 2;
     }
     return error;
   };

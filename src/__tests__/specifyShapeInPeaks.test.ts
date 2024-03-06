@@ -52,7 +52,6 @@ describe('Optimize sum of Lorentzians', () => {
   it('shifted baseline up by two', () => {
     const shiftedPeaks = JSON.parse(JSON.stringify(peaks));
     for (const shiftedPeak of shiftedPeaks) {
-       
       shiftedPeak.y = shiftedPeak.y + 2;
     }
     const yShiftedData = {
