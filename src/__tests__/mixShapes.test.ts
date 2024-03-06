@@ -8,7 +8,7 @@ expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
 
 describe('Sum of a mix of distributions', () => {
   it('2 peaks', () => {
-    let peaks = [
+    const peaks = [
       {
         x: -0.5,
         y: 0.001,
@@ -28,7 +28,7 @@ describe('Sum of a mix of distributions', () => {
       },
     });
 
-    let result = optimize(
+    const result = optimize(
       data,
       [
         {
@@ -57,7 +57,7 @@ describe('Sum of a mix of distributions', () => {
     }
   });
   it('2 peaks same position', () => {
-    let peaks = [
+    const peaks = [
       {
         x: 0,
         y: 1,
@@ -76,7 +76,7 @@ describe('Sum of a mix of distributions', () => {
       },
     });
 
-    let result = optimize(data, [
+    const result = optimize(data, [
       {
         x: -0.1,
         y: 1.2,
@@ -96,7 +96,7 @@ describe('Sum of a mix of distributions', () => {
   });
   it('20 peaks with overlap', () => {
     const nbPeaks = 5;
-    let peaks = [];
+    const peaks = [];
     for (let i = 0; i < nbPeaks; i++) {
       peaks.push({
         x: i,
@@ -112,10 +112,10 @@ describe('Sum of a mix of distributions', () => {
       },
     });
 
-    let guess = JSON.parse(JSON.stringify(peaks));
+    const guess = JSON.parse(JSON.stringify(peaks));
     guess.forEach((peak: any) => (peak.x += Math.random() / 10));
 
-    let result = optimize(data, guess, {
+    const result = optimize(data, guess, {
       optimization: { options: { maxIterations: 10 } },
     });
     // we have a little bit more error on mu
@@ -126,7 +126,7 @@ describe('Sum of a mix of distributions', () => {
     }
   });
   it('6 peaks', () => {
-    let peaks = [
+    const peaks = [
       {
         x: 0,
         y: 0.001,
@@ -159,7 +159,7 @@ describe('Sum of a mix of distributions', () => {
       },
     });
 
-    let result = optimize(
+    const result = optimize(
       data,
       [
         {

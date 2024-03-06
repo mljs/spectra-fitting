@@ -9,7 +9,7 @@ import { directOptimization } from './wrappers/directOptimization';
  * @returns - The algorithm and optimization options
  */
 export function selectMethod(optimizationOptions: OptimizationOptions = {}) {
-  let { kind = 'lm', options } = optimizationOptions;
+  const { kind = 'lm', options } = optimizationOptions;
 
   switch (kind) {
     case 'lm':

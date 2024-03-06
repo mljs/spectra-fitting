@@ -32,7 +32,7 @@ describe('Optimize sum of Gaussians', () => {
       },
     });
 
-    let result = optimize(data, [
+    const result = optimize(data, [
       {
         id: 'first',
         x: -0.55,
@@ -66,7 +66,7 @@ describe('Optimize sum of Gaussians', () => {
       },
     });
 
-    let result = optimize(data, [
+    const result = optimize(data, [
       { x: -0.52, y: 0.9, shape: { kind: 'gaussian', fwhm: 0.2 } },
       { x: 0.52, y: 0.9, shape: { kind: 'lorentzian', fwhm: 0.6 } },
     ]);
@@ -91,7 +91,7 @@ describe('Optimize sum of Lorentzians', () => {
       },
     });
 
-    let result = optimize(
+    const result = optimize(
       data,
       [
         { x: -0.52, y: 0.9 },
@@ -125,7 +125,7 @@ describe('Optimize sum of PseudoVoigts', () => {
       },
     });
 
-    let result = optimize(
+    const result = optimize(
       data,
       [
         { x: -0.52, y: 0.9 },

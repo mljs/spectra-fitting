@@ -6,9 +6,9 @@ import { optimize } from '../index';
 
 expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
 
-let nbPoints = 31;
-let xFactor = 0.1;
-let x = new Float64Array(nbPoints);
+const nbPoints = 31;
+const xFactor = 0.1;
+const x = new Float64Array(nbPoints);
 for (let i = 0; i < nbPoints; i++) {
   x[i] = (i - nbPoints / 2) * xFactor;
 }
@@ -31,7 +31,7 @@ describe('One Shape tested', () => {
       },
     });
 
-    let result = optimize(data, [
+    const result = optimize(data, [
       {
         x: -0.52,
         y: 0.0009,
@@ -42,7 +42,7 @@ describe('One Shape tested', () => {
   });
 
   it('Lorentzian', () => {
-    let peaks = [
+    const peaks = [
       {
         x: -0.5,
         y: 0.001,
@@ -63,7 +63,7 @@ describe('One Shape tested', () => {
       },
     });
 
-    let result = optimize(data, [
+    const result = optimize(data, [
       {
         x: -0.52,
         y: 0.0009,
@@ -75,7 +75,7 @@ describe('One Shape tested', () => {
   });
 
   it('Pseudo Voigt', () => {
-    let peaks = [
+    const peaks = [
       {
         x: 0,
         y: 0.001,
@@ -91,7 +91,7 @@ describe('One Shape tested', () => {
       },
     });
 
-    let result = optimize(data, [
+    const result = optimize(data, [
       {
         x: 0.001,
         y: 0.0009,

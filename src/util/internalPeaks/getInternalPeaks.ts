@@ -31,7 +31,7 @@ export function getInternalPeaks(
   options: OptimizeOptions = {},
 ) {
   let index = 0;
-  let internalPeaks: InternalPeak[] = [];
+  const internalPeaks: InternalPeak[] = [];
   const { baseline: shiftValue = minMaxY.min } = options;
 
   const normalizedPeaks = peaks.map((peak) => {
@@ -56,8 +56,8 @@ export function getInternalPeaks(
       gradientDifference: [],
     };
 
-    for (let parameter of parameters) {
-      for (let property of properties) {
+    for (const parameter of parameters) {
+      for (const property of properties) {
         // check if the property is specified in the peak
         let propertyValue = peak?.parameters?.[parameter]?.[property];
         if (propertyValue) {
