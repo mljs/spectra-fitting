@@ -1,4 +1,8 @@
-import { Shape1DInstance, PseudoVoigt } from 'ml-peak-shape-generator';
+import {
+  Shape1DInstance,
+  PseudoVoigt,
+  GeneralizedLorentzian,
+} from 'ml-peak-shape-generator';
 
 import { Peak } from '../../index';
 
@@ -29,6 +33,13 @@ export const DefaultParameters = {
     init: (peak: Peak, peakShape: PseudoVoigt) => peakShape.mu,
     min: () => 0,
     max: () => 1,
+    gradientDifference: () => 0.01,
+  },
+  gamma: {
+    init: (peak: Peak, peakShape: GeneralizedLorentzian) =>
+      peakShape.gamma || 0.5,
+    min: () => -1,
+    max: () => 2,
     gradientDifference: () => 0.01,
   },
 };
