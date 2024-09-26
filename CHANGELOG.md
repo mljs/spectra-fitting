@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.4](https://github.com/mljs/spectra-fitting/compare/v4.2.3...v4.2.4) (2024-09-26)
+
+
+### Bug Fixes
+
+* new shape generalized lorentzian ([#109](https://github.com/mljs/spectra-fitting/issues/109)) ([c8591d2](https://github.com/mljs/spectra-fitting/commit/c8591d28e6f5f293beecaa3e7d529d0eab85dc60))
+
 ## [4.2.3](https://github.com/mljs/spectra-fitting/compare/v4.2.2...v4.2.3) (2024-03-07)
 
 
