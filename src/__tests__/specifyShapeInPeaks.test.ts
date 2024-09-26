@@ -50,7 +50,7 @@ describe('Optimize sum of Lorentzians', () => {
   });
 
   it('shifted baseline up by two', () => {
-    const shiftedPeaks = JSON.parse(JSON.stringify(peaks));
+    const shiftedPeaks = structuredClone(peaks);
     for (const shiftedPeak of shiftedPeaks) {
       shiftedPeak.y = shiftedPeak.y + 2;
     }
@@ -76,7 +76,7 @@ describe('Optimize sum of Lorentzians', () => {
   });
 
   it('negative maxima peaks', () => {
-    const shiftedPeaks = JSON.parse(JSON.stringify(peaks));
+    const shiftedPeaks = structuredClone(peaks);
     for (const shiftedPeak of shiftedPeaks) {
       shiftedPeak.y = shiftedPeak.y - 2;
     }
@@ -142,7 +142,7 @@ describe('Optimize sum of Gaussians', () => {
   });
 
   it('negative maxima peaks', () => {
-    const shiftedPeaks = JSON.parse(JSON.stringify(peaks));
+    const shiftedPeaks = structuredClone(peaks);
     for (const shiftedPeak of shiftedPeaks) {
       shiftedPeak.y = shiftedPeak.y - 2;
     }

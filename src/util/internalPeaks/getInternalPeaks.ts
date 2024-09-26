@@ -5,7 +5,7 @@ import { assert } from '../assert';
 
 import { DefaultParameters } from './DefaultParameters';
 
-type Parameter = 'x' | 'y' | 'fwhm' | 'mu';
+type Parameter = 'x' | 'y' | 'fwhm' | 'mu' | 'gamma';
 
 type Property = 'init' | 'min' | 'max' | 'gradientDifference';
 const properties: Property[] = ['init', 'min', 'max', 'gradientDifference'];

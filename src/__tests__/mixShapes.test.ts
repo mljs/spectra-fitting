@@ -112,8 +112,8 @@ describe('Sum of a mix of distributions', () => {
       },
     });
 
-    const guess = JSON.parse(JSON.stringify(peaks));
-    guess.forEach((peak: any) => (peak.x += Math.random() / 10));
+    const guess = structuredClone(peaks);
+    guess.forEach((peak: { x: number }) => (peak.x += Math.random() / 10));
 
     const result = optimize(data, guess, {
       optimization: { options: { maxIterations: 10 } },

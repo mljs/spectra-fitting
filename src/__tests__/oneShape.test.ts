@@ -109,4 +109,52 @@ describe('One Shape tested', () => {
 
     expect(result.peaks[0]).toMatchCloseTo(peaks[0], 2);
   });
+  it('generalized Lorentzian', () => {
+    const peaks = [
+      {
+        x: 0,
+        y: 0.001,
+        shape: { kind: 'lorentzian' as const, fwhm: 0.31 },
+      },
+    ];
+
+    const data: DataXY = generateSpectrum(peaks, {
+      generator: {
+        from: -10,
+        to: 10,
+        nbPoints: 256,
+      },
+    });
+
+    const result = optimize(
+      data,
+      [
+        {
+          x: 0.001,
+          y: 0.0009,
+          shape: {
+            kind: 'generalizedLorentzian',
+            fwhm: 0.25,
+            gamma: 0.5,
+          },
+        },
+      ],
+      {
+        optimization: {
+          kind: 'lm',
+          options: {
+            damping: 0.1,
+            maxIterations: 10,
+            errorTolerance: 1e-8,
+          },
+        },
+      },
+    );
+    expect(result.peaks[0].shape.fwhm).toBeCloseTo(0.31, 4);
+    expect(result.peaks[0].x).toBeCloseTo(0, 5);
+    expect(result.peaks[0].y).toBeCloseTo(0.001, 5);
+    expect(result.peaks[0].shape.fwhm).toBeCloseTo(0.31, 1);
+    //@ts-expect-error should exists
+    expect(result.peaks[0].shape.gamma).toBeCloseTo(0, 1);
+  });
 });
