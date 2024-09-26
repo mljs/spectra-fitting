@@ -136,10 +136,7 @@ describe('Optimize sum of PseudoVoigts', () => {
       },
     );
     for (let i = 0; i < 2; i++) {
-      expect(result.peaks[i]).toMatchCloseTo(
-        JSON.parse(JSON.stringify(peaks[i])),
-        3,
-      );
+      expect(result.peaks[i]).toMatchCloseTo(structuredClone(peaks[i]), 3);
     }
   });
 });

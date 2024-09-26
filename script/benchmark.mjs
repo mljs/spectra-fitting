@@ -24,7 +24,7 @@ const data = generateSpectrum(peaks, {
   },
 });
 
-let guess = JSON.parse(JSON.stringify(peaks));
+let guess = structuredClone(peaks);
 guess.forEach((peak) => (peak.x += Math.random() / 10));
 
 let result = optimize(data, guess, {
