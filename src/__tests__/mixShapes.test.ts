@@ -92,7 +92,8 @@ describe('Sum of a mix of distributions', () => {
       expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
-  it('20 peaks with overlap', () => {
+  // it seems CI needs extra time for this test
+  it('20 peaks with overlap', { timeout: 10000 }, () => {
     const nbPeaks = 5;
     const peaks = [];
     for (let i = 0; i < nbPeaks; i++) {
@@ -117,7 +118,7 @@ describe('Sum of a mix of distributions', () => {
       optimization: { options: { maxIterations: 10 } },
     });
     // we have a little bit more error on mu
-    //@ts-expect-error we ignoere this ts error
+    //@ts-expect-error we ignore this ts error
     peaks.forEach((peak) => peak.shape.mu && delete peak.shape.mu);
     for (let i = 0; i < result.peaks.length; i++) {
       expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
