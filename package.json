@@ -49,6 +49,7 @@
     "eslint-config-cheminfo-typescript": "^18.0.1",
     "jest-matcher-deep-close-to": "^3.0.2",
     "prettier": "^3.2.5",
+    "rimraf": "^6.0.1",
     "spectrum-generator": "^8.0.11",
     "typescript": "^5.8.3",
     "vitest": "^3.2.3"
