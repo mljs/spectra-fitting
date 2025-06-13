@@ -1,10 +1,7 @@
 import type { DataXY } from 'cheminfo-types';
-import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
 import { generateSpectrum } from 'spectrum-generator';
 
-import { optimize } from '../index';
-
-expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
+import { optimize } from '../index.ts';
 
 describe('Sum of a mix of distributions', () => {
   it('2 peaks', () => {

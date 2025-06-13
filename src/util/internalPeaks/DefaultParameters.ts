@@ -1,10 +1,10 @@
-import {
+import type {
   Shape1DInstance,
   PseudoVoigt,
   GeneralizedLorentzian,
 } from 'ml-peak-shape-generator';
 
-import { Peak } from '../../index';
+import type { Peak } from '../../index.ts';
 
 export const DefaultParameters = {
   x: {

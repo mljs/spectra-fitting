@@ -1,4 +1,4 @@
-import { selectMethod } from '../selectMethod';
+import { selectMethod } from '../selectMethod.ts';
 
 describe('selectMethod', () => {
   it('throw errors', () => {

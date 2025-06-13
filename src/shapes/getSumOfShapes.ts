@@ -1,9 +1,9 @@
-import { InternalPeak } from '../util/internalPeaks/getInternalPeaks';
+import type { InternalPeak } from '../util/internalPeaks/getInternalPeaks.ts';
 
 /**
  * This function returns the sumOfShapes function
  * This function gives sumOfShapes access to the peak list and the associated data
- * @param parameters - parameters
+ * @param internalPeaks
  */
 
 export function getSumOfShapes(internalPeaks: InternalPeak[]) {
@@ -14,8 +14,12 @@ export function getSumOfShapes(internalPeaks: InternalPeak[]) {
         const peakX = parameters[peak.fromIndex];
         const y = parameters[peak.fromIndex + 1];
         for (let i = 2; i < parameters.length; i++) {
-          //@ts-expect-error Not simply to solve the issue
-          peak.shapeFct[peak.parameters[i]] = parameters[peak.fromIndex + i];
+          type Parameter = (typeof peak.parameters)[number];
+          const shapeFctKey = peak.parameters[i] as Extract<
+            Parameter,
+            keyof typeof peak.shapeFct
+          >;
+          peak.shapeFct[shapeFctKey] = parameters[peak.fromIndex + i];
         }
         totalY += y * peak.shapeFct.fct(x - peakX);
       }

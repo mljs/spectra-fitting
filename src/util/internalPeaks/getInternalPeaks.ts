@@ -1,9 +1,10 @@
-import { getShape1D, Shape1D, Shape1DInstance } from 'ml-peak-shape-generator';
+import type { Shape1D, Shape1DInstance } from 'ml-peak-shape-generator';
+import { getShape1D } from 'ml-peak-shape-generator';
 
-import { Peak, OptimizeOptions } from '../../index';
-import { assert } from '../assert';
+import type { Peak, OptimizeOptions } from '../../index.ts';
+import { assert } from '../assert.ts';
 
-import { DefaultParameters } from './DefaultParameters';
+import { DefaultParameters } from './DefaultParameters.ts';
 
 type Parameter = 'x' | 'y' | 'fwhm' | 'mu' | 'gamma';
 
@@ -22,6 +23,7 @@ export interface InternalPeak {
 /**
  * Return an array of internalPeaks that contains the exact init, min, max values based on the options
  * @param peaks
+ * @param minMaxY
  * @param options
  * @returns
  */

@@ -10,6 +10,7 @@ jobs:
     # Documentation: https://github.com/zakodium/workflows#release
     uses: zakodium/workflows/.github/workflows/release.yml@release-v1
     with:
+      # noinspection UndefinedParamsPresent
       npm: true
     secrets:
       github-token: ${{ secrets.BOT_TOKEN }}
