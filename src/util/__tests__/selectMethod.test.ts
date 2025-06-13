@@ -1,10 +1,11 @@
-import { selectMethod } from '../selectMethod';
+import { describe, expect, it } from 'vitest';
+
+import { selectMethod } from '../selectMethod.ts';
 
 describe('selectMethod', () => {
   it('throw errors', () => {
     expect(() => {
-      //@ts-expect-error expected to fail
-      selectMethod({ kind: 'fail' });
+      selectMethod({ kind: 'fail' as never });
     }).toThrow('Unknown fitting algorithm');
   });
 });

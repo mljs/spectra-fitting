@@ -1,10 +1,8 @@
 import type { DataXY } from 'cheminfo-types';
-import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
 import { generateSpectrum } from 'spectrum-generator';
+import { describe, expect, it } from 'vitest';
 
-import { optimize } from '../index';
-
-expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
+import { optimize } from '../index.ts';
 
 describe('Optimize sum of Gaussians', () => {
   it('positive maxima peaks, default value', () => {

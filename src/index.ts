@@ -1,10 +1,11 @@
-import { DataXY } from 'cheminfo-types';
-import { Shape1D } from 'ml-peak-shape-generator';
+import type { DataXY } from 'cheminfo-types';
+import type { Shape1D } from 'ml-peak-shape-generator';
 import { xMinMaxValues } from 'ml-spectra-processing';
 
-import { getSumOfShapes } from './shapes/getSumOfShapes';
-import { getInternalPeaks } from './util/internalPeaks/getInternalPeaks';
-import { selectMethod } from './util/selectMethod';
+import { getSumOfShapes } from './shapes/getSumOfShapes.ts';
+import { getInternalPeaks } from './util/internalPeaks/getInternalPeaks.ts';
+import { selectMethod } from './util/selectMethod.ts';
+import type { InternalDirectOptimizationOptions } from './util/wrappers/directOptimization.js';
 
 export interface InitialParameter {
   init?: OptimizationParameter;
@@ -61,12 +62,9 @@ export interface LMOptimizationOptions extends GeneralAlgorithmOptions {
   errorTolerance?: number;
 }
 
-export interface DirectOptimizationOptions extends GeneralAlgorithmOptions {
-  epsilon?: number;
-  tolerance?: number;
-  tolerance2?: number;
-  initialState?: any;
-}
+export interface DirectOptimizationOptions
+  extends GeneralAlgorithmOptions,
+    InternalDirectOptimizationOptions {}
 
 export interface OptimizationOptions {
   /**

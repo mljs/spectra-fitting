@@ -1,10 +1,8 @@
 import type { DataXY } from 'cheminfo-types';
-import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
 import { generateSpectrum } from 'spectrum-generator';
+import { describe, expect, it } from 'vitest';
 
-import { optimize } from '../index';
-
-expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
+import { optimize } from '../index.ts';
 
 describe('Optimize sum of Gaussians', () => {
   const peaks = [
@@ -59,7 +57,7 @@ describe('Optimize sum of Gaussians', () => {
     for (const key in peak) {
       //@ts-expect-error to be improved
       const value = peak[key];
-      // eslint-disable-next-line @typescript-eslint/no-loop-func
+
       it(`peak at ${peak.x} key: ${key}`, () => {
         //@ts-expect-error to be improved
         expect(result.peaks[i][key]).toMatchCloseTo(value, 2);

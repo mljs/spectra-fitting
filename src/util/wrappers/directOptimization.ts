@@ -1,10 +1,20 @@
-import { DataXY } from 'cheminfo-types';
+import type { DataXY } from 'cheminfo-types';
 import direct from 'ml-direct';
+
+export interface InternalDirectOptimizationOptions {
+  minValues: ArrayLike<number>;
+  maxValues: ArrayLike<number>;
+  maxIterations?: number;
+  epsilon?: number;
+  tolerance?: number;
+  tolerance2?: number;
+  initialState?: object;
+}
 
 export function directOptimization(
   data: DataXY,
   sumOfShapes: (parameters: number[]) => (x: number) => number,
-  options: any,
+  options: InternalDirectOptimizationOptions,
 ) {
   const {
     minValues,
@@ -16,13 +26,20 @@ export function directOptimization(
     initialState,
   } = options;
   const objectiveFunction = getObjectiveFunction(data, sumOfShapes);
-  const result = direct(objectiveFunction, minValues, maxValues, {
-    iterations: maxIterations,
-    epsilon,
-    tolerance,
-    tolerance2,
-    initialState,
-  });
+  const result = direct(
+    objectiveFunction,
+    // direct internally converts ArrayLike to Float64Array,
+    // so we can safely cast minValues and maxValues to number[]
+    minValues as number[],
+    maxValues as number[],
+    {
+      iterations: maxIterations,
+      epsilon,
+      tolerance,
+      tolerance2,
+      initialState,
+    },
+  );
 
   const { optima } = result;
 

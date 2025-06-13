@@ -1,10 +1,9 @@
 import type { DataXY } from 'cheminfo-types';
-import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
 import { generateSpectrum } from 'spectrum-generator';
+import { describe, expect, it } from 'vitest';
 
-import { optimize, Peak } from '../index';
-
-expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
+import { optimize } from '../index.ts';
+import type { Peak } from '../index.ts';
 
 const nbPoints = 31;
 const xFactor = 0.1;

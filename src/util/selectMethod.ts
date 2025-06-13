@@ -1,8 +1,8 @@
 import { levenbergMarquardt } from 'ml-levenberg-marquardt';
 
-import { OptimizationOptions } from '../index';
+import type { OptimizationOptions } from '../index.ts';
 
-import { directOptimization } from './wrappers/directOptimization';
+import { directOptimization } from './wrappers/directOptimization.ts';
 
 /** Algorithm to select the method.
  * @param optimizationOptions - Optimization options

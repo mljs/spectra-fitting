@@ -1,9 +1,7 @@
-import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
+import { describe, expect, it } from 'vitest';
 
-import { Peak } from '../../..';
-import { getInternalPeaks } from '../getInternalPeaks';
-
-expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
+import type { Peak } from '../../../index.ts';
+import { getInternalPeaks } from '../getInternalPeaks.js';
 
 describe('getInternalPeaks', () => {
   it('default values', () => {
