@@ -57,7 +57,6 @@
   },
   "dependencies": {
     "cheminfo-types": "^1.7.2",
-    "ml-array-max": "^1.2.4",
     "ml-direct": "^1.0.0",
     "ml-levenberg-marquardt": "^5.0.0",
     "ml-peak-shape-generator": "^4.1.4",
