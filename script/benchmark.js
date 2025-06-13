@@ -1,11 +1,8 @@
-/*
-You first need to make `npm run prepack` to build the library
-To create a benchmark report: `node --prof benchmark.mjs`
-*/
+// To create a benchmark report: `node --cpu-prof benchmark.js`
 
 import { generateSpectrum } from 'spectrum-generator';
 
-import { optimize } from '../lib/index.js';
+import { optimize } from '../src/index.ts';
 
 const nbPeaks = 5;
 let peaks = [];
