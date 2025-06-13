@@ -1,10 +1,13 @@
 # ml-spectra-fitting
 
-[![NPM version][npm-image]][npm-url]
-[![build status][ci-image]][ci-url]
-[![npm download][download-image]][download-url]
+[![NPM version](https://img.shields.io/npm/v/ml-spectra-fitting.svg)](https://www.npmjs.com/package/ml-spectra-fitting)
+[![npm download](https://img.shields.io/npm/dm/ml-spectra-fitting.svg)](https://www.npmjs.com/package/ml-spectra-fitting)
+[![test coverage](https://img.shields.io/codecov/c/github/mljs/spectra-fitting.svg)](https://codecov.io/gh/mljs/spectra-fitting)
+[![license](https://img.shields.io/npm/l/ml-spectra-fitting.svg)](https://github.com/mljs/spectra-fitting/blob/main/LICENSE)
 
-This is a spectra fitting package to optimize the position (x), max intensity (y), full width at half maximum (FWHM = width) and the ratio of gaussian contribution (mu) if it's required. It supports three kind of shapes:
+This is a spectra fitting package to optimize the position (x), max intensity (y),
+full width at half-maximum (FWHM = width) and the ratio of gaussian contribution (mu) if it's required.
+It supports three kinds of shapes:
 
 | Name         |                                                                                                                            Equation                                                                                                                             |
 | ------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -23,7 +26,9 @@ It is a wrapper of [ml-levenberg-marquardt](https://github.com/mljs/levenberg-ma
 
 ## Installation
 
-`$ npm install ml-spectra-fitting`
+```console
+npm i ml-spectra-fitting
+```
 
 ## Example
 
@@ -184,10 +189,3 @@ const result = {
 ## License
 
 [MIT](./LICENSE)
-
-[npm-image]: https://img.shields.io/npm/v/ml-spectra-fitting.svg
-[npm-url]: https://npmjs.org/package/ml-spectra-fitting
-[ci-image]: https://github.com/mljs/spectra-fitting/workflows/Node.js%20CI/badge.svg?branch=main
-[ci-url]: https://github.com/mljs/spectra-fitting/actions?query=workflow%3A%22Node.js+CI%22
-[download-image]: https://img.shields.io/npm/dm/ml-spectra-fitting.svg
-[download-url]: https://npmjs.org/package/ml-spectra-fitting
