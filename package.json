@@ -9,6 +9,7 @@
     "src"
   ],
   "scripts": {
+    "build": "npm run tsc && cheminfo-build --entry lib/index.js --root SpectraFitting",
     "check-types": "tsc --noEmit",
     "clean": "rimraf lib",
     "eslint": "eslint .",

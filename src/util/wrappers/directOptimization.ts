@@ -1,7 +1,7 @@
 import type { DataXY } from 'cheminfo-types';
 import direct from 'ml-direct';
 
-export interface DirectOptimizationOptions {
+export interface InternalDirectOptimizationOptions {
   minValues: ArrayLike<number>;
   maxValues: ArrayLike<number>;
   maxIterations?: number;
@@ -14,7 +14,7 @@ export interface DirectOptimizationOptions {
 export function directOptimization(
   data: DataXY,
   sumOfShapes: (parameters: number[]) => (x: number) => number,
-  options: DirectOptimizationOptions,
+  options: InternalDirectOptimizationOptions,
 ) {
   const {
     minValues,

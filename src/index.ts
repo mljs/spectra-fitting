@@ -5,7 +5,7 @@ import { xMinMaxValues } from 'ml-spectra-processing';
 import { getSumOfShapes } from './shapes/getSumOfShapes.ts';
 import { getInternalPeaks } from './util/internalPeaks/getInternalPeaks.ts';
 import { selectMethod } from './util/selectMethod.ts';
-import type { DirectOptimizationOptions as InternalDirectOptimizationOptions } from './util/wrappers/directOptimization.js';
+import type { InternalDirectOptimizationOptions } from './util/wrappers/directOptimization.js';
 
 export interface InitialParameter {
   init?: OptimizationParameter;
