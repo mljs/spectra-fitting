@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.0](https://github.com/mljs/spectra-fitting/compare/v4.2.4...v5.0.0) (2025-06-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* migrate to esm-only and update ml-levenberg-marquardt ([#112](https://github.com/mljs/spectra-fitting/issues/112))
+
+### Code Refactoring
+
+* migrate to esm-only and update ml-levenberg-marquardt ([#112](https://github.com/mljs/spectra-fitting/issues/112)) ([24873a6](https://github.com/mljs/spectra-fitting/commit/24873a60e25b1c61b1051bb66766f7080cb3bdaa))
+
 ## [4.2.4](https://github.com/mljs/spectra-fitting/compare/v4.2.3...v4.2.4) (2024-09-26)
 
 
