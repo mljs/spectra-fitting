@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import type { Peak } from '../../../index.ts';
 import { getInternalPeaks } from '../getInternalPeaks.js';
 

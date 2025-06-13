@@ -2,8 +2,7 @@
   "extends": "@zakodium/tsconfig",
   "compilerOptions": {
     "outDir": "lib",
-    "noUncheckedIndexedAccess": false,
-    "types": ["vitest/globals"]
+    "noUncheckedIndexedAccess": false
   },
   "include": ["src", "vite*.ts"]
 }
