@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.1](https://github.com/mljs/spectra-fitting/compare/v5.0.0...v5.0.1) (2025-06-13)
+
+
+### Bug Fixes
+
+* remove unused dependency ([#115](https://github.com/mljs/spectra-fitting/issues/115)) ([2f27fcd](https://github.com/mljs/spectra-fitting/commit/2f27fcd814e5a46be59a25aaba335f2fad7b66e6))
+
 ## [5.0.0](https://github.com/mljs/spectra-fitting/compare/v4.2.4...v5.0.0) (2025-06-13)
 
 
