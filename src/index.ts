@@ -3,9 +3,9 @@ import type { Shape1D } from 'ml-peak-shape-generator';
 import { xMinMaxValues } from 'ml-spectra-processing';
 
 import { getSumOfShapes } from './shapes/getSumOfShapes.ts';
-import { getInternalPeaks } from './util/internalPeaks/getInternalPeaks.ts';
-import { getGlobalParameterVectors } from './util/getGlobalParameterVectors.ts';
 import { getFixedParametersResult } from './util/getFixedParametersResult.ts';
+import { getGlobalParameterVectors } from './util/getGlobalParameterVectors.ts';
+import { getInternalPeaks } from './util/internalPeaks/getInternalPeaks.ts';
 import { selectMethod } from './util/selectMethod.ts';
 import type { InternalDirectOptimizationOptions } from './util/wrappers/directOptimization.js';
 
@@ -49,7 +49,7 @@ export interface OptimizedPeak {
   shape: Shape1D;
 }
 
-type OptimizedPeakIDOrNot<T extends Peak> = T extends { id: string }
+export type OptimizedPeakIDOrNot<T extends Peak> = T extends { id: string }
   ? OptimizedPeak & { id: string }
   : OptimizedPeak;
 
@@ -148,7 +148,7 @@ export function optimize<T extends Peak>(
   const baseSumOfShapes = getSumOfShapes(internalPeaks);
 
   if (freeIndices.length === 0) {
-    return getFixedParametersResult(
+    return getFixedParametersResult<T>(
       internalPeaks,
       normalizedY,
       data.x,

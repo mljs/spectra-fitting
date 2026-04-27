@@ -1,8 +1,10 @@
 import type { NumberArray } from 'cheminfo-types';
-import type { InternalPeak } from './internalPeaks/getInternalPeaks.ts';
+
 import type { OptimizedPeakIDOrNot, Peak } from '../index.ts';
 
-export function getFixedParametersResult(
+import type { InternalPeak } from './internalPeaks/getInternalPeaks.ts';
+
+export function getFixedParametersResult<T extends Peak>(
   internalPeaks: InternalPeak[],
   normalizedY: Float64Array,
   x: NumberArray,
@@ -10,17 +12,24 @@ export function getFixedParametersResult(
   baseSumOfShapes: (parameters: number[]) => (x: number) => number,
   minMaxY: { min: number; max: number; range: number },
   shiftValue: number,
-) {
+): {
+  error: number;
+  iterations: number;
+  peaks: Array<OptimizedPeakIDOrNot<T>>;
+} {
   const fittedValues = Array.from(globalInit);
-  const newPeaks = [];
+  const newPeaks: Peak[] = [];
   for (const peak of internalPeaks) {
     const { id, shape, parameters, fromIndex } = peak;
-    let newPeak = { x: 0, y: 0, shape } as OptimizedPeakIDOrNot<Peak>;
-    if (id) newPeak = { ...newPeak, id };
-
+    let newPeak = { x: 0, y: 0, shape };
+    if (id) {
+      //@ts-expect-error it is right step
+      newPeak = { ...newPeak, id };
+    }
     newPeak.x = fittedValues[fromIndex];
     newPeak.y = fittedValues[fromIndex + 1] * minMaxY.range + shiftValue;
     for (let i = 2; i < parameters.length; i++) {
+      //@ts-expect-error it is right step
       newPeak.shape[parameters[i]] = fittedValues[fromIndex + i];
     }
     newPeaks.push(newPeak);
@@ -35,6 +44,6 @@ export function getFixedParametersResult(
   return {
     error,
     iterations: 0,
-    peaks: newPeaks,
+    peaks: newPeaks as Array<OptimizedPeakIDOrNot<T>>,
   };
 }
