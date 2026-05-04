@@ -62,7 +62,7 @@ export function getInternalPeaks(
       for (const property of properties) {
         // check if the property is specified in the peak
         let propertyValue = peak?.parameters?.[parameter]?.[property];
-        if (propertyValue) {
+        if (propertyValue !== undefined) {
           propertyValue = getNormalizedValue(
             propertyValue,
             parameter,
@@ -78,7 +78,7 @@ export function getInternalPeaks(
 
         let generalParameterValue =
           options?.parameters?.[parameter]?.[property];
-        if (generalParameterValue) {
+        if (generalParameterValue !== undefined) {
           if (typeof generalParameterValue === 'number') {
             generalParameterValue = getNormalizedValue(
               generalParameterValue,

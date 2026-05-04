@@ -1,5 +1,6 @@
-import type { InternalPeak } from './internalPeaks/getInternalPeaks.ts';
 import type { OptimizeOptions, Peak } from '../index.ts';
+
+import type { InternalPeak } from './internalPeaks/getInternalPeaks.ts';
 
 export interface GlobalParameterVectors {
   freeIndices: number[];
