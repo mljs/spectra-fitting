@@ -1,6 +1,6 @@
 import type { DataXY } from 'cheminfo-types';
 import type { Shape1D } from 'ml-peak-shape-generator';
-import { xMinMaxValues } from 'ml-spectra-processing';
+import { xMaxAbsoluteValue } from 'ml-spectra-processing';
 
 import { getSumOfShapes } from './shapes/getSumOfShapes.ts';
 import { getFixedParametersResult } from './util/getFixedParametersResult.ts';
@@ -89,10 +89,6 @@ export interface OptimizationOptions {
 
 export interface OptimizeOptions {
   /**
-   * baseline value to shift the intensity of data and peak
-   */
-  baseline?: number;
-  /**
    * Kind of shape used for fitting.
    **/
   shape?: Shape1D;
@@ -126,17 +122,16 @@ export function optimize<T extends Peak>(
   peaks: Array<OptimizedPeakIDOrNot<T>>;
   iterations: number;
 } {
-  // rescale data
-  const temp = xMinMaxValues(data.y);
-  const minMaxY = { ...temp, range: temp.max - temp.min };
+  // rescale data so the maximum Y value becomes 1
+  const max = xMaxAbsoluteValue(data.y);
+  const yScale = max === 0 ? 1 : max;
 
-  const internalPeaks = getInternalPeaks(peaks, minMaxY, options);
+  const internalPeaks = getInternalPeaks(peaks, yScale, options);
 
   // need to rescale what is related to Y
-  const { baseline: shiftValue = minMaxY.min } = options;
   const normalizedY = new Float64Array(data.y.length);
   for (let i = 0; i < data.y.length; i++) {
-    normalizedY[i] = (data.y[i] - shiftValue) / minMaxY.range;
+    normalizedY[i] = data.y[i] / yScale;
   }
 
   const { freeIndices, globalMin, globalMax, globalInit, globalGrad } =
@@ -154,8 +149,7 @@ export function optimize<T extends Peak>(
       data.x,
       globalInit,
       baseSumOfShapes,
-      minMaxY,
-      shiftValue,
+      yScale,
     );
   }
 
@@ -228,7 +222,7 @@ export function optimize<T extends Peak>(
     }
 
     newPeak.x = fittedValues[fromIndex];
-    newPeak.y = fittedValues[fromIndex + 1] * minMaxY.range + shiftValue;
+    newPeak.y = fittedValues[fromIndex + 1] * yScale;
     for (let i = 2; i < parameters.length; i++) {
       //@ts-expect-error should be fixed once
       newPeak.shape[parameters[i]] = fittedValues[fromIndex + i];

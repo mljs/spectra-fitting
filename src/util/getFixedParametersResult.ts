@@ -10,8 +10,7 @@ export function getFixedParametersResult<T extends Peak>(
   x: NumberArray,
   globalInit: Float64Array,
   baseSumOfShapes: (parameters: number[]) => (x: number) => number,
-  minMaxY: { min: number; max: number; range: number },
-  shiftValue: number,
+  yScale: number,
 ): {
   error: number;
   iterations: number;
@@ -27,7 +26,7 @@ export function getFixedParametersResult<T extends Peak>(
       newPeak = { ...newPeak, id };
     }
     newPeak.x = fittedValues[fromIndex];
-    newPeak.y = fittedValues[fromIndex + 1] * minMaxY.range + shiftValue;
+    newPeak.y = fittedValues[fromIndex + 1] * yScale;
     for (let i = 2; i < parameters.length; i++) {
       //@ts-expect-error it is right step
       newPeak.shape[parameters[i]] = fittedValues[fromIndex + i];

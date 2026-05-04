@@ -29,7 +29,6 @@ describe('getFixedParametersResult', () => {
       [0.1, 0.2],
       Float64Array.from([1, 2, 3, 4]),
       () => (x) => x,
-      { min: 0, max: 1, range: 10 },
       5,
     );
 
@@ -40,7 +39,7 @@ describe('getFixedParametersResult', () => {
         {
           id: 'peak-1',
           x: 1,
-          y: 25,
+          y: 10,
           shape: { kind: 'pseudoVoigt', fwhm: 3, mu: 4 },
         },
       ],

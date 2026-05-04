@@ -29,17 +29,16 @@ export interface InternalPeak {
  */
 export function getInternalPeaks(
   peaks: Peak[],
-  minMaxY: { min: number; max: number; range: number },
+  yScale: number,
   options: OptimizeOptions = {},
 ) {
   let index = 0;
   const internalPeaks: InternalPeak[] = [];
-  const { baseline: shiftValue = minMaxY.min } = options;
 
   const normalizedPeaks = peaks.map((peak) => {
     return {
       ...peak,
-      y: (peak.y - shiftValue) / minMaxY.range,
+      y: peak.y / yScale,
     };
   });
 
@@ -67,8 +66,7 @@ export function getInternalPeaks(
             propertyValue,
             parameter,
             property,
-            minMaxY,
-            options.baseline,
+            yScale,
           );
 
           propertiesValues[property].push(propertyValue);
@@ -84,20 +82,13 @@ export function getInternalPeaks(
               generalParameterValue,
               parameter,
               property,
-              minMaxY,
-              options.baseline,
+              yScale,
             );
             propertiesValues[property].push(generalParameterValue);
             continue;
           } else {
             let value = generalParameterValue(peak);
-            value = getNormalizedValue(
-              value,
-              parameter,
-              property,
-              minMaxY,
-              options.baseline,
-            );
+            value = getNormalizedValue(value, parameter, property, yScale);
             propertiesValues[property].push(value);
             continue;
           }
@@ -135,16 +126,13 @@ function getNormalizedValue(
   value: number,
   parameter: string,
   property: string,
-  minMaxY: { min: number; max: number; range: number },
-  baseline?: number,
+  yScale: number,
 ): number {
   if (parameter === 'y') {
     if (property === 'gradientDifference') {
       return value;
     } else {
-      return baseline !== undefined
-        ? (value - baseline) / minMaxY.range
-        : (value - minMaxY.min) / minMaxY.range;
+      return value / yScale;
     }
   }
   return value;
