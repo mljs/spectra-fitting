@@ -1,5 +1,16 @@
 # Changelog
 
+## [6.0.0](https://github.com/mljs/spectra-fitting/compare/v5.0.1...v6.0.0) (2026-05-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* optimize parameters on demand by optimize flag ([#117](https://github.com/mljs/spectra-fitting/issues/117))
+
+### Features
+
+* optimize parameters on demand by optimize flag ([#117](https://github.com/mljs/spectra-fitting/issues/117)) ([f45ee0a](https://github.com/mljs/spectra-fitting/commit/f45ee0a61adefe338fdb20b9a49b189ce3b585e8))
+
 ## [5.0.1](https://github.com/mljs/spectra-fitting/compare/v5.0.0...v5.0.1) (2025-06-13)
 
 
