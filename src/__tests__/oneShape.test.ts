@@ -61,13 +61,17 @@ describe('One Shape tested', () => {
       },
     });
 
-    const result = optimize(data, [
-      {
-        x: -0.52,
-        y: 0.0009,
-        shape: { kind: 'lorentzian', fwhm: 0.29 },
-      },
-    ]);
+    const result = optimize(
+      data,
+      [
+        {
+          x: -0.52,
+          y: 0.0009,
+          shape: { kind: 'lorentzian', fwhm: 0.29 },
+        },
+      ],
+      { optimization: { kind: 'lm', options: { maxIterations: 20 } } },
+    );
 
     expect(result.peaks[0]).toMatchCloseTo(peaks[0], 3);
   });

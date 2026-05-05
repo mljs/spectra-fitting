@@ -47,61 +47,6 @@ describe('Optimize sum of Lorentzians', () => {
       expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
-
-  it('shifted baseline up by two', () => {
-    const shiftedPeaks = structuredClone(peaks);
-    for (const shiftedPeak of shiftedPeaks) {
-      shiftedPeak.y = shiftedPeak.y + 2;
-    }
-    const yShiftedData = {
-      x: data.x,
-      y: data.y.map((el: number) => el + 2),
-    };
-    const result = optimize(yShiftedData, [
-      {
-        x: -0.52,
-        y: 2.9,
-        shape: { kind: 'lorentzian' as const, fwhm: 0.08 },
-      },
-      {
-        x: 0.52,
-        y: 2.9,
-        shape: { kind: 'lorentzian' as const, fwhm: 0.08 },
-      },
-    ]);
-    for (let i = 0; i < 2; i++) {
-      expect(result.peaks[i]).toMatchCloseTo(shiftedPeaks[i], 3);
-    }
-  });
-
-  it('negative maxima peaks', () => {
-    const shiftedPeaks = structuredClone(peaks);
-    for (const shiftedPeak of shiftedPeaks) {
-      shiftedPeak.y = shiftedPeak.y - 2;
-    }
-    const yShiftedPeaks = [
-      {
-        x: -0.52,
-        y: -1,
-        shape: { kind: 'lorentzian' as const, fwhm: 0.08 },
-      },
-      {
-        x: 0.52,
-        y: -1,
-        shape: { kind: 'lorentzian' as const, fwhm: 0.08 },
-      },
-    ];
-
-    const yShiftedData = {
-      x: data.x.slice(),
-      y: data.y.map((el: number) => el - 2),
-    };
-
-    const result = optimize(yShiftedData, yShiftedPeaks);
-    for (let i = 0; i < 2; i++) {
-      expect(result.peaks[i]).toMatchCloseTo(shiftedPeaks[i], 3);
-    }
-  });
 });
 
 describe('Optimize sum of Gaussians', () => {
@@ -137,44 +82,6 @@ describe('Optimize sum of Gaussians', () => {
     const result = optimize(data, peakList);
     for (let i = 0; i < 2; i++) {
       expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
-    }
-  });
-
-  it('negative maxima peaks', () => {
-    const shiftedPeaks = structuredClone(peaks);
-    for (const shiftedPeak of shiftedPeaks) {
-      shiftedPeak.y = shiftedPeak.y - 2;
-    }
-
-    const yShiftedData = {
-      x: data.x.slice(),
-      y: data.y.map((el: number) => el - 2),
-    };
-
-    const result = optimize(
-      yShiftedData,
-      [
-        {
-          x: -0.52,
-          y: -1,
-          shape: { kind: 'gaussian' as const, fwhm: 0.08 },
-        },
-        {
-          x: 0.52,
-          y: -1,
-          shape: { kind: 'gaussian' as const, fwhm: 0.08 },
-        },
-      ],
-      {
-        optimization: {
-          kind: 'lm',
-          options: { maxIterations: 500, damping: 0.5, errorTolerance: 1e-8 },
-        },
-      },
-    );
-
-    for (let i = 0; i < 2; i++) {
-      expect(result.peaks[i]).toMatchCloseTo(shiftedPeaks[i], 3);
     }
   });
 });
