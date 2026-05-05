@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.0.1](https://github.com/mljs/spectra-fitting/compare/v6.0.0...v6.0.1) (2026-05-05)
+
+
+### Bug Fixes
+
+* dummy commit to release with the content of 6.0.0 ([#119](https://github.com/mljs/spectra-fitting/issues/119)) ([2c39a2a](https://github.com/mljs/spectra-fitting/commit/2c39a2ac495566a87038b09f0a967bef3b11f229))
+
 ## [6.0.0](https://github.com/mljs/spectra-fitting/compare/v5.0.1...v6.0.0) (2026-05-05)
 
 
