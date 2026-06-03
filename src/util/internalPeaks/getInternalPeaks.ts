@@ -6,7 +6,7 @@ import { assert } from '../assert.ts';
 
 import { DefaultParameters } from './DefaultParameters.ts';
 
-type Parameter = 'x' | 'y' | 'fwhm' | 'mu' | 'gamma';
+type Parameter = 'x' | 'y' | 'fwhm' | 'mu' | 'gamma' | 'fwhmG' | 'fwhmL';
 
 type Property = 'init' | 'min' | 'max' | 'gradientDifference';
 const properties: Property[] = ['init', 'min', 'max', 'gradientDifference'];
