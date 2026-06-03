@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.1.0](https://github.com/mljs/spectra-fitting/compare/v6.0.1...v6.1.0) (2026-06-03)
+
+
+### Features
+
+* improve speed do not update peak.shapeFct[...] every time the returned function is evaluated at an x ([#121](https://github.com/mljs/spectra-fitting/issues/121)) ([199679e](https://github.com/mljs/spectra-fitting/commit/199679e3968cd0d4748d16f8a4144f964cdec929))
+
 ## [6.0.1](https://github.com/mljs/spectra-fitting/compare/v6.0.0...v6.0.1) (2026-05-05)
 
 
