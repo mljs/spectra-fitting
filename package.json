@@ -61,7 +61,7 @@
     "cheminfo-types": "^1.7.2",
     "ml-direct": "^1.0.0",
     "ml-levenberg-marquardt": "^5.0.0",
-    "ml-peak-shape-generator": "^4.1.4",
+    "ml-peak-shape-generator": "^5.1.0",
     "ml-spectra-processing": "^14.2.0"
   }
 }

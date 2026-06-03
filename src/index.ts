@@ -153,16 +153,6 @@ export function optimize<T extends Peak>(
     );
   }
 
-  // wrapper that maps reduced (free) parameters into the full parameter vector
-  const sumOfShapesForReduced = (reducedParameters: number[]) => {
-    const full = new Float64Array(nbParams);
-    full.set(globalInit);
-    for (let k = 0; k < freeIndices.length; k++) {
-      full[freeIndices[k]] = reducedParameters[k];
-    }
-    return baseSumOfShapes(Array.from(full));
-  };
-
   // prepare arrays to pass to the algorithm (reduced if needed)
   let minValues: Float64Array;
   let maxValues: Float64Array;
@@ -177,6 +167,16 @@ export function optimize<T extends Peak>(
     initialValues = globalInit;
     gradientDifferences = globalGrad;
   } else {
+    // wrapper that maps reduced (free) parameters into the full parameter vector
+    const sumOfShapesForReduced = (reducedParameters: number[]) => {
+      const full = new Float64Array(nbParams);
+      full.set(globalInit);
+      for (let k = 0; k < freeIndices.length; k++) {
+        full[freeIndices[k]] = reducedParameters[k];
+      }
+      return baseSumOfShapes(Array.from(full));
+    };
+
     minValues = new Float64Array(freeIndices.length);
     maxValues = new Float64Array(freeIndices.length);
     initialValues = new Float64Array(freeIndices.length);
