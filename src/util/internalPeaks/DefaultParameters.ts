@@ -29,6 +29,22 @@ export const DefaultParameters = {
     gradientDifference: (peak: Peak, peakShape: Shape1DInstance) =>
       peakShape.fwhm * 2e-3,
   },
+  fwhmG: {
+    init: (peak: Peak, peakShape: Shape1DInstance) => peakShape.fwhm * 0.6,
+    min: (peak: Peak, peakShape: Shape1DInstance) =>
+      peakShape.fwhm * 0.6 * 0.25,
+    max: (peak: Peak, peakShape: Shape1DInstance) => peakShape.fwhm * 0.6 * 4,
+    gradientDifference: (peak: Peak, peakShape: Shape1DInstance) =>
+      peakShape.fwhm * 0.6 * 2e-3,
+  },
+  fwhmL: {
+    init: (peak: Peak, peakShape: Shape1DInstance) => peakShape.fwhm * 0.4,
+    min: (peak: Peak, peakShape: Shape1DInstance) =>
+      peakShape.fwhm * 0.4 * 0.25,
+    max: (peak: Peak, peakShape: Shape1DInstance) => peakShape.fwhm * 0.4 * 4,
+    gradientDifference: (peak: Peak, peakShape: Shape1DInstance) =>
+      peakShape.fwhm * 0.4 * 2e-3,
+  },
   mu: {
     init: (peak: Peak, peakShape: PseudoVoigt) => peakShape.mu,
     min: () => 0,
