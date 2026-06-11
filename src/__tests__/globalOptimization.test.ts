@@ -54,6 +54,7 @@ describe('Optimize sum of Gaussians', () => {
   );
   for (let i = 0; i < 2; i++) {
     const peak = peaks[i];
+    // eslint-disable-next-line vitest/prefer-each -- dynamic test generation over peak keys
     for (const key in peak) {
       //@ts-expect-error to be improved
       const value = peak[key];

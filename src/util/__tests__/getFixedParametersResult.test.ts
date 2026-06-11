@@ -4,6 +4,9 @@ import type { Peak } from '../../index.ts';
 import { getFixedParametersResult } from '../getFixedParametersResult.ts';
 import type { InternalPeak } from '../internalPeaks/getInternalPeaks.ts';
 
+const identity = (x: number) => x;
+const identitySumOfShapes = () => identity;
+
 describe('getFixedParametersResult', () => {
   it('rebuilds peaks and computes the fitting error', () => {
     const internalPeaks: InternalPeak[] = [
@@ -28,7 +31,7 @@ describe('getFixedParametersResult', () => {
       Float64Array.from([0.1, 0.2]),
       [0.1, 0.2],
       Float64Array.from([1, 2, 3, 4]),
-      () => (x) => x,
+      identitySumOfShapes,
       5,
     );
 

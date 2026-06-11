@@ -4,7 +4,8 @@ import type { OptimizationOptions } from '../index.ts';
 
 import { directOptimization } from './wrappers/directOptimization.ts';
 
-/** Algorithm to select the method.
+/**
+ * Algorithm to select the method.
  * @param optimizationOptions - Optimization options
  * @returns - The algorithm and optimization options
  */

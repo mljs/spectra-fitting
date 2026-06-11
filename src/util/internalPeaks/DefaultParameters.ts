@@ -1,7 +1,7 @@
 import type {
-  Shape1DInstance,
-  PseudoVoigt,
   GeneralizedLorentzian,
+  PseudoVoigt,
+  Shape1DInstance,
 } from 'ml-peak-shape-generator';
 
 import type { Peak } from '../../index.ts';

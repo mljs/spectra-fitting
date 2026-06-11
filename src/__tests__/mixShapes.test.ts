@@ -49,11 +49,12 @@ describe('Sum of a mix of distributions', () => {
     );
     // we have a little bit more error on mu
     //@ts-expect-error we ignoere this ts error
-    peaks.forEach((peak) => peak.shape.mu && delete peak.shape.mu);
+    for (const peak of peaks) if (peak.shape.mu) delete peak.shape.mu;
     for (let i = 0; i < result.peaks.length; i++) {
       expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
+
   it('2 peaks same position', () => {
     const peaks = [
       {
@@ -87,11 +88,12 @@ describe('Sum of a mix of distributions', () => {
     ]);
     // we have a little bit more error on mu
     //@ts-expect-error we ignoere this ts error
-    peaks.forEach((peak) => peak.shape.mu && delete peak.shape.mu);
+    for (const peak of peaks) if (peak.shape.mu) delete peak.shape.mu;
     for (let i = 0; i < result.peaks.length; i++) {
       expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
+
   // it seems CI needs extra time for this test
   it('20 peaks with overlap', { timeout: 10000 }, () => {
     const nbPeaks = 5;
@@ -112,18 +114,21 @@ describe('Sum of a mix of distributions', () => {
     });
 
     const guess = structuredClone(peaks);
-    guess.forEach((peak: { x: number }) => (peak.x += Math.random() / 10));
+    for (const peak of guess as Array<{ x: number }>) {
+      peak.x += Math.random() / 10;
+    }
 
     const result = optimize(data, guess, {
       optimization: { options: { maxIterations: 10 } },
     });
     // we have a little bit more error on mu
     //@ts-expect-error we ignore this ts error
-    peaks.forEach((peak) => peak.shape.mu && delete peak.shape.mu);
+    for (const peak of peaks) if (peak.shape.mu) delete peak.shape.mu;
     for (let i = 0; i < result.peaks.length; i++) {
       expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
   });
+
   it('6 peaks', () => {
     const peaks = [
       {
@@ -206,7 +211,7 @@ describe('Sum of a mix of distributions', () => {
 
     // we have a little bit more error on mu
     //@ts-expect-error we ignoere this ts error
-    peaks.forEach((peak) => peak.shape.mu && delete peak.shape.mu);
+    for (const peak of peaks) if (peak.shape.mu) delete peak.shape.mu;
     for (let i = 0; i < result.peaks.length; i++) {
       expect(result.peaks[i]).toMatchCloseTo(peaks[i], 3);
     }
