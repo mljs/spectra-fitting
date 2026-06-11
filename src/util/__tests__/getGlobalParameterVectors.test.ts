@@ -44,10 +44,10 @@ describe('getGlobalParameterVectors', () => {
       },
     });
 
-    expect(result.freeIndices).toEqual([1, 3]);
-    expect(Array.from(result.globalMin)).toEqual([1, 2, 3, 4]);
-    expect(Array.from(result.globalMax)).toEqual([5, 6, 7, 8]);
-    expect(Array.from(result.globalInit)).toEqual([9, 10, 11, 12]);
-    expect(Array.from(result.globalGrad)).toEqual([13, 14, 15, 16]);
+    expect(result.freeIndices).toStrictEqual([1, 3]);
+    expect(Array.from(result.globalMin)).toStrictEqual([1, 2, 3, 4]);
+    expect(Array.from(result.globalMax)).toStrictEqual([5, 6, 7, 8]);
+    expect(Array.from(result.globalInit)).toStrictEqual([9, 10, 11, 12]);
+    expect(Array.from(result.globalGrad)).toStrictEqual([13, 14, 15, 16]);
   });
 });

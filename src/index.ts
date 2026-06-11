@@ -11,14 +11,20 @@ import type { InternalDirectOptimizationOptions } from './util/wrappers/directOp
 
 export interface InitialParameter {
   init?: OptimizationParameter;
-  /** definition of the lower limit of the parameter,
-   *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the min of the first peak and so on. */
+  /**
+   * definition of the lower limit of the parameter,
+   *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the min of the first peak and so on.
+   */
   min?: OptimizationParameter;
-  /** definition of the upper limit of the parameter,
-   *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the max of the first peak and so on. */
+  /**
+   * definition of the upper limit of the parameter,
+   *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the max of the first peak and so on.
+   */
   max?: OptimizationParameter;
-  /** definition of  the step size to approximate the jacobian matrix of the parameter,
-   *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the gradientDifference of the first peak and so on. */
+  /**
+   * definition of  the step size to approximate the jacobian matrix of the parameter,
+   *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the gradientDifference of the first peak and so on.
+   */
   gradientDifference?: OptimizationParameter;
   /** whether this parameter should be optimized (true by default) */
   optimize?: OptimizeFlag;
@@ -56,7 +62,8 @@ export type OptimizedPeakIDOrNot<T extends Peak> = T extends { id: string }
 type OptimizationParameter = number | ((peak: Peak) => number);
 
 interface GeneralAlgorithmOptions {
-  /** number of max iterations
+  /**
+   * number of max iterations
    * @default 100
    */
   maxIterations?: number;
@@ -64,11 +71,13 @@ interface GeneralAlgorithmOptions {
 export interface LMOptimizationOptions extends GeneralAlgorithmOptions {
   /** maximum time running before break in seconds */
   timeout?: number;
-  /** damping factor
+  /**
+   * damping factor
    * @default 1.5
    */
   damping?: number;
-  /** error tolerance
+  /**
+   * error tolerance
    * @default 1e-8
    */
   errorTolerance?: number;
@@ -90,7 +99,7 @@ export interface OptimizationOptions {
 export interface OptimizeOptions {
   /**
    * Kind of shape used for fitting.
-   **/
+   */
   shape?: Shape1D;
   /**
    *  options of each parameter to be optimized e.g. For a pseudovoigt shape
@@ -107,7 +116,6 @@ export interface OptimizeOptions {
 
 /**
  * Fits a set of points to the sum of a set of bell functions.
- *
  * @param data - An object containing the x and y data to be fitted.
  * @param peaks - A list of initial parameters to be optimized. e.g. coming from a peak picking [{x, y, width}].
  * @param options - Options for optimize

@@ -41,11 +41,11 @@ export function directOptimization(
     },
   );
 
-  const { optima } = result;
+  const { optima, minFunctionValue, iterations } = result;
 
   return {
-    parameterError: result.minFunctionValue,
-    iterations: result.iterations,
+    parameterError: minFunctionValue,
+    iterations,
     parameterValues: optima[0],
   };
 }

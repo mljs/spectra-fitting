@@ -1,3 +1,4 @@
+/* eslint-disable vitest/prefer-importing-vitest-globals -- `assert` is the local util under test, not the vitest global */
 import { describe, expect, it } from 'vitest';
 
 import { assert } from '../assert.ts';

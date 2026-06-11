@@ -21,8 +21,8 @@ describe('Optimize only fwhm', () => {
     });
 
     const initial = [
-      { x: -0.5, y: 1.0, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
-      { x: 0.5, y: 1.0, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+      { x: -0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+      { x: 0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
     ];
 
     const result = optimize(data, initial, {

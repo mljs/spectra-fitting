@@ -36,6 +36,7 @@ describe('One Shape tested', () => {
         shape: { kind: 'gaussian', fwhm: 0.35 },
       },
     ]);
+
     expect(result.peaks[0]).toMatchCloseTo(peaks[0], 3);
   });
 
@@ -111,6 +112,7 @@ describe('One Shape tested', () => {
 
     expect(result.peaks[0]).toMatchCloseTo(peaks[0], 2);
   });
+
   it('generalized Lorentzian', () => {
     const peaks = [
       {
@@ -152,6 +154,7 @@ describe('One Shape tested', () => {
         },
       },
     );
+
     expect(result.peaks[0].shape.fwhm).toBeCloseTo(0.31, 4);
     expect(result.peaks[0].x).toBeCloseTo(0, 5);
     expect(result.peaks[0].y).toBeCloseTo(0.001, 5);

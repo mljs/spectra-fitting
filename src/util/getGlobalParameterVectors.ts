@@ -1,5 +1,6 @@
 import type { OptimizeOptions, Peak } from '../index.ts';
 
+import { assert } from './assert.ts';
 import type { InternalPeak } from './internalPeaks/getInternalPeaks.ts';
 
 export interface GlobalParameterVectors {
@@ -15,7 +16,9 @@ export function getGlobalParameterVectors(
   peaks: Peak[],
   options: OptimizeOptions,
 ): GlobalParameterVectors {
-  const nbParams = internalPeaks[internalPeaks.length - 1].toIndex + 1;
+  const lastPeak = internalPeaks.at(-1);
+  assert(lastPeak);
+  const nbParams = lastPeak.toIndex + 1;
   const globalMin = new Float64Array(nbParams);
   const globalMax = new Float64Array(nbParams);
   const globalInit = new Float64Array(nbParams);

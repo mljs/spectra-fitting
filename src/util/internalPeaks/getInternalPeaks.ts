@@ -1,7 +1,7 @@
 import type { Shape1D, Shape1DInstance } from 'ml-peak-shape-generator';
 import { getShape1D } from 'ml-peak-shape-generator';
 
-import type { Peak, OptimizeOptions } from '../../index.ts';
+import type { OptimizeOptions, Peak } from '../../index.ts';
 import { assert } from '../assert.ts';
 
 import { DefaultParameters } from './DefaultParameters.ts';
@@ -24,6 +24,7 @@ export interface InternalPeak {
  * Return an array of internalPeaks that contains the exact init, min, max values based on the options
  * @param peaks
  * @param minMaxY
+ * @param yScale
  * @param options
  * @returns
  */
@@ -43,8 +44,7 @@ export function getInternalPeaks(
   });
 
   for (const peak of normalizedPeaks) {
-    const { id, shape = options.shape ? options.shape : { kind: 'gaussian' } } =
-      peak;
+    const { id, shape = options.shape || { kind: 'gaussian' } } = peak;
 
     const shapeFct: Shape1DInstance = getShape1D(shape);
 
