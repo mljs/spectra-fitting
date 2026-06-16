@@ -3,9 +3,10 @@ import type { Shape1D } from 'ml-peak-shape-generator';
 import { xMaxAbsoluteValue } from 'ml-spectra-processing';
 
 import { getSumOfShapes } from './shapes/getSumOfShapes.ts';
+import { buildOptimizationLayout } from './util/buildOptimizationLayout.ts';
 import { getFixedParametersResult } from './util/getFixedParametersResult.ts';
-import { getGlobalParameterVectors } from './util/getGlobalParameterVectors.ts';
 import { getInternalPeaks } from './util/internalPeaks/getInternalPeaks.ts';
+import { reconstructPeaks } from './util/reconstructPeaks.ts';
 import { selectMethod } from './util/selectMethod.ts';
 import type { InternalDirectOptimizationOptions } from './util/wrappers/directOptimization.js';
 
@@ -96,6 +97,17 @@ export interface OptimizationOptions {
   options?: DirectOptimizationOptions | LMOptimizationOptions;
 }
 
+export interface ParameterGroupMember {
+  peak: number | string;
+  factor?: number;
+  offset?: number;
+}
+
+export interface ParameterGroup {
+  parameter: string;
+  members: ParameterGroupMember[];
+}
+
 export interface OptimizeOptions {
   /**
    * Kind of shape used for fitting.
@@ -108,6 +120,11 @@ export interface OptimizeOptions {
    *  array of numbers, callback, or array of callbacks. Each kind of shape has default parameters so it could be undefined
    */
   parameters?: Record<string, InitialParameter>;
+  /**
+   * Groups parameters from multiple peaks into a shared optimization variable.
+   * The actual peak value is reconstructed as sharedVariable * factor + offset.
+   */
+  parameterGroups?: ParameterGroup[];
   /**
    * The kind and options of the algorithm use to optimize parameters.
    */
@@ -135,27 +152,43 @@ export function optimize<T extends Peak>(
   const yScale = max === 0 ? 1 : max;
 
   const internalPeaks = getInternalPeaks(peaks, yScale, options);
-
   // need to rescale what is related to Y
   const normalizedY = new Float64Array(data.y.length);
   for (let i = 0; i < data.y.length; i++) {
     normalizedY[i] = data.y[i] / yScale;
   }
 
-  const { freeIndices, globalMin, globalMax, globalInit, globalGrad } =
-    getGlobalParameterVectors(internalPeaks, peaks, options);
-  const nbParams = globalInit.length;
+  const optimizationLayout = buildOptimizationLayout(
+    internalPeaks,
+    peaks,
+    options,
+    yScale,
+  );
+
+  const {
+    freeIndices,
+    variableMin,
+    variableMax,
+    variableInit,
+    variableGrad,
+    variables,
+  } = optimizationLayout;
 
   const { algorithm, optimizationOptions } = selectMethod(options.optimization);
 
   const baseSumOfShapes = getSumOfShapes(internalPeaks);
+  const sumOfShapesForVariables = (variableValues: number[]) => {
+    return baseSumOfShapes(
+      optimizationLayout.variableToPeakValues(variableValues),
+    );
+  };
 
   if (freeIndices.length === 0) {
     return getFixedParametersResult<T>(
       internalPeaks,
       normalizedY,
       data.x,
-      globalInit,
+      Float64Array.from(optimizationLayout.variableToPeakValues(variableInit)),
       baseSumOfShapes,
       yScale,
     );
@@ -166,23 +199,23 @@ export function optimize<T extends Peak>(
   let maxValues: Float64Array;
   let initialValues: Float64Array;
   let gradientDifferences: Float64Array;
-  let sumOfShapesToUse = baseSumOfShapes;
+  let sumOfShapesToUse = sumOfShapesForVariables;
 
-  if (freeIndices.length === nbParams) {
+  if (freeIndices.length === variables.length) {
     // nothing to reduce
-    minValues = globalMin;
-    maxValues = globalMax;
-    initialValues = globalInit;
-    gradientDifferences = globalGrad;
+    minValues = variableMin;
+    maxValues = variableMax;
+    initialValues = variableInit;
+    gradientDifferences = variableGrad;
   } else {
     // wrapper that maps reduced (free) parameters into the full parameter vector
     const sumOfShapesForReduced = (reducedParameters: number[]) => {
-      const full = new Float64Array(nbParams);
-      full.set(globalInit);
+      const full = new Float64Array(variables.length);
+      full.set(variableInit);
       for (let k = 0; k < freeIndices.length; k++) {
         full[freeIndices[k]] = reducedParameters[k];
       }
-      return baseSumOfShapes(Array.from(full));
+      return sumOfShapesForVariables(Array.from(full));
     };
 
     minValues = new Float64Array(freeIndices.length);
@@ -191,10 +224,10 @@ export function optimize<T extends Peak>(
     gradientDifferences = new Float64Array(freeIndices.length);
     for (let j = 0; j < freeIndices.length; j++) {
       const i = freeIndices[j];
-      minValues[j] = globalMin[i];
-      maxValues[j] = globalMax[i];
-      initialValues[j] = globalInit[i];
-      gradientDifferences[j] = globalGrad[i];
+      minValues[j] = variableMin[i];
+      maxValues[j] = variableMax[i];
+      initialValues[j] = variableInit[i];
+      gradientDifferences[j] = variableGrad[i];
     }
     sumOfShapesToUse = sumOfShapesForReduced;
   }
@@ -207,40 +240,23 @@ export function optimize<T extends Peak>(
     ...optimizationOptions,
   });
 
-  // reconstruct full parameter vector
-  let fittedValues: number[];
-  if (freeIndices.length === nbParams) {
-    fittedValues = fitted.parameterValues;
+  let fittedVariableValues: number[];
+  if (freeIndices.length === variables.length) {
+    fittedVariableValues = fitted.parameterValues;
   } else {
-    const full = Array.from(globalInit);
+    const full = Array.from(variableInit);
     for (let k = 0; k < freeIndices.length; k++) {
       full[freeIndices[k]] = fitted.parameterValues[k];
     }
-    fittedValues = full;
+    fittedVariableValues = full;
   }
 
-  const newPeaks = [];
-  for (const peak of internalPeaks) {
-    const { id, shape, parameters, fromIndex } = peak;
-
-    let newPeak = { x: 0, y: 0, shape } as OptimizedPeakIDOrNot<T>;
-
-    if (id) {
-      newPeak = { ...newPeak, id };
-    }
-
-    newPeak.x = fittedValues[fromIndex];
-    newPeak.y = fittedValues[fromIndex + 1] * yScale;
-    for (let i = 2; i < parameters.length; i++) {
-      //@ts-expect-error should be fixed once
-      newPeak.shape[parameters[i]] = fittedValues[fromIndex + i];
-    }
-    newPeaks.push(newPeak);
-  }
+  const fittedValues =
+    optimizationLayout.variableToPeakValues(fittedVariableValues);
 
   return {
     error: fitted.parameterError,
     iterations: fitted.iterations,
-    peaks: newPeaks,
+    peaks: reconstructPeaks<T>(internalPeaks, fittedValues, yScale),
   };
 }
