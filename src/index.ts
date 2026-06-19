@@ -97,15 +97,15 @@ export interface OptimizationOptions {
   options?: DirectOptimizationOptions | LMOptimizationOptions;
 }
 
-export interface ParameterGroupMember {
-  peak: number | string;
+export interface LinkedParameterPeak {
+  id: number | string;
   factor?: number;
   offset?: number;
 }
 
-export interface ParameterGroup {
+export interface LinkedParameter {
   parameter: string;
-  members: ParameterGroupMember[];
+  peaks: LinkedParameterPeak[];
 }
 
 export interface OptimizeOptions {
@@ -121,10 +121,10 @@ export interface OptimizeOptions {
    */
   parameters?: Record<string, InitialParameter>;
   /**
-   * Groups parameters from multiple peaks into a shared optimization variable.
+   * Links parameters from multiple peaks into a shared optimization variable.
    * The actual peak value is reconstructed as sharedVariable * factor + offset.
    */
-  parameterGroups?: ParameterGroup[];
+  linkedParameters?: LinkedParameter[];
   /**
    * The kind and options of the algorithm use to optimize parameters.
    */

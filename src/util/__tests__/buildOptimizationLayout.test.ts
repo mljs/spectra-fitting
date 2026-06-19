@@ -103,10 +103,10 @@ describe('buildOptimizationLayout', () => {
     ];
 
     const layout = buildOptimizationLayout(internalPeaks, peaks, {
-      parameterGroups: [
+      linkedParameters: [
         {
           parameter: 'fwhm',
-          members: [{ peak: 'A' }, { peak: 'B', factor: 2, offset: 0.1 }],
+          peaks: [{ id: 'A' }, { id: 'B', factor: 2, offset: 0.1 }],
         },
       ],
     });
@@ -175,10 +175,10 @@ describe('buildOptimizationLayout', () => {
 
     expect(() =>
       buildOptimizationLayout(internalPeaks, peaks, {
-        parameterGroups: [
+        linkedParameters: [
           {
             parameter: 'fwhm',
-            members: [{ peak: 'A' }, { peak: 'B' }],
+            peaks: [{ id: 'A' }, { id: 'B' }],
           },
         ],
       }),

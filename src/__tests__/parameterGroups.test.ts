@@ -51,10 +51,10 @@ describe('optimize with parameter groups', () => {
           x: { optimize: false },
           y: { optimize: false },
         },
-        parameterGroups: [
+        linkedParameters: [
           {
             parameter: 'fwhm',
-            members: [{ peak: 'left' }, { peak: 'right' }],
+            peaks: [{ id: 'left' }, { id: 'right' }],
           },
         ],
       },
@@ -119,12 +119,12 @@ describe('optimize with parameter groups', () => {
           x: { optimize: false },
           fwhm: { optimize: false },
         },
-        parameterGroups: [
+        linkedParameters: [
           {
             parameter: 'y',
-            members: [
-              { peak: 'A', factor: 1 },
-              { peak: 'B', factor: 2 },
+            peaks: [
+              { id: 'A', factor: 1 },
+              { id: 'B', factor: 2 },
             ],
           },
         ],
@@ -200,13 +200,13 @@ describe('optimize with parameter groups', () => {
           y: { optimize: false },
           fwhm: { optimize: false },
         },
-        parameterGroups: [
+        linkedParameters: [
           {
             parameter: 'x',
-            members: [
-              { peak: 'P1', offset: -0.2 },
-              { peak: 'P2' },
-              { peak: 'P3', offset: 0.2 },
+            peaks: [
+              { id: 'P1', offset: -0.2 },
+              { id: 'P2' },
+              { id: 'P3', offset: 0.2 },
             ],
           },
         ],

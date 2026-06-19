@@ -1,9 +1,9 @@
 import { xMean } from 'ml-spectra-processing';
 
 import type {
+  LinkedParameter,
+  LinkedParameterPeak,
   OptimizeOptions,
-  ParameterGroup,
-  ParameterGroupMember,
   Peak,
 } from '../index.ts';
 
@@ -75,7 +75,7 @@ export function buildOptimizationLayout(
   const slots = buildParameterSlots(internalPeaks, peaks, options);
   const variables = buildOptimizationVariables(
     slots,
-    options.parameterGroups,
+    options.linkedParameters,
     yScale,
   );
 
@@ -149,7 +149,7 @@ function buildParameterSlots(
 
 function buildOptimizationVariables(
   slots: ParameterSlot[],
-  parameterGroups: ParameterGroup[] | undefined,
+  linkedParameters: LinkedParameter[] | undefined,
   yScale: number,
 ): OptimizationVariable[] {
   const groupedActualIndices = new Set<number>();
@@ -160,15 +160,17 @@ function buildOptimizationVariables(
     slotLookup.set(getSlotKey(slot.peakIndex, slot.parameter), slot);
     if (slot.peakId) {
       const indices = idToIndices.get(slot.peakId) ?? [];
-      indices.push(slot.peakIndex);
+      if (!indices.includes(slot.peakIndex)) {
+        indices.push(slot.peakIndex);
+      }
       idToIndices.set(slot.peakId, indices);
     }
   }
 
-  for (const group of parameterGroups ?? []) {
+  for (const linkedParameter of linkedParameters ?? []) {
     variables.push(
-      buildGroupedVariable(
-        group,
+      buildLinkedVariable(
+        linkedParameter,
         slotLookup,
         groupedActualIndices,
         idToIndices,
@@ -206,35 +208,35 @@ function buildOptimizationVariables(
   return variables.map(({ sortKey: _sortKey, ...variable }) => variable);
 }
 
-function buildGroupedVariable(
-  group: ParameterGroup,
+function buildLinkedVariable(
+  linkedParameter: LinkedParameter,
   slotLookup: Map<string, ParameterSlot>,
   groupedActualIndices: Set<number>,
   idToIndices: Map<string, number[]>,
   yScale: number,
 ): SortableVariable {
-  if (group.members.length === 0) {
+  if (linkedParameter.peaks.length === 0) {
     throw new Error(
-      `Parameter group for ${group.parameter} must contain at least one member`,
+      `Linked parameter for ${linkedParameter.parameter} must contain at least one peak`,
     );
   }
 
-  const resolvedMembers = group.members.map((member) => {
-    const slot = resolveGroupSlot(
-      member,
-      group.parameter,
+  const resolvedMembers = linkedParameter.peaks.map((peak) => {
+    const slot = resolveLinkedSlot(
+      peak,
+      linkedParameter.parameter,
       slotLookup,
       idToIndices,
     );
     if (groupedActualIndices.has(slot.actualIndex)) {
       throw new Error(
-        `Peak ${String(member.peak)} parameter ${group.parameter} is already linked`,
+        `Peak ${String(peak.id)} parameter ${linkedParameter.parameter} is already linked`,
       );
     }
     return {
       slot,
-      factor: getFactor(member, group.parameter),
-      offset: getOffset(member, group.parameter, yScale),
+      factor: getFactor(peak, linkedParameter.parameter),
+      offset: getOffset(peak, linkedParameter.parameter, yScale),
     };
   });
 
@@ -242,7 +244,7 @@ function buildGroupedVariable(
   for (const member of resolvedMembers) {
     if (memberActualIndices.has(member.slot.actualIndex)) {
       throw new Error(
-        `Parameter group for ${group.parameter} contains the same peak more than once`,
+        `Linked parameter for ${linkedParameter.parameter} contains the same peak more than once`,
       );
     }
     memberActualIndices.add(member.slot.actualIndex);
@@ -256,7 +258,7 @@ function buildGroupedVariable(
   for (const member of resolvedMembers) {
     if (member.slot.optimize !== optimize) {
       throw new Error(
-        `Linked parameter ${group.parameter} must use a consistent optimize flag across all members`,
+        `Linked parameter ${linkedParameter.parameter} must use a consistent optimize flag across all members`,
       );
     }
 
@@ -266,7 +268,7 @@ function buildGroupedVariable(
 
   if (sharedMin > sharedMax) {
     throw new Error(
-      `Linked parameter ${group.parameter} has incompatible bounds across its members`,
+      `Linked parameter ${linkedParameter.parameter} has incompatible bounds across its members`,
     );
   }
 
@@ -278,7 +280,7 @@ function buildGroupedVariable(
     sortKey: Math.min(
       ...resolvedMembers.map((member) => member.slot.actualIndex),
     ),
-    parameter: group.parameter,
+    parameter: linkedParameter.parameter,
     init: xMean(resolvedMembers.map((member) => member.slot.init)),
     min: sharedMin,
     max: sharedMax,
@@ -298,25 +300,25 @@ function buildGroupedVariable(
   };
 }
 
-function resolveGroupSlot(
-  member: ParameterGroupMember,
+function resolveLinkedSlot(
+  peak: LinkedParameterPeak,
   parameter: string,
   slotLookup: Map<string, ParameterSlot>,
   idToIndices: Map<string, number[]>,
 ): ParameterSlot {
   const peakIndex =
-    typeof member.peak === 'number'
-      ? member.peak
-      : resolvePeakIndexById(member.peak, idToIndices);
+    typeof peak.id === 'number'
+      ? peak.id
+      : resolvePeakIndexById(peak.id, idToIndices);
 
   if (!Number.isInteger(peakIndex) || peakIndex < 0) {
-    throw new Error(`Invalid peak reference ${String(member.peak)}`);
+    throw new Error(`Invalid peak reference ${String(peak.id)}`);
   }
 
   const slot = slotLookup.get(getSlotKey(peakIndex, parameter));
   if (!slot) {
     throw new Error(
-      `Unknown parameter ${parameter} for peak ${String(member.peak)}`,
+      `Unknown parameter ${parameter} for peak ${String(peak.id)}`,
     );
   }
 
@@ -331,7 +333,7 @@ function resolvePeakIndexById(
   if (!indices || indices.length === 0) {
     throw new Error(`Unknown peak id ${peakId}`);
   }
-  if (indices.every((index) => index !== indices[0])) {
+  if (new Set(indices).size > 1) {
     throw new Error(
       `Peak id ${peakId} is ambiguous because it is used by multiple peaks`,
     );
@@ -340,8 +342,8 @@ function resolvePeakIndexById(
   return indices[0];
 }
 
-function getFactor(member: ParameterGroupMember, parameter: string): number {
-  const factor = member.factor ?? 1;
+function getFactor(peak: LinkedParameterPeak, parameter: string): number {
+  const factor = peak.factor ?? 1;
   if (!Number.isFinite(factor) || factor === 0) {
     throw new Error(
       `Linked parameter ${parameter} must use a non-zero finite factor`,
@@ -351,11 +353,11 @@ function getFactor(member: ParameterGroupMember, parameter: string): number {
 }
 
 function getOffset(
-  member: ParameterGroupMember,
+  peak: LinkedParameterPeak,
   parameter: string,
   yScale: number,
 ): number {
-  const offset = member.offset ?? 0;
+  const offset = peak.offset ?? 0;
   if (!Number.isFinite(offset)) {
     throw new Error(`Linked parameter ${parameter} must use a finite offset`);
   }
