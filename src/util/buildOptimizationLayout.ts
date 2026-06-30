@@ -10,26 +10,49 @@ import type {
 import { assert } from './assert.ts';
 import type { InternalPeak } from './internalPeaks/getInternalPeaks.ts';
 
+/**
+ * Represents a concrete parameter position for a specific peak.
+ */
 export interface ParameterSlot {
+  /** Index in the flattened actual parameter vector. */
   actualIndex: number;
+  /** Zero-based index of the peak this slot belongs to. */
   peakIndex: number;
+  /** Optional peak identifier when available. */
   peakId?: string;
+  /** Name of the parameter represented by this slot. */
   parameter: string;
+  /** Initial parameter value. */
   init: number;
+  /** Lower bound for the parameter. */
   min: number;
+  /** Upper bound for the parameter. */
   max: number;
+  /** Finite difference step used for gradients. */
   gradientDifference: number;
+  /** Whether this slot participates in optimization. */
   optimize: boolean;
 }
 
+/**
+ * Describes how an optimization variable maps to a slot.
+ */
 interface VariableMemberReference {
+  /** Index in the flattened actual parameter vector. */
   actualIndex: number;
+  /** Zero-based index of the peak this member refers to. */
   peakIndex: number;
+  /** Name of the mapped parameter. */
   parameter: string;
+  /** Multiplicative transform from variable value to slot value. */
   factor: number;
+  /** Additive transform from variable value to slot value. */
   offset: number;
 }
 
+/**
+ * Represents an optimizer variable, potentially shared by multiple slots.
+ */
 export interface OptimizationVariable {
   parameter: string;
   init: number;
@@ -40,17 +63,31 @@ export interface OptimizationVariable {
   members: VariableMemberReference[];
 }
 
+/**
+ * Aggregates slots and variables used during optimization.
+ */
 export interface OptimizationLayout {
+  /** Concrete parameter slots for all peaks. */
   slots: ParameterSlot[];
+  /** Optimization variables, including shared/grouped ones. */
   variables: OptimizationVariable[];
+  /** Indices of variables marked as optimizable. */
   freeIndices: number[];
+  /** Lower bounds for each optimization variable. */
   variableMin: Float64Array;
+  /** Upper bounds for each optimization variable. */
   variableMax: Float64Array;
+  /** Initial values for each optimization variable. */
   variableInit: Float64Array;
+  /** Gradient step values for each optimization variable. */
   variableGrad: Float64Array;
+  /** Maps a variable vector back to per-slot peak values. */
   variableToPeakValues(variableValues: ArrayLike<number>): number[];
 }
 
+/**
+ * Internal variable shape with an ordering key.
+ */
 interface SortableVariable extends OptimizationVariable {
   sortKey: number;
 }
@@ -119,6 +156,13 @@ export function buildOptimizationLayout(
   };
 }
 
+/**
+ * Builds concrete parameter slots for each peak parameter.
+ * @param internalPeaks - normalized peaks containing parameter metadata
+ * @param peaks - original peaks used to resolve optimize flags
+ * @param options - optimization options with parameter settings
+ * @returns flattened parameter slots across all peaks
+ */
 function buildParameterSlots(
   internalPeaks: InternalPeak[],
   peaks: Peak[],
@@ -147,6 +191,13 @@ function buildParameterSlots(
   return slots;
 }
 
+/**
+ * Builds optimization variables from concrete parameter slots.
+ * @param slots - flattened per-peak parameter slots
+ * @param linkedParameters - optional linked parameter groups
+ * @param yScale - y normalization factor for y-offset conversion
+ * @returns sorted optimization variables ready for the optimizer
+ */
 function buildOptimizationVariables(
   slots: ParameterSlot[],
   linkedParameters: LinkedParameter[] | undefined,
