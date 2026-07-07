@@ -188,7 +188,7 @@ export function optimize<T extends Peak>(
       internalPeaks,
       normalizedY,
       data.x,
-      Float64Array.from(optimizationLayout.variableToPeakValues(variableInit)),
+      optimizationLayout.variableToPeakValues(variableInit),
       baseSumOfShapes,
       yScale,
     );
