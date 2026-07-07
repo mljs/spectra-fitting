@@ -1,9 +1,9 @@
-import type { DataXY } from 'cheminfo-types';
+import type { DataXY, DoubleArray } from 'cheminfo-types';
 import direct from 'ml-direct';
 
 export interface InternalDirectOptimizationOptions {
-  minValues: ArrayLike<number>;
-  maxValues: ArrayLike<number>;
+  minValues: DoubleArray;
+  maxValues: DoubleArray;
   maxIterations?: number;
   epsilon?: number;
   tolerance?: number;
@@ -11,9 +11,16 @@ export interface InternalDirectOptimizationOptions {
   initialState?: object;
 }
 
+/**
+ * Run a direct optimization on the provided data using a sum-of-shapes model.
+ * @param data - The observed x/y data to fit.
+ * @param sumOfShapes - A function returning the model prediction for a given parameter vector.
+ * @param options - Optimization bounds and solver options.
+ * @returns The optimized parameter values, the final objective error, and the number of iterations.
+ */
 export function directOptimization(
   data: DataXY,
-  sumOfShapes: (parameters: number[]) => (x: number) => number,
+  sumOfShapes: (parameters: DoubleArray) => (x: number) => number,
   options: InternalDirectOptimizationOptions,
 ) {
   const {
@@ -52,11 +59,11 @@ export function directOptimization(
 
 function getObjectiveFunction(
   data: DataXY,
-  sumOfShapes: (parameters: number[]) => (x: number) => number,
+  sumOfShapes: (parameters: DoubleArray) => (x: number) => number,
 ) {
   const { x, y } = data;
   const nbPoints = x.length;
-  return (parameters: number[]) => {
+  return (parameters: DoubleArray) => {
     const fct = sumOfShapes(parameters);
     let error = 0;
     for (let i = 0; i < nbPoints; i++) {
