@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.2.0](https://github.com/mljs/spectra-fitting/compare/v6.1.0...v6.2.0) (2026-07-07)
+
+
+### Features
+
+* add LinkedParameter options to share parameters between peaks ([#126](https://github.com/mljs/spectra-fitting/issues/126)) ([468cb3c](https://github.com/mljs/spectra-fitting/commit/468cb3c63da42c17d8643b67e2aa7d237315addc))
+
 ## [6.1.0](https://github.com/mljs/spectra-fitting/compare/v6.0.1...v6.1.0) (2026-06-03)
 
 
