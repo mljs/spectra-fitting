@@ -1,3 +1,5 @@
+import type { DoubleArray } from 'cheminfo-types';
+
 import type { OptimizedPeakIDOrNot, Peak } from '../index.ts';
 
 import type { InternalPeak } from './internalPeaks/getInternalPeaks.ts';
@@ -11,9 +13,10 @@ import type { InternalPeak } from './internalPeaks/getInternalPeaks.ts';
  * @param yScale - normalization factor previously applied to Y values
  * @returns array of optimized peaks with reconstructed shapes and ids
  */
+
 export function reconstructPeaks<T extends Peak>(
   internalPeaks: InternalPeak[],
-  actualValues: number[],
+  actualValues: DoubleArray,
   yScale: number,
 ): Array<OptimizedPeakIDOrNot<T>> {
   const newPeaks: Array<OptimizedPeakIDOrNot<T>> = [];

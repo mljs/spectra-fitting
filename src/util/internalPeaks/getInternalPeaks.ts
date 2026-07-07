@@ -1,3 +1,4 @@
+import type { DoubleArray } from 'cheminfo-types';
 import type { Shape1D, Shape1DInstance } from 'ml-peak-shape-generator';
 import { getShape1D } from 'ml-peak-shape-generator';
 
@@ -15,7 +16,7 @@ export interface InternalPeak {
   shape: Shape1D;
   shapeFct: Shape1DInstance;
   parameters: Parameter[];
-  propertiesValues: Record<Property, number[]>;
+  propertiesValues: Record<Property, DoubleArray>;
   fromIndex: number;
   toIndex: number;
 }
@@ -50,7 +51,7 @@ export function getInternalPeaks(
 
     const parameters: Parameter[] = ['x', 'y', ...shapeFct.getParameters()];
 
-    const propertiesValues: Record<Property, number[]> = {
+    const propertiesValuesInternal: Record<Property, number[]> = {
       min: [],
       max: [],
       init: [],
@@ -69,7 +70,7 @@ export function getInternalPeaks(
             yScale,
           );
 
-          propertiesValues[property].push(propertyValue);
+          propertiesValuesInternal[property].push(propertyValue);
           continue;
         }
         // check if there are some global option, it could be a number or a callback
@@ -84,12 +85,12 @@ export function getInternalPeaks(
               property,
               yScale,
             );
-            propertiesValues[property].push(generalParameterValue);
+            propertiesValuesInternal[property].push(generalParameterValue);
             continue;
           } else {
             let value = generalParameterValue(peak);
             value = getNormalizedValue(value, parameter, property, yScale);
-            propertiesValues[property].push(value);
+            propertiesValuesInternal[property].push(value);
             continue;
           }
         }
@@ -100,14 +101,23 @@ export function getInternalPeaks(
           `No default parameter for ${parameter}`,
         );
         const defaultParameterValues = DefaultParameters[parameter][property];
-        //@ts-expect-error should never happen
-        propertiesValues[property].push(defaultParameterValues(peak, shapeFct));
+        propertiesValuesInternal[property].push(
+          //@ts-expect-error parameters and shape instance are guaranteed to be present in the defaultParameterValues function
+          defaultParameterValues(peak, shapeFct),
+        );
       }
     }
 
     const fromIndex = index;
     const toIndex = fromIndex + parameters.length - 1;
     index += toIndex - fromIndex + 1;
+
+    const propertiesValues: Record<Property, DoubleArray> = {
+      min: propertiesValuesInternal.min,
+      max: propertiesValuesInternal.max,
+      init: propertiesValuesInternal.init,
+      gradientDifference: propertiesValuesInternal.gradientDifference,
+    };
 
     internalPeaks.push({
       id,

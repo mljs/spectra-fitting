@@ -1,3 +1,4 @@
+import type { DoubleArray } from 'cheminfo-types';
 import { xMean } from 'ml-spectra-processing';
 
 import type {
@@ -74,15 +75,15 @@ export interface OptimizationLayout {
   /** Indices of variables marked as optimizable. */
   freeIndices: number[];
   /** Lower bounds for each optimization variable. */
-  variableMin: Float64Array;
+  variableMin: DoubleArray;
   /** Upper bounds for each optimization variable. */
-  variableMax: Float64Array;
+  variableMax: DoubleArray;
   /** Initial values for each optimization variable. */
-  variableInit: Float64Array;
+  variableInit: DoubleArray;
   /** Gradient step values for each optimization variable. */
-  variableGrad: Float64Array;
+  variableGrad: DoubleArray;
   /** Maps a variable vector back to per-slot peak values. */
-  variableToPeakValues(variableValues: ArrayLike<number>): number[];
+  variableToPeakValues(variableValues: ArrayLike<number>): DoubleArray;
 }
 
 /**

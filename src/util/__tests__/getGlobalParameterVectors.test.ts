@@ -29,7 +29,7 @@ describe('getGlobalParameterVectors', () => {
         parameters: {
           x: { optimize: false },
           y: {
-            optimize: (peak) => peak.x > 0,
+            optimize: (peak: Peak) => peak.x > 0,
           },
         },
       },
@@ -39,7 +39,7 @@ describe('getGlobalParameterVectors', () => {
       parameters: {
         fwhm: { optimize: false },
         mu: {
-          optimize: (peak) => peak.y > 0,
+          optimize: (peak: Peak) => peak.y > 0,
         },
       },
     });

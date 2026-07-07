@@ -1,3 +1,5 @@
+import type { DoubleArray } from 'cheminfo-types';
+
 import type { OptimizeOptions, Peak } from '../index.ts';
 
 import { assert } from './assert.ts';
@@ -5,10 +7,10 @@ import type { InternalPeak } from './internalPeaks/getInternalPeaks.ts';
 
 export interface GlobalParameterVectors {
   freeIndices: number[];
-  globalMin: Float64Array;
-  globalMax: Float64Array;
-  globalInit: Float64Array;
-  globalGrad: Float64Array;
+  globalMin: DoubleArray;
+  globalMax: DoubleArray;
+  globalInit: DoubleArray;
+  globalGrad: DoubleArray;
 }
 
 export function getGlobalParameterVectors(

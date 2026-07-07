@@ -1,4 +1,4 @@
-import type { DataXY } from 'cheminfo-types';
+import type { DataXY, DoubleArray } from 'cheminfo-types';
 import type { Shape1D } from 'ml-peak-shape-generator';
 import { xMaxAbsoluteValue } from 'ml-spectra-processing';
 
@@ -177,7 +177,7 @@ export function optimize<T extends Peak>(
   const { algorithm, optimizationOptions } = selectMethod(options.optimization);
 
   const baseSumOfShapes = getSumOfShapes(internalPeaks);
-  const sumOfShapesForVariables = (variableValues: number[]) => {
+  const sumOfShapesForVariables = (variableValues: DoubleArray) => {
     return baseSumOfShapes(
       optimizationLayout.variableToPeakValues(variableValues),
     );
@@ -195,10 +195,10 @@ export function optimize<T extends Peak>(
   }
 
   // prepare arrays to pass to the algorithm (reduced if needed)
-  let minValues: Float64Array;
-  let maxValues: Float64Array;
-  let initialValues: Float64Array;
-  let gradientDifferences: Float64Array;
+  let minValues: DoubleArray;
+  let maxValues: DoubleArray;
+  let initialValues: DoubleArray;
+  let gradientDifferences: DoubleArray;
   let sumOfShapesToUse = sumOfShapesForVariables;
 
   if (freeIndices.length === variables.length) {
@@ -209,13 +209,13 @@ export function optimize<T extends Peak>(
     gradientDifferences = variableGrad;
   } else {
     // wrapper that maps reduced (free) parameters into the full parameter vector
-    const sumOfShapesForReduced = (reducedParameters: number[]) => {
+    const sumOfShapesForReduced = (reducedParameters: DoubleArray) => {
       const full = new Float64Array(variables.length);
       full.set(variableInit);
       for (let k = 0; k < freeIndices.length; k++) {
         full[freeIndices[k]] = reducedParameters[k];
       }
-      return sumOfShapesForVariables(Array.from(full));
+      return sumOfShapesForVariables(full);
     };
 
     minValues = new Float64Array(freeIndices.length);
@@ -240,11 +240,11 @@ export function optimize<T extends Peak>(
     ...optimizationOptions,
   });
 
-  let fittedVariableValues: number[];
+  let fittedVariableValues: DoubleArray;
   if (freeIndices.length === variables.length) {
     fittedVariableValues = fitted.parameterValues;
   } else {
-    const full = Array.from(variableInit);
+    const full = variableInit.slice();
     for (let k = 0; k < freeIndices.length; k++) {
       full[freeIndices[k]] = fitted.parameterValues[k];
     }

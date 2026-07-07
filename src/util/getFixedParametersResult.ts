@@ -1,4 +1,4 @@
-import type { NumberArray } from 'cheminfo-types';
+import type { DoubleArray, NumberArray } from 'cheminfo-types';
 
 import type { OptimizedPeakIDOrNot, Peak } from '../index.ts';
 
@@ -20,19 +20,17 @@ import { reconstructPeaks } from './reconstructPeaks.ts';
  */
 export function getFixedParametersResult<T extends Peak>(
   internalPeaks: InternalPeak[],
-  normalizedY: Float64Array,
+  normalizedY: DoubleArray,
   x: NumberArray,
-  globalInit: Float64Array,
-  baseSumOfShapes: (parameters: number[]) => (x: number) => number,
+  globalInit: DoubleArray,
+  baseSumOfShapes: (parameters: DoubleArray) => (x: number) => number,
   yScale: number,
 ): {
   error: number;
   iterations: number;
   peaks: Array<OptimizedPeakIDOrNot<T>>;
 } {
-  const fittedValues = Array.from(globalInit);
-
-  const fct = baseSumOfShapes(fittedValues);
+  const fct = baseSumOfShapes(globalInit);
   let error = 0;
   for (let i = 0; i < normalizedY.length; i++) {
     error += (normalizedY[i] - fct(x[i])) ** 2;
@@ -41,6 +39,6 @@ export function getFixedParametersResult<T extends Peak>(
   return {
     error,
     iterations: 0,
-    peaks: reconstructPeaks<T>(internalPeaks, fittedValues, yScale),
+    peaks: reconstructPeaks<T>(internalPeaks, globalInit, yScale),
   };
 }
