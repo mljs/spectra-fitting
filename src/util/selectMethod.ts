@@ -28,7 +28,7 @@ export function selectMethod(optimizationOptions: OptimizationOptions = {}) {
       return {
         algorithm: directOptimization,
         optimizationOptions: {
-          iterations: 20,
+          maxIterations: 20,
           epsilon: 1e-4,
           tolerance: 1e-16,
           tolerance2: 1e-12,

@@ -10,21 +10,26 @@ import { reconstructPeaks } from './util/reconstructPeaks.ts';
 import { selectMethod } from './util/selectMethod.ts';
 import type { InternalDirectOptimizationOptions } from './util/wrappers/directOptimization.js';
 
+type PublicDirectOptimizationOptions = Omit<
+  InternalDirectOptimizationOptions,
+  'minValues' | 'maxValues'
+>;
+
 export interface InitialParameter {
   init?: OptimizationParameter;
   /**
-   * definition of the lower limit of the parameter,
-   *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the min of the first peak and so on.
+   * definition of the lower limit of the parameter.
+   * If it is a callback, it receives the original peak provided by the user.
    */
   min?: OptimizationParameter;
   /**
-   * definition of the upper limit of the parameter,
-   *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the max of the first peak and so on.
+   * definition of the upper limit of the parameter.
+   * If it is a callback, it receives the original peak provided by the user.
    */
   max?: OptimizationParameter;
   /**
-   * definition of  the step size to approximate the jacobian matrix of the parameter,
-   *  if it is a callback the method pass the peak as the unique input, if it is an array the first element define the gradientDifference of the first peak and so on.
+   * definition of the step size to approximate the jacobian matrix of the parameter.
+   * If it is a callback, it receives the original peak provided by the user.
    */
   gradientDifference?: OptimizationParameter;
   /** whether this parameter should be optimized (true by default) */
@@ -85,7 +90,7 @@ export interface LMOptimizationOptions extends GeneralAlgorithmOptions {
 }
 
 export interface DirectOptimizationOptions
-  extends GeneralAlgorithmOptions, InternalDirectOptimizationOptions {}
+  extends GeneralAlgorithmOptions, PublicDirectOptimizationOptions {}
 
 export interface OptimizationOptions {
   /**
@@ -114,10 +119,13 @@ export interface OptimizeOptions {
    */
   shape?: Shape1D;
   /**
-   *  options of each parameter to be optimized e.g. For a pseudovoigt shape
-   *  it could have x, y, fwhm and mu properties, each of which could contain init, min, max and gradientDifference, those options will define the guess,
-   *  the min and max value of the parameter (search space) and the step size to approximate the jacobian matrix respectively. Those options could be a number,
-   *  array of numbers, callback, or array of callbacks. Each kind of shape has default parameters so it could be undefined
+   * Options of each parameter to be optimized. For example, for a pseudoVoigt
+   * shape this can include x, y, fwhm and mu values.
+   *
+   * Each parameter can define init, min, max and gradientDifference to set the
+   * initial guess, bounds and finite-difference step. These options can be
+   * numbers or callbacks. Callback options receive the original peak values
+   * provided by the user. Each shape has defaults, so this can be undefined.
    */
   parameters?: Record<string, InitialParameter>;
   /**
