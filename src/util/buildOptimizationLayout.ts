@@ -125,6 +125,7 @@ export function buildOptimizationLayout(
 
   for (let i = 0; i < variables.length; i++) {
     const variable = variables[i];
+    validateVariableInitialization(variable);
     variableMin[i] = variable.min;
     variableMax[i] = variable.max;
     variableInit[i] = variable.init;
@@ -258,6 +259,18 @@ function buildOptimizationVariables(
 
   variables.sort((a, b) => a.sortKey - b.sortKey);
   return variables.map(({ sortKey: _sortKey, ...variable }) => variable);
+}
+
+function validateVariableInitialization(variable: OptimizationVariable): void {
+  if (variable.init < variable.min || variable.init > variable.max) {
+    const scope =
+      variable.members.length === 1
+        ? `Peak ${variable.members[0]?.peakIndex} parameter ${variable.parameter}`
+        : `Linked parameter ${variable.parameter}`;
+    throw new Error(
+      `${scope} has init ${variable.init} outside of bounds [${variable.min}, ${variable.max}]`,
+    );
+  }
 }
 
 function buildLinkedVariable(
