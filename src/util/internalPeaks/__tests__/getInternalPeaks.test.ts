@@ -77,6 +77,24 @@ describe('getInternalPeaks', () => {
     });
   });
 
+  it('uses original peak values in callbacks and normalizes y callback output once', () => {
+    const peaks: Peak[] = [{ x: 1, y: 4 }];
+
+    const internalPeaks = getInternalPeaks(peaks, 4, {
+      parameters: {
+        y: {
+          init: (peak) => peak.y * 0.8,
+          min: (peak) => -peak.y,
+          max: (peak) => peak.y + 1,
+        },
+      },
+    });
+
+    expect(internalPeaks[0].propertiesValues.init[1]).toBeCloseTo(0.8, 6);
+    expect(internalPeaks[0].propertiesValues.min[1]).toBeCloseTo(-1, 6);
+    expect(internalPeaks[0].propertiesValues.max[1]).toBeCloseTo(1.25, 6);
+  });
+
   it('accepts zero-valued overrides and explicit gamma values', () => {
     const peaks: Peak[] = [
       {

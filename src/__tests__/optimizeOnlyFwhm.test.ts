@@ -7,8 +7,8 @@ import { optimize } from '../index.ts';
 describe('Optimize only fwhm', () => {
   it('optimizes fwhm while keeping x and y fixed', () => {
     const truePeaks = [
-      { x: -0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
-      { x: 0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
+      { x: -0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
+      { x: 0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
     ];
 
     const data: DataXY = generateSpectrum(truePeaks, {
@@ -21,14 +21,74 @@ describe('Optimize only fwhm', () => {
     });
 
     const initial = [
-      { x: -0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
-      { x: 0.5, y: 1, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+      { x: -0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+      { x: 0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
     ];
 
     const result = optimize(data, initial, {
       parameters: {
         x: { optimize: false },
         y: { optimize: false },
+      },
+    });
+
+    // positions and amplitudes should remain the same
+    for (let i = 0; i < 2; i++) {
+      expect(result.peaks[i].x).toBeCloseTo(truePeaks[i].x, 6);
+      expect(result.peaks[i].y).toBeCloseTo(truePeaks[i].y, 6);
+      // fwhm should be fitted back near the true value
+      expect(result.peaks[i].shape.fwhm).toBeCloseTo(
+        truePeaks[i].shape.fwhm,
+        3,
+      );
+    }
+  });
+
+  it('optimizes fwhm while keeping x and y fixed pseudoVoigt', () => {
+    const truePeaks = [
+      {
+        x: -0.5,
+        y: 2,
+        shape: { kind: 'pseudoVoigt' as const, fwhm: 0.05, mu: 0.5 },
+      },
+      {
+        x: 0.5,
+        y: 2,
+        shape: { kind: 'pseudoVoigt' as const, fwhm: 0.05, mu: 0.5 },
+      },
+    ];
+
+    const data: DataXY = generateSpectrum(truePeaks, {
+      generator: {
+        from: -5,
+        to: 5,
+        nbPoints: 1001,
+        shape: { kind: 'pseudoVoigt', fwhm: 0.05, mu: 0.5 },
+      },
+    });
+
+    const initial = [
+      {
+        x: -0.5,
+        y: 2,
+        shape: { kind: 'pseudoVoigt' as const, fwhm: 0.08, mu: 0.5 },
+      },
+      {
+        x: 0.5,
+        y: 2,
+        shape: { kind: 'pseudoVoigt' as const, fwhm: 0.08, mu: 0.5 },
+      },
+    ];
+
+    const result = optimize(data, initial, {
+      optimization: {
+        kind: 'lm',
+        options: { maxIterations: 10, errorTolerance: 1e-3 },
+      },
+      parameters: {
+        x: { optimize: false },
+        y: { optimize: false },
+        mu: { optimize: false },
       },
     });
 
@@ -78,6 +138,76 @@ describe('Optimize only fwhm', () => {
       expect(result.peaks[i].y).toBeCloseTo(initial[i].y, 6);
       expect(result.peaks[i].shape.fwhm).toBeCloseTo(initial[i].shape.fwhm, 6);
     }
+  });
+
+  it('preserves y amplitude when optimize is false and init is a callback', () => {
+    const truePeaks = [
+      { x: -0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
+      { x: 0.5, y: 3, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
+    ];
+
+    const data: DataXY = generateSpectrum(truePeaks, {
+      generator: {
+        from: -5,
+        to: 5,
+        nbPoints: 1001,
+        shape: { kind: 'gaussian' },
+      },
+    });
+
+    const initial = [
+      { x: -0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+      { x: 0.5, y: 3, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+    ];
+
+    const result = optimize(data, initial, {
+      parameters: {
+        x: { optimize: false },
+        y: { optimize: false, init: (peak) => peak.y },
+      },
+    });
+
+    for (let i = 0; i < 2; i++) {
+      expect(result.peaks[i].x).toBeCloseTo(truePeaks[i].x, 6);
+      expect(result.peaks[i].y).toBeCloseTo(truePeaks[i].y, 6);
+    }
+  });
+});
+
+describe('ml-spectra-fitting y init normalization bug', () => {
+  it('should preserve y when optimize is false and init callback is provided', () => {
+    const peaks = [
+      { x: -0.5, y: -2, width: 0.12 },
+      { x: 0, y: 1, width: 0.12 },
+    ];
+
+    const data = generateSpectrum(peaks, {
+      generator: {
+        from: -0.7,
+        to: 0.15,
+        nbPoints: 256,
+        shape: { kind: 'gaussian' },
+      },
+    });
+
+    const guessPeaks = [
+      { x: -0.47, y: -1.9, width: 0.11 },
+      { x: 0.01, y: 0.9, width: 0.11 },
+    ];
+
+    const { peaks: optimizedPeaks } = optimize(data, guessPeaks, {
+      shape: { kind: 'gaussian' },
+      optimization: { kind: 'lm', options: { maxIterations: 10 } },
+      parameters: {
+        y: { optimize: false, init: (peak: any) => peak.y },
+        x: { optimize: false },
+        fwhm: { optimize: true },
+      },
+    });
+
+    // Expected: y stays close to the input values (-1.9 and 0.9)
+    expect(optimizedPeaks[0].y).toBeCloseTo(-1.9, 1);
+    expect(optimizedPeaks[1].y).toBeCloseTo(0.9, 1);
   });
 
   it('optimizes only fwhm when x and y are fixed', () => {

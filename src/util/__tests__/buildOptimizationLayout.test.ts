@@ -114,9 +114,9 @@ describe('buildOptimizationLayout', () => {
     expect(layout.variables).toHaveLength(5);
     expect(layout.variables[2]).toMatchObject({
       parameter: 'fwhm',
-      init: 0.95,
+      init: 0.6,
       min: 0.4,
-      max: 1.5,
+      max: 0.7,
       gradientDifference: 0.02,
       optimize: true,
     });
@@ -279,8 +279,8 @@ describe('buildOptimizationLayout', () => {
         shapeFct: {} as never,
         parameters: ['x', 'y', 'fwhm'],
         propertiesValues: {
-          min: [-1, 0, 0.4],
-          max: [1, 2, 0.7],
+          min: [-1, 0, 0],
+          max: [1, 2, 1],
           init: [0, 1, 0.6],
           gradientDifference: [0.1, 0.01, 0.02],
         },
@@ -293,9 +293,9 @@ describe('buildOptimizationLayout', () => {
         shapeFct: {} as never,
         parameters: ['x', 'y', 'fwhm'],
         propertiesValues: {
-          min: [2, 0, 0.4],
-          max: [3, 3, 0.7],
-          init: [2.5, 2, 0.8],
+          min: [2, 0, 5],
+          max: [3, 3, 7],
+          init: [2.5, 2, 6],
           gradientDifference: [0.1, 0.01, 0.03],
         },
         fromIndex: 3,
@@ -308,34 +308,13 @@ describe('buildOptimizationLayout', () => {
       { id: 'B', x: 2.5, y: 2 },
     ];
 
-    const badInternalPeaks: InternalPeak[] = [];
-    for (let index = 0; index < internalPeaks.length; index++) {
-      const peak = internalPeaks[index];
-      if (index === 0) {
-        badInternalPeaks.push({
-          ...peak,
-          propertiesValues: {
-            ...peak.propertiesValues,
-            min: [0, 0, 10],
-            max: [0, 0, -1],
-          },
-        });
-      } else {
-        badInternalPeaks.push({
-          ...peak,
-          propertiesValues: {
-            ...peak.propertiesValues,
-            min: [0, 0, 3],
-            max: [0, 0, -2],
-          },
-        });
-      }
-    }
-
     expect(() =>
-      buildOptimizationLayout(badInternalPeaks, peaks, {
+      buildOptimizationLayout(internalPeaks, peaks, {
         linkedParameters: [
-          { parameter: 'fwhm', peaks: [{ id: 'A' }, { id: 'B' }] },
+          {
+            parameter: 'fwhm',
+            peaks: [{ id: 'A' }, { id: 'B', factor: 2, offset: 1 }],
+          },
         ],
       }),
     ).toThrow(/incompatible bounds/);

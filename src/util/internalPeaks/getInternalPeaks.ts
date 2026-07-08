@@ -36,15 +36,12 @@ export function getInternalPeaks(
 ) {
   let index = 0;
   const internalPeaks: InternalPeak[] = [];
-
-  const normalizedPeaks = peaks.map((peak) => {
-    return {
-      ...peak,
-      y: peak.y / yScale,
+  for (const originalPeak of peaks) {
+    const normalizedPeak = {
+      ...originalPeak,
+      y: originalPeak.y / yScale,
     };
-  });
-
-  for (const peak of normalizedPeaks) {
+    const peak = normalizedPeak;
     const { id, shape = options.shape || { kind: 'gaussian' } } = peak;
 
     const shapeFct: Shape1DInstance = getShape1D(shape);
@@ -88,7 +85,8 @@ export function getInternalPeaks(
             propertiesValuesInternal[property].push(generalParameterValue);
             continue;
           } else {
-            let value = generalParameterValue(peak);
+            // callbacks receive user-provided peak values (not Y-normalized)
+            let value = generalParameterValue(originalPeak);
             value = getNormalizedValue(value, parameter, property, yScale);
             propertiesValuesInternal[property].push(value);
             continue;

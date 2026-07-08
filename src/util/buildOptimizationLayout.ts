@@ -100,7 +100,7 @@ interface SortableVariable extends OptimizationVariable {
  * materialize actual peak parameter values from a variable vector.
  * @param internalPeaks - normalized internal peaks with parameter indices
  * @param peaks - original peak objects (for per-peak optimize flags)
- * @param options - user `OptimizeOptions`, may contain `parameterGroups`
+ * @param options - user `OptimizeOptions`, may contain `linkedParameters`
  * @param yScale - y normalization factor (used when converting offsets)
  * @returns an `OptimizationLayout` describing variables and slots
  */
@@ -303,10 +303,10 @@ function buildLinkedVariable(
   }
 
   const firstMember = resolvedMembers[0];
-  let sharedMin = Number.POSITIVE_INFINITY;
-  let sharedMax = Number.NEGATIVE_INFINITY;
-  const parameterName = firstMember.slot.parameter;
+  let sharedMin = Number.NEGATIVE_INFINITY;
+  let sharedMax = Number.POSITIVE_INFINITY;
   const optimize = firstMember.slot.optimize;
+  const sharedInitCandidates: number[] = [];
 
   for (const member of resolvedMembers) {
     if (member.slot.optimize !== optimize) {
@@ -315,8 +315,18 @@ function buildLinkedVariable(
       );
     }
 
-    sharedMin = Math.min(sharedMin, member.slot.min);
-    sharedMax = Math.max(sharedMax, member.slot.max);
+    if (member.slot.min > member.slot.max) {
+      throw new Error(
+        `Linked parameter ${linkedParameter.parameter} has incompatible bounds across its members`,
+      );
+    }
+
+    const variableBounds = getMemberVariableBounds(member);
+    sharedMin = Math.max(sharedMin, variableBounds.min);
+    sharedMax = Math.min(sharedMax, variableBounds.max);
+    sharedInitCandidates.push(
+      (member.slot.init - member.offset) / member.factor,
+    );
   }
 
   if (sharedMin > sharedMax) {
@@ -329,26 +339,12 @@ function buildLinkedVariable(
     groupedActualIndices.add(member.slot.actualIndex);
   }
 
-  //normalize y factor to avoid multiplet peaks intensity values outside the range.
-  if (parameterName === 'y' && resolvedMembers.length > 1) {
-    let maxAbsYFactor = Number.NEGATIVE_INFINITY;
-    for (const { factor } of resolvedMembers) {
-      if (Math.abs(factor) > maxAbsYFactor) {
-        maxAbsYFactor = Math.abs(factor);
-      }
-    }
-
-    for (const member of resolvedMembers) {
-      member.factor /= maxAbsYFactor;
-    }
-  }
-
   return {
     sortKey: Math.min(
       ...resolvedMembers.map((member) => member.slot.actualIndex),
     ),
     parameter: linkedParameter.parameter,
-    init: xMean(resolvedMembers.map((member) => member.slot.init)),
+    init: xMean(sharedInitCandidates),
     min: sharedMin,
     max: sharedMax,
     gradientDifference: Math.min(
@@ -430,6 +426,20 @@ function getOffset(
     return offset / yScale;
   }
   return offset;
+}
+
+function getMemberVariableBounds(member: {
+  slot: ParameterSlot;
+  factor: number;
+  offset: number;
+}): { min: number; max: number } {
+  const transformedMin = (member.slot.min - member.offset) / member.factor;
+  const transformedMax = (member.slot.max - member.offset) / member.factor;
+
+  return {
+    min: Math.min(transformedMin, transformedMax),
+    max: Math.max(transformedMin, transformedMax),
+  };
 }
 
 function getOptimizeFlag(
