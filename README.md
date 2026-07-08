@@ -108,6 +108,46 @@ const result = {
 };
 ```
 
+## Linked parameters
+
+You can link one parameter across multiple peaks so they share one optimization
+variable.
+
+For each linked peak, the actual parameter value is reconstructed as:
+
+```text
+actualValue = sharedVariable * factor + offset
+```
+
+By default, `factor = 1` and `offset = 0`.
+
+```js
+import { optimize } from 'ml-spectra-fitting';
+
+const result = optimize(data, peaks, {
+  parameters: {
+    x: { optimize: false },
+  },
+  linkedParameters: [
+    {
+      parameter: 'fwhm',
+      peaks: [{ id: 'left' }, { id: 'right' }],
+    },
+    {
+      parameter: 'y',
+      peaks: [
+        { id: 'left', factor: 1 },
+        { id: 'right', factor: 2 },
+      ],
+    },
+  ],
+});
+```
+
+`linkedParameters.peaks[].id` accepts either the peak index or peak `id`.
+
+If the linked parameter is `y`, `offset` is interpreted in the original Y scale.
+
 ## License
 
 [MIT](./LICENSE)
