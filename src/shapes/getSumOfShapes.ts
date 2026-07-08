@@ -11,7 +11,7 @@ import type { InternalPeak } from '../util/internalPeaks/getInternalPeaks.ts';
 export function getSumOfShapes(internalPeaks: InternalPeak[]) {
   return function sumOfShapes(parameters: DoubleArray) {
     for (const peak of internalPeaks) {
-      for (let i = 2; i < parameters.length; i++) {
+      for (let i = 2; i < peak.parameters.length; i++) {
         type Parameter = (typeof peak.parameters)[number];
         const shapeFctKey = peak.parameters[i] as Extract<
           Parameter,
