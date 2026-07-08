@@ -305,7 +305,6 @@ function buildLinkedVariable(
   const firstMember = resolvedMembers[0];
   let sharedMin = Number.NEGATIVE_INFINITY;
   let sharedMax = Number.POSITIVE_INFINITY;
-  const parameterName = firstMember.slot.parameter;
   const optimize = firstMember.slot.optimize;
   const sharedInitCandidates: number[] = [];
 
@@ -338,20 +337,6 @@ function buildLinkedVariable(
 
   for (const member of resolvedMembers) {
     groupedActualIndices.add(member.slot.actualIndex);
-  }
-
-  //normalize y factor to avoid multiplet peaks intensity values outside the range.
-  if (parameterName === 'y' && resolvedMembers.length > 1) {
-    let maxAbsYFactor = Number.NEGATIVE_INFINITY;
-    for (const { factor } of resolvedMembers) {
-      if (Math.abs(factor) > maxAbsYFactor) {
-        maxAbsYFactor = Math.abs(factor);
-      }
-    }
-
-    for (const member of resolvedMembers) {
-      member.factor /= maxAbsYFactor;
-    }
   }
 
   return {
