@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.2.1](https://github.com/mljs/spectra-fitting/compare/v6.2.0...v6.2.1) (2026-07-08)
+
+
+### Bug Fixes
+
+* normalize y callback output using original peak values in getInternalPeaks ([#129](https://github.com/mljs/spectra-fitting/issues/129)) ([55d3668](https://github.com/mljs/spectra-fitting/commit/55d3668aaf027779ac48325babcbaa66d70b31c7))
+
 ## [6.2.0](https://github.com/mljs/spectra-fitting/compare/v6.1.0...v6.2.0) (2026-07-07)
 
 
