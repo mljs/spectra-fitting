@@ -102,6 +102,7 @@ interface SortableVariable extends OptimizationVariable {
  * @param peaks - original peak objects (for per-peak optimize flags)
  * @param options - user `OptimizeOptions`, may contain `linkedParameters`
  * @param yScale - y normalization factor (used when converting offsets)
+ * @param validateInitialValues - whether to check that initial values are within bounds
  * @returns an `OptimizationLayout` describing variables and slots
  */
 export function buildOptimizationLayout(
@@ -109,6 +110,7 @@ export function buildOptimizationLayout(
   peaks: Peak[],
   options: OptimizeOptions,
   yScale = 1,
+  validateInitialValues = true,
 ): OptimizationLayout {
   const slots = buildParameterSlots(internalPeaks, peaks, options);
   const variables = buildOptimizationVariables(
@@ -125,7 +127,9 @@ export function buildOptimizationLayout(
 
   for (let i = 0; i < variables.length; i++) {
     const variable = variables[i];
-    validateVariableInitialization(variable);
+    if (validateInitialValues) {
+      validateVariableInitialization(variable);
+    }
     variableMin[i] = variable.min;
     variableMax[i] = variable.max;
     variableInit[i] = variable.init;
@@ -262,7 +266,21 @@ function buildOptimizationVariables(
 }
 
 function validateVariableInitialization(variable: OptimizationVariable): void {
-  if (variable.init < variable.min || variable.init > variable.max) {
+  if (variable.min > variable.max) {
+    const scope =
+      variable.members.length === 1
+        ? `Peak ${variable.members[0]?.peakIndex} parameter ${variable.parameter}`
+        : `Linked parameter ${variable.parameter}`;
+    throw new Error(
+      `${scope} has min lower than max: min ${variable.min}, max ${variable.max}, init ${variable.init}`,
+    );
+  }
+
+  const epsilon = 1e-3;
+  if (
+    variable.init < variable.min - epsilon ||
+    variable.init > variable.max + epsilon
+  ) {
     const scope =
       variable.members.length === 1
         ? `Peak ${variable.members[0]?.peakIndex} parameter ${variable.parameter}`
