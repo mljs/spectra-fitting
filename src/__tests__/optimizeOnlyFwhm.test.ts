@@ -44,6 +44,39 @@ describe('Optimize only fwhm', () => {
     }
   });
 
+  it('throws when an init value is outside the configured min-max range', () => {
+    const truePeaks = [
+      { x: -0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
+      { x: 0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
+    ];
+
+    const data: DataXY = generateSpectrum(truePeaks, {
+      generator: {
+        from: -5,
+        to: 5,
+        nbPoints: 1001,
+        shape: { kind: 'gaussian' },
+      },
+    });
+
+    const initial = [
+      { x: -0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+      { x: 0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+    ];
+
+    expect(() =>
+      optimize(data, initial, {
+        parameters: {
+          x: { optimize: false },
+          y: { optimize: false },
+          fwhm: { min: 0.03, max: 0.06, optimize: true },
+        },
+      }),
+    ).toThrow(
+      /Peak 0 parameter fwhm has init 0\.08 outside of bounds \[0\.03, 0\.06\]/,
+    );
+  });
+
   it('optimizes fwhm while keeping x and y fixed pseudoVoigt', () => {
     const truePeaks = [
       {
@@ -199,7 +232,7 @@ describe('ml-spectra-fitting y init normalization bug', () => {
       shape: { kind: 'gaussian' },
       optimization: { kind: 'lm', options: { maxIterations: 10 } },
       parameters: {
-        y: { optimize: false, init: (peak: any) => peak.y },
+        y: { optimize: false, init: (peak: { y: number }) => peak.y },
         x: { optimize: false },
         fwhm: { optimize: true },
       },

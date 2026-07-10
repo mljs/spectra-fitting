@@ -171,6 +171,7 @@ export function optimize<T extends Peak>(
     peaks,
     options,
     yScale,
+    options.optimization?.kind !== 'direct',
   );
 
   const {
