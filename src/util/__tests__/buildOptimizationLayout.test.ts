@@ -320,6 +320,33 @@ describe('buildOptimizationLayout', () => {
     ).toThrow(/incompatible bounds/);
   });
 
+  it('rejects linked groups when a member has invalid min/max bounds', () => {
+    const internalPeaks: InternalPeak[] = [
+      {
+        id: 'A',
+        shape: { kind: 'gaussian' },
+        shapeFct: {} as never,
+        parameters: ['x', 'y', 'fwhm'],
+        propertiesValues: {
+          min: [-1, 0, 0.7],
+          max: [1, 2, 0.6],
+          init: [0, 1, 0.65],
+          gradientDifference: [0.1, 0.01, 0.02],
+        },
+        fromIndex: 0,
+        toIndex: 2,
+      },
+    ];
+
+    const peaks: Peak[] = [{ id: 'A', x: 0, y: 1 }];
+
+    expect(() =>
+      buildOptimizationLayout(internalPeaks, peaks, {
+        linkedParameters: [{ parameter: 'fwhm', peaks: [{ id: 'A' }] }],
+      }),
+    ).toThrow(/incompatible bounds across its members/);
+  });
+
   it('rejects linked groups that reference an invalid peak index', () => {
     const internalPeaks: InternalPeak[] = [
       {

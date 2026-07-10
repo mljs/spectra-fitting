@@ -50,4 +50,41 @@ describe('getGlobalParameterVectors', () => {
     expect(Array.from(result.globalInit)).toStrictEqual([9, 10, 11, 12]);
     expect(Array.from(result.globalGrad)).toStrictEqual([13, 14, 15, 16]);
   });
+
+  it('uses a global optimize option when the per-peak config omits optimize', () => {
+    const internalPeaks: InternalPeak[] = [
+      {
+        shape: { kind: 'gaussian' },
+        shapeFct: {} as never,
+        parameters: ['x', 'y'],
+        propertiesValues: {
+          min: [0, 0],
+          max: [10, 1],
+          init: [1, 0.5],
+          gradientDifference: [0.1, 0.01],
+        },
+        fromIndex: 0,
+        toIndex: 1,
+      },
+    ];
+
+    const peaks: Peak[] = [
+      {
+        x: 1,
+        y: 0.5,
+        parameters: {
+          x: { init: 1 },
+        },
+      },
+    ];
+
+    const result = getGlobalParameterVectors(internalPeaks, peaks, {
+      parameters: {
+        x: { optimize: false },
+      },
+    });
+
+    expect(result.freeIndices).toStrictEqual([1]);
+    expect(Array.from(result.globalInit)).toStrictEqual([1, 0.5]);
+  });
 });
