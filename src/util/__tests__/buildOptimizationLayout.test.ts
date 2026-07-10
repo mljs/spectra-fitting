@@ -129,6 +129,61 @@ describe('buildOptimizationLayout', () => {
     }
   });
 
+  it('rejects min greather than max', () => {
+    const internalPeaks: InternalPeak[] = [
+      {
+        id: 'A',
+        shape: { kind: 'gaussian' },
+        shapeFct: {} as never,
+        parameters: ['x', 'y', 'fwhm'],
+        propertiesValues: {
+          min: [1, 0, 0.4],
+          max: [-1, 2, 0.7],
+          init: [0, 1, 0.6],
+          gradientDifference: [0.1, 0.01, 0.02],
+        },
+        fromIndex: 0,
+        toIndex: 2,
+      },
+      {
+        id: 'B',
+        shape: { kind: 'gaussian' },
+        shapeFct: {} as never,
+        parameters: ['x', 'y', 'fwhm'],
+        propertiesValues: {
+          min: [2, 0, 0.5],
+          max: [3, 3, 0.9],
+          init: [2.5, 2, 0.8],
+          gradientDifference: [0.1, 0.01, 0.03],
+        },
+        fromIndex: 3,
+        toIndex: 5,
+      },
+    ];
+
+    const peaks: Peak[] = [
+      { id: 'A', x: 0, y: 1 },
+      {
+        id: 'B',
+        x: 2.5,
+        y: 2,
+        parameters: {
+          x: { optimize: false },
+        },
+      },
+    ];
+
+    expect(() =>
+      buildOptimizationLayout(internalPeaks, peaks, {
+        parameters: {
+          y: { optimize: false },
+        },
+      }),
+    ).toThrow(
+      /Peak 0 parameter x has min lower than max: min 1, max -1, init 0/,
+    );
+  });
+
   it('rejects inconsistent optimize flags within a linked group', () => {
     const internalPeaks: InternalPeak[] = [
       {
@@ -318,6 +373,33 @@ describe('buildOptimizationLayout', () => {
         ],
       }),
     ).toThrow(/incompatible bounds/);
+  });
+
+  it('rejects linked groups when a member has invalid min/max bounds', () => {
+    const internalPeaks: InternalPeak[] = [
+      {
+        id: 'A',
+        shape: { kind: 'gaussian' },
+        shapeFct: {} as never,
+        parameters: ['x', 'y', 'fwhm'],
+        propertiesValues: {
+          min: [-1, 0, 0.7],
+          max: [1, 2, 0.6],
+          init: [0, 1, 0.65],
+          gradientDifference: [0.1, 0.01, 0.02],
+        },
+        fromIndex: 0,
+        toIndex: 2,
+      },
+    ];
+
+    const peaks: Peak[] = [{ id: 'A', x: 0, y: 1 }];
+
+    expect(() =>
+      buildOptimizationLayout(internalPeaks, peaks, {
+        linkedParameters: [{ parameter: 'fwhm', peaks: [{ id: 'A' }] }],
+      }),
+    ).toThrow(/incompatible bounds across its members/);
   });
 
   it('rejects linked groups that reference an invalid peak index', () => {
