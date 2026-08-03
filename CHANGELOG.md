@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.2.2](https://github.com/mljs/spectra-fitting/compare/v6.2.1...v6.2.2) (2026-08-03)
+
+
+### Bug Fixes
+
+* only optimize shapes with fwhm ([#132](https://github.com/mljs/spectra-fitting/issues/132)) ([1c7578b](https://github.com/mljs/spectra-fitting/commit/1c7578bdd1cd61d438fc13c5d71323eb7ed5cd4a))
+
 ## [6.2.1](https://github.com/mljs/spectra-fitting/compare/v6.2.0...v6.2.1) (2026-07-08)
 
 
