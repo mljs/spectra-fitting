@@ -1,5 +1,5 @@
 import type { DataXY, DoubleArray } from 'cheminfo-types';
-import type { Shape1D } from 'ml-peak-shape-generator';
+import type { Shape1DWithFWHM } from 'ml-peak-shape-generator';
 import { xMaxAbsoluteValue } from 'ml-spectra-processing';
 
 import { getSumOfShapes } from './shapes/getSumOfShapes.ts';
@@ -42,7 +42,7 @@ export interface Peak {
   id?: string;
   x: number;
   y: number;
-  shape?: Shape1D;
+  shape?: Shape1DWithFWHM;
   parameters?: Record<
     string,
     {
@@ -58,7 +58,7 @@ export interface Peak {
 export interface OptimizedPeak {
   x: number;
   y: number;
-  shape: Shape1D;
+  shape: Shape1DWithFWHM;
 }
 
 export type OptimizedPeakIDOrNot<T extends Peak> = T extends { id: string }
@@ -117,7 +117,7 @@ export interface OptimizeOptions {
   /**
    * Kind of shape used for fitting.
    */
-  shape?: Shape1D;
+  shape?: Shape1DWithFWHM;
   /**
    * Options of each parameter to be optimized. For example, for a pseudoVoigt
    * shape this can include x, y, fwhm and mu values.
