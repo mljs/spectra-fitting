@@ -1,5 +1,5 @@
 import type { DoubleArray } from 'cheminfo-types';
-import type { Shape1D, Shape1DInstance } from 'ml-peak-shape-generator';
+import type { Shape1DInstance, Shape1DWithFWHM } from 'ml-peak-shape-generator';
 import { getShape1D } from 'ml-peak-shape-generator';
 
 import type { OptimizeOptions, Peak } from '../../index.ts';
@@ -13,7 +13,7 @@ type Property = 'init' | 'min' | 'max' | 'gradientDifference';
 const properties: Property[] = ['init', 'min', 'max', 'gradientDifference'];
 export interface InternalPeak {
   id?: string;
-  shape: Shape1D;
+  shape: Shape1DWithFWHM;
   shapeFct: Shape1DInstance;
   parameters: Parameter[];
   propertiesValues: Record<Property, DoubleArray>;
