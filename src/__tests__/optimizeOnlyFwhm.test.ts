@@ -1,6 +1,6 @@
 import type { DataXY } from 'cheminfo-types';
 import { generateSpectrum } from 'spectrum-generator';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, test } from 'vitest';
 
 import { optimize } from '../index.ts';
 
@@ -42,6 +42,39 @@ describe('Optimize only fwhm', () => {
         3,
       );
     }
+  });
+
+  it('throws when an init value is outside the configured min-max range', () => {
+    const truePeaks = [
+      { x: -0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
+      { x: 0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
+    ];
+
+    const data: DataXY = generateSpectrum(truePeaks, {
+      generator: {
+        from: -5,
+        to: 5,
+        nbPoints: 1001,
+        shape: { kind: 'gaussian' },
+      },
+    });
+
+    const initial = [
+      { x: -0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+      { x: 0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+    ];
+
+    expect(() =>
+      optimize(data, initial, {
+        parameters: {
+          x: { optimize: false },
+          y: { optimize: false },
+          fwhm: { min: 0.03, max: 0.06, optimize: true },
+        },
+      }),
+    ).toThrow(
+      /Peak 0 parameter fwhm has init 0\.08 outside of bounds \[0\.03, 0\.06\]/,
+    );
   });
 
   it('optimizes fwhm while keeping x and y fixed pseudoVoigt', () => {
@@ -199,7 +232,7 @@ describe('ml-spectra-fitting y init normalization bug', () => {
       shape: { kind: 'gaussian' },
       optimization: { kind: 'lm', options: { maxIterations: 10 } },
       parameters: {
-        y: { optimize: false, init: (peak: any) => peak.y },
+        y: { optimize: false, init: (peak: { y: number }) => peak.y },
         x: { optimize: false },
         fwhm: { optimize: true },
       },
@@ -210,42 +243,171 @@ describe('ml-spectra-fitting y init normalization bug', () => {
     expect(optimizedPeaks[1].y).toBeCloseTo(0.9, 1);
   });
 
-  it('optimizes only fwhm when x and y are fixed', () => {
-    const offset = 7 / 400;
+  it('preserves y amplitude when optimize is false and init is a callback', () => {
     const truePeaks = [
-      {
-        id: 'triplet-peak-1',
-        x: 2.02 + offset,
-        y: 0.25,
-        shape: { kind: 'gaussian' as const, fwhm: 0.005 },
-      },
-      {
-        id: 'triplet-peak-2',
-        x: 2.02,
-        y: 0.5,
-        shape: { kind: 'gaussian' as const, fwhm: 0.005 },
-      },
-      {
-        id: 'triplet-peak-3',
-        x: 2.02 - offset,
-        y: 0.25,
-        shape: { kind: 'gaussian' as const, fwhm: 0.005 },
-      },
-      {
-        id: 'doublet-peak-1',
-        x: 2.0025 - offset,
-        y: 0.5,
-        shape: { kind: 'gaussian' as const, fwhm: 0.005 },
-      },
-      {
-        id: 'doublet-peak-2',
-        x: 2.0025 + offset,
-        y: 0.5,
-        shape: { kind: 'gaussian' as const, fwhm: 0.005 },
-      },
-    ].toSorted((a, b) => a.x - b.x);
+      { x: -0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
+      { x: 0.5, y: 3, shape: { kind: 'gaussian' as const, fwhm: 0.05 } },
+    ];
 
     const data: DataXY = generateSpectrum(truePeaks, {
+      generator: {
+        from: -5,
+        to: 5,
+        nbPoints: 1001,
+        shape: { kind: 'gaussian' },
+      },
+    });
+
+    const initial = [
+      { x: -0.5, y: 2, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+      { x: 0.5, y: 3, shape: { kind: 'gaussian' as const, fwhm: 0.08 } },
+    ];
+
+    const result = optimize(data, initial, {
+      parameters: {
+        x: { optimize: false },
+        y: { optimize: false, init: (peak) => peak.y },
+      },
+    });
+
+    for (let i = 0; i < 2; i++) {
+      expect(result.peaks[i].x).toBeCloseTo(truePeaks[i].x, 6);
+      expect(result.peaks[i].y).toBeCloseTo(truePeaks[i].y, 6);
+    }
+  });
+});
+
+test('optimize doublet overlaped with a triplet by linking parameters', () => {
+  const offset = 7 / 400;
+  const truePeaks = [
+    {
+      id: 'triplet-peak-1',
+      x: 2.02 + offset,
+      y: 0.25,
+      shape: { kind: 'gaussian' as const, fwhm: 0.005 },
+    },
+    {
+      id: 'triplet-peak-2',
+      x: 2.02,
+      y: 0.5,
+      shape: { kind: 'gaussian' as const, fwhm: 0.005 },
+    },
+    {
+      id: 'triplet-peak-3',
+      x: 2.02 - offset,
+      y: 0.25,
+      shape: { kind: 'gaussian' as const, fwhm: 0.005 },
+    },
+    {
+      id: 'doublet-peak-1',
+      x: 2.0025 - offset,
+      y: 0.5,
+      shape: { kind: 'gaussian' as const, fwhm: 0.005 },
+    },
+    {
+      id: 'doublet-peak-2',
+      x: 2.0025 + offset,
+      y: 0.5,
+      shape: { kind: 'gaussian' as const, fwhm: 0.005 },
+    },
+  ].toSorted((a, b) => a.x - b.x);
+
+  const data: DataXY = generateSpectrum(truePeaks, {
+    generator: {
+      from: 1.7,
+      to: 2.3,
+      nbPoints: 1024 * 3,
+      shape: { kind: 'gaussian' },
+    },
+  });
+
+  const initial = [
+    {
+      id: 'triplet-peak-1',
+      x: 2.03 + offset,
+      y: 0.3,
+      shape: { kind: 'gaussian' as const, fwhm: 0.006 },
+    },
+    {
+      id: 'triplet-peak-2',
+      x: 2.03,
+      y: 0.6,
+      shape: { kind: 'gaussian' as const, fwhm: 0.006 },
+    },
+    {
+      id: 'triplet-peak-3',
+      x: 2.03 - offset,
+      y: 0.3,
+      shape: { kind: 'gaussian' as const, fwhm: 0.006 },
+    },
+    {
+      id: 'doublet-peak-1',
+      x: 2.01 - offset,
+      y: 0.7,
+      shape: { kind: 'gaussian' as const, fwhm: 0.006 },
+    },
+    {
+      id: 'doublet-peak-2',
+      x: 2.01 + offset,
+      y: 0.7,
+      shape: { kind: 'gaussian' as const, fwhm: 0.006 },
+    },
+  ].toSorted((a, b) => a.x - b.x);
+
+  const result = optimize(data, initial, {
+    optimization: {
+      kind: 'lm',
+      options: { maxIterations: 100 },
+    },
+    linkedParameters: [
+      {
+        parameter: 'x',
+        peaks: [
+          { id: 'triplet-peak-1', offset },
+          { id: 'triplet-peak-2' },
+          { id: 'triplet-peak-3', offset: -offset },
+        ],
+      },
+      {
+        parameter: 'y',
+        peaks: [
+          { id: 'triplet-peak-1', factor: 1 },
+          { id: 'triplet-peak-2', factor: 2 },
+          { id: 'triplet-peak-3', factor: 1 },
+        ],
+      },
+      {
+        parameter: 'fwhm',
+        peaks: [
+          { id: 'triplet-peak-1' },
+          { id: 'triplet-peak-2' },
+          { id: 'triplet-peak-3' },
+        ],
+      },
+      {
+        parameter: 'x',
+        peaks: [
+          { id: 'doublet-peak-1', offset: -offset },
+          { id: 'doublet-peak-2', offset },
+        ],
+      },
+      {
+        parameter: 'y',
+        peaks: [
+          { id: 'doublet-peak-1', factor: 1 },
+          { id: 'doublet-peak-2', factor: 1 },
+        ],
+      },
+      {
+        parameter: 'fwhm',
+        peaks: [{ id: 'doublet-peak-1' }, { id: 'doublet-peak-2' }],
+      },
+    ],
+  });
+
+  const shapePeaks = [];
+  for (const peak of result.peaks) {
+    const data = generateSpectrum([peak], {
       generator: {
         from: 1.7,
         to: 2.3,
@@ -253,124 +415,28 @@ describe('ml-spectra-fitting y init normalization bug', () => {
         shape: { kind: 'gaussian' },
       },
     });
+    shapePeaks.push(data);
+  }
 
-    const initial = [
-      {
-        id: 'triplet-peak-1',
-        x: 2.03 + offset,
-        y: 0.3,
-        shape: { kind: 'gaussian' as const, fwhm: 0.006 },
-      },
-      {
-        id: 'triplet-peak-2',
-        x: 2.03,
-        y: 0.6,
-        shape: { kind: 'gaussian' as const, fwhm: 0.006 },
-      },
-      {
-        id: 'triplet-peak-3',
-        x: 2.03 - offset,
-        y: 0.3,
-        shape: { kind: 'gaussian' as const, fwhm: 0.006 },
-      },
-      {
-        id: 'doublet-peak-1',
-        x: 2.01 - offset,
-        y: 0.7,
-        shape: { kind: 'gaussian' as const, fwhm: 0.006 },
-      },
-      {
-        id: 'doublet-peak-2',
-        x: 2.01 + offset,
-        y: 0.7,
-        shape: { kind: 'gaussian' as const, fwhm: 0.006 },
-      },
-    ].toSorted((a, b) => a.x - b.x);
+  expect(result.peaks.map((peak) => peak.id)).toStrictEqual(
+    initial.map((peak) => peak.id),
+  );
 
-    const result = optimize(data, initial, {
-      optimization: {
-        kind: 'lm',
-        options: { maxIterations: 100 },
-      },
-      linkedParameters: [
-        {
-          parameter: 'x',
-          peaks: [
-            { id: 'triplet-peak-1', offset },
-            { id: 'triplet-peak-2' },
-            { id: 'triplet-peak-3', offset: -offset },
-          ],
-        },
-        {
-          parameter: 'y',
-          peaks: [
-            { id: 'triplet-peak-1', factor: 1 },
-            { id: 'triplet-peak-2', factor: 2 },
-            { id: 'triplet-peak-3', factor: 1 },
-          ],
-        },
-        {
-          parameter: 'fwhm',
-          peaks: [
-            { id: 'triplet-peak-1' },
-            { id: 'triplet-peak-2' },
-            { id: 'triplet-peak-3' },
-          ],
-        },
-        {
-          parameter: 'x',
-          peaks: [
-            { id: 'doublet-peak-1', offset: -offset },
-            { id: 'doublet-peak-2', offset },
-          ],
-        },
-        {
-          parameter: 'y',
-          peaks: [
-            { id: 'doublet-peak-1', factor: 1 },
-            { id: 'doublet-peak-2', factor: 1 },
-          ],
-        },
-        {
-          parameter: 'fwhm',
-          peaks: [{ id: 'doublet-peak-1' }, { id: 'doublet-peak-2' }],
-        },
-      ],
-    });
+  expect(result.peaks[0].x).toBeCloseTo(truePeaks[0].x, 3);
+  expect(result.peaks[1].x).toBeCloseTo(truePeaks[1].x, 3);
+  expect(result.peaks[2].x).toBeCloseTo(truePeaks[2].x, 3);
+  expect(result.peaks[3].x).toBeCloseTo(truePeaks[3].x, 3);
+  expect(result.peaks[4].x).toBeCloseTo(truePeaks[4].x, 3);
 
-    const shapePeaks = [];
-    for (const peak of result.peaks) {
-      const data = generateSpectrum([peak], {
-        generator: {
-          from: 1.7,
-          to: 2.3,
-          nbPoints: 1024 * 3,
-          shape: { kind: 'gaussian' },
-        },
-      });
-      shapePeaks.push(data);
-    }
+  expect(result.peaks[0].y).toBeCloseTo(truePeaks[0].y, 3);
+  expect(result.peaks[1].y).toBeCloseTo(truePeaks[1].y, 3);
+  expect(result.peaks[2].y).toBeCloseTo(truePeaks[2].y, 3);
+  expect(result.peaks[3].y).toBeCloseTo(truePeaks[3].y, 3);
+  expect(result.peaks[4].y).toBeCloseTo(truePeaks[4].y, 3);
 
-    expect(result.peaks.map((peak) => peak.id)).toStrictEqual(
-      initial.map((peak) => peak.id),
-    );
-
-    expect(result.peaks[0].x).toBeCloseTo(truePeaks[0].x, 3);
-    expect(result.peaks[1].x).toBeCloseTo(truePeaks[1].x, 3);
-    expect(result.peaks[2].x).toBeCloseTo(truePeaks[2].x, 3);
-    expect(result.peaks[3].x).toBeCloseTo(truePeaks[3].x, 3);
-    expect(result.peaks[4].x).toBeCloseTo(truePeaks[4].x, 3);
-
-    expect(result.peaks[0].y).toBeCloseTo(truePeaks[0].y, 3);
-    expect(result.peaks[1].y).toBeCloseTo(truePeaks[1].y, 3);
-    expect(result.peaks[2].y).toBeCloseTo(truePeaks[2].y, 3);
-    expect(result.peaks[3].y).toBeCloseTo(truePeaks[3].y, 3);
-    expect(result.peaks[4].y).toBeCloseTo(truePeaks[4].y, 3);
-
-    expect(result.peaks[0].shape.fwhm).toBeCloseTo(0.005, 3);
-    expect(result.peaks[1].shape.fwhm).toBeCloseTo(0.005, 3);
-    expect(result.peaks[2].shape.fwhm).toBeCloseTo(0.005, 3);
-    expect(result.peaks[3].shape.fwhm).toBeCloseTo(0.005, 3);
-    expect(result.peaks[4].shape.fwhm).toBeCloseTo(0.005, 3);
-  });
+  expect(result.peaks[0].shape.fwhm).toBeCloseTo(0.005, 3);
+  expect(result.peaks[1].shape.fwhm).toBeCloseTo(0.005, 3);
+  expect(result.peaks[2].shape.fwhm).toBeCloseTo(0.005, 3);
+  expect(result.peaks[3].shape.fwhm).toBeCloseTo(0.005, 3);
+  expect(result.peaks[4].shape.fwhm).toBeCloseTo(0.005, 3);
 });

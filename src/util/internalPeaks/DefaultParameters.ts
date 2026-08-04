@@ -6,7 +6,26 @@ import type {
 
 import type { Peak } from '../../index.ts';
 
-export const DefaultParameters = {
+interface DefaultParameterDefinition<
+  TShape extends Shape1DInstance = Shape1DInstance,
+> {
+  init: (peak: Peak, peakShape: TShape) => number;
+  min: (peak: Peak, peakShape: TShape) => number;
+  max: (peak: Peak, peakShape: TShape) => number;
+  gradientDifference: (peak: Peak, peakShape: TShape) => number;
+}
+
+export interface DefaultParameters {
+  x: DefaultParameterDefinition;
+  y: DefaultParameterDefinition;
+  fwhm: DefaultParameterDefinition;
+  fwhmG: DefaultParameterDefinition;
+  fwhmL: DefaultParameterDefinition;
+  mu: DefaultParameterDefinition<PseudoVoigt>;
+  gamma: DefaultParameterDefinition<GeneralizedLorentzian>;
+}
+
+export const DefaultParameters: DefaultParameters = {
   x: {
     init: (peak: Peak) => peak.x,
     min: (peak: Peak, peakShape: Shape1DInstance) =>

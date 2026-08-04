@@ -31,7 +31,7 @@ describe('Sum of a mix of distributions', () => {
       [
         {
           x: -0.6,
-          y: 0.002,
+          y: 0.0011,
           shape: {
             kind: 'pseudoVoigt' as const,
             fwhm: 0.4,
@@ -168,7 +168,7 @@ describe('Sum of a mix of distributions', () => {
       [
         {
           x: 0.1,
-          y: 0.0015,
+          y: 0.0011,
           shape: {
             kind: 'pseudoVoigt' as const,
             fwhm: 0.17,
