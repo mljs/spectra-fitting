@@ -22,7 +22,10 @@ export function reconstructPeaks<T extends Peak>(
   const newPeaks: Array<OptimizedPeakIDOrNot<T>> = [];
 
   for (const peak of internalPeaks) {
-    const { id, shape, parameters, fromIndex } = peak;
+    const { id, parameters, fromIndex } = peak;
+
+    // do not change original peak
+    const shape = { ...peak.shape };
 
     let newPeak = { x: 0, y: 0, shape } as OptimizedPeakIDOrNot<T>;
 

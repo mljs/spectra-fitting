@@ -1,4 +1,5 @@
 import type { DataXY } from 'cheminfo-types';
+import { getShape1D } from 'ml-peak-shape-generator';
 import { generateSpectrum } from 'spectrum-generator';
 import { describe, expect, it } from 'vitest';
 
@@ -37,8 +38,8 @@ describe('Optimize only fwhm', () => {
       expect(result.peaks[i].x).toBeCloseTo(truePeaks[i].x, 6);
       expect(result.peaks[i].y).toBeCloseTo(truePeaks[i].y, 6);
       // fwhm should be fitted back near the true value
-      expect(result.peaks[i].shape.fwhm).toBeCloseTo(
-        truePeaks[i].shape.fwhm,
+      expect(getShape1D(result.peaks[i].shape).fwhm).toBeCloseTo(
+        getShape1D(truePeaks[i].shape).fwhm,
         3,
       );
     }
@@ -97,8 +98,8 @@ describe('Optimize only fwhm', () => {
       expect(result.peaks[i].x).toBeCloseTo(truePeaks[i].x, 6);
       expect(result.peaks[i].y).toBeCloseTo(truePeaks[i].y, 6);
       // fwhm should be fitted back near the true value
-      expect(result.peaks[i].shape.fwhm).toBeCloseTo(
-        truePeaks[i].shape.fwhm,
+      expect(getShape1D(result.peaks[i].shape).fwhm).toBeCloseTo(
+        getShape1D(truePeaks[i].shape).fwhm,
         3,
       );
     }
@@ -136,7 +137,10 @@ describe('Optimize only fwhm', () => {
     for (let i = 0; i < 2; i++) {
       expect(result.peaks[i].x).toBeCloseTo(initial[i].x, 6);
       expect(result.peaks[i].y).toBeCloseTo(initial[i].y, 6);
-      expect(result.peaks[i].shape.fwhm).toBeCloseTo(initial[i].shape.fwhm, 6);
+      expect(getShape1D(result.peaks[i].shape).fwhm).toBeCloseTo(
+        getShape1D(initial[i].shape).fwhm,
+        6,
+      );
     }
   });
 
@@ -367,10 +371,10 @@ describe('ml-spectra-fitting y init normalization bug', () => {
     expect(result.peaks[3].y).toBeCloseTo(truePeaks[3].y, 3);
     expect(result.peaks[4].y).toBeCloseTo(truePeaks[4].y, 3);
 
-    expect(result.peaks[0].shape.fwhm).toBeCloseTo(0.005, 3);
-    expect(result.peaks[1].shape.fwhm).toBeCloseTo(0.005, 3);
-    expect(result.peaks[2].shape.fwhm).toBeCloseTo(0.005, 3);
-    expect(result.peaks[3].shape.fwhm).toBeCloseTo(0.005, 3);
-    expect(result.peaks[4].shape.fwhm).toBeCloseTo(0.005, 3);
+    expect(getShape1D(result.peaks[0].shape).fwhm).toBeCloseTo(0.005, 3);
+    expect(getShape1D(result.peaks[1].shape).fwhm).toBeCloseTo(0.005, 3);
+    expect(getShape1D(result.peaks[2].shape).fwhm).toBeCloseTo(0.005, 3);
+    expect(getShape1D(result.peaks[3].shape).fwhm).toBeCloseTo(0.005, 3);
+    expect(getShape1D(result.peaks[4].shape).fwhm).toBeCloseTo(0.005, 3);
   });
 });

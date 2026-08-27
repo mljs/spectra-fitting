@@ -7,7 +7,13 @@
 
 This is a spectra fitting package to optimize the position (x), max intensity (y),
 full width at half-maximum (FWHM = width) and the ratio of gaussian contribution (mu) if it's required.
-It supports three kinds of shapes:
+
+It supports the `gaussian`, `lorentzian`, `pseudoVoigt`, `pseudoVoigtTCH`,
+`lorentzianDispersive`, `generalizedLorentzian` and `splitGaussian` shapes of
+[ml-peak-shape-generator](https://github.com/mljs/peak-shape-generator).
+The `splitGaussian` shape is asymmetric: it is parameterized by `fwhmLow` and
+`fwhmHigh` instead of `fwhm`, and both are optimized independently.
+The three most common ones are:
 
 | Name         |                                                                                                                            Equation                                                                                                                             |
 | ------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -42,28 +48,25 @@ const generator = new SpectrumGenerator({
   to: 1,
 });
 
-// by default the kind of shape is gaussian;
-generator.addPeak({ x: 0.5, y: 0.2 }, { fwhm: 0.2 });
+generator.addPeak(
+  { x: 0.5, y: 0.2 },
+  { shape: { kind: 'gaussian', fwhm: 0.2 } },
+);
 generator.addPeak(
   { x: -0.5, y: 0.2 },
-  {
-    shape: {
-      kind: 'lorentzian',
-      fwhm: 0.1,
-    },
-  },
+  { shape: { kind: 'lorentzian', fwhm: 0.1 } },
 );
 
 //points to fit {x, y};
-let data = generator.getSpectrum();
-console.log(JSON.stringify({ x: Array.from(data.x), y: Array.from(data.y) }));
-//the approximate values to be optimized, It could coming from a peak picking with ml-gsd
-let peaks = [
+const data = generator.getSpectrum();
+
+//the approximate values to be optimized, it could come from a peak picking with ml-gsd
+const peaks = [
   {
     x: -0.5,
     y: 0.22,
     shape: {
-      kind: 'gaussian',
+      kind: 'pseudoVoigt',
       fwhm: 0.25,
     },
   },
@@ -71,42 +74,38 @@ let peaks = [
     x: 0.52,
     y: 0.18,
     shape: {
-      kind: 'gaussian',
+      kind: 'pseudoVoigt',
       fwhm: 0.18,
     },
   },
 ];
 
-// the function receive an array of peak with {x, y, fwhm} as a guess
-// and return a list of objects
-let fittedParams = optimize(data, peaks, { shape: { kind: 'pseudoVoigt' } });
+// the function receives an array of peaks with {x, y, shape} as a guess
+// and returns the optimized peaks
+const fittedParams = optimize(data, peaks);
 
 console.log(fittedParams);
-const result = {
-  error: 0.12361588652854476,
-  iterations: 100,
-  peaks: [
-    {
-      x: -0.5000014532421942,
-      y: 0.19995307937326137,
-      shape: {
-        kind: 'pseudoVoigt',
-        fwhm: 0.10007670374735196,
-        mu: 0.004731136777288483,
-      },
-    },
-    {
-      x: 0.5001051783652894,
-      y: 0.19960010175400406,
-      shape: {
-        kind: 'pseudoVoigt',
-        fwhm: 0.19935932346969124,
-        mu: 1,
-      },
-    },
-  ],
-};
+// {
+//   error: 3.689192965926774e-8,
+//   iterations: 100,
+//   peaks: [
+//     {
+//       x: -0.49999998364851705,
+//       y: 0.2000001018716569,
+//       shape: { kind: 'pseudoVoigt', fwhm: 0.10000007214964078, mu: 0 },
+//     },
+//     {
+//       x: 0.500000000861883,
+//       y: 0.1999983363407256,
+//       shape: { kind: 'pseudoVoigt', fwhm: 0.20000322106167928, mu: 1 },
+//     },
+//   ],
+// }
 ```
+
+A `pseudoVoigt` fit recovers `mu = 0` for the lorentzian peak and `mu = 1` for
+the gaussian one. Each peak's own `shape.kind` wins over the `shape` passed in
+the options, which only applies to peaks that do not define one.
 
 ## Linked parameters
 

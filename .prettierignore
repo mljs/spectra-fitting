@@ -1,2 +1,4 @@
-coverage
 CHANGELOG.md
+coverage
+dist
+lib

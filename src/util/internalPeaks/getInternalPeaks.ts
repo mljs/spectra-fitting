@@ -5,11 +5,9 @@ import { getShape1D } from 'ml-peak-shape-generator';
 import type { OptimizeOptions, Peak } from '../../index.ts';
 import { assert } from '../assert.ts';
 
+import type { Parameter, Property } from './DefaultParameters.ts';
 import { DefaultParameters } from './DefaultParameters.ts';
 
-type Parameter = 'x' | 'y' | 'fwhm' | 'mu' | 'gamma' | 'fwhmG' | 'fwhmL';
-
-type Property = 'init' | 'min' | 'max' | 'gradientDifference';
 const properties: Property[] = ['init', 'min', 'max', 'gradientDifference'];
 export interface InternalPeak {
   id?: string;
@@ -23,11 +21,10 @@ export interface InternalPeak {
 
 /**
  * Return an array of internalPeaks that contains the exact init, min, max values based on the options
- * @param peaks
- * @param minMaxY
- * @param yScale
- * @param options
- * @returns
+ * @param peaks - The peaks to optimize.
+ * @param yScale - The factor the y values were divided by to normalize the data.
+ * @param options - The optimization options.
+ * @returns The internal peaks, ready to be optimized.
  */
 export function getInternalPeaks(
   peaks: Peak[],
@@ -94,14 +91,10 @@ export function getInternalPeaks(
         }
 
         // we just need to take the default parameters
-        assert(
-          DefaultParameters[parameter],
-          `No default parameter for ${parameter}`,
-        );
-        const defaultParameterValues = DefaultParameters[parameter][property];
+        const defaultParameters = DefaultParameters[parameter];
+        assert(defaultParameters, `No default parameter for ${parameter}`);
         propertiesValuesInternal[property].push(
-          //@ts-expect-error parameters and shape instance are guaranteed to be present in the defaultParameterValues function
-          defaultParameterValues(peak, shapeFct),
+          defaultParameters[property](peak, shapeFct),
         );
       }
     }
