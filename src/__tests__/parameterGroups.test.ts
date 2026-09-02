@@ -1,4 +1,5 @@
 import type { DataXY } from 'cheminfo-types';
+import { getShape1D } from 'ml-peak-shape-generator';
 import { generateSpectrum } from 'spectrum-generator';
 import { describe, expect, it } from 'vitest';
 
@@ -64,11 +65,10 @@ describe('optimize with parameter groups', () => {
       'left',
       'right',
     ]);
-    expect(result.peaks[0].shape.fwhm).toBeCloseTo(0.05, 1);
-    expect(result.peaks[1].shape.fwhm).toBeCloseTo(0.05, 1);
-    expect(result.peaks[0].shape.fwhm).toBeCloseTo(
-      //@ts-expect-error should be fixed once
-      result.peaks[1].shape.fwhm,
+    expect(getShape1D(result.peaks[0].shape).fwhm).toBeCloseTo(0.05, 1);
+    expect(getShape1D(result.peaks[1].shape).fwhm).toBeCloseTo(0.05, 1);
+    expect(getShape1D(result.peaks[0].shape).fwhm).toBeCloseTo(
+      getShape1D(result.peaks[1].shape).fwhm,
       1,
     );
   });

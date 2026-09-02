@@ -2,6 +2,7 @@ import type { DataXY, DoubleArray } from 'cheminfo-types';
 import type { Shape1DWithFWHM } from 'ml-peak-shape-generator';
 import { xMaxAbsoluteValue } from 'ml-spectra-processing';
 
+import { getJacobian } from './shapes/getJacobian.ts';
 import { getSumOfShapes } from './shapes/getSumOfShapes.ts';
 import { buildOptimizationLayout } from './util/buildOptimizationLayout.ts';
 import { getFixedParametersResult } from './util/getFixedParametersResult.ts';
@@ -182,7 +183,9 @@ export function optimize<T extends Peak>(
     variables,
   } = optimizationLayout;
 
-  const { algorithm, optimizationOptions } = selectMethod(options.optimization);
+  const { algorithm, optimizationOptions, supportsJacobian } = selectMethod(
+    options.optimization,
+  );
 
   const baseSumOfShapes = getSumOfShapes(internalPeaks);
   const sumOfShapesForVariables = (variableValues: DoubleArray) => {
@@ -245,6 +248,13 @@ export function optimize<T extends Peak>(
     maxValues,
     initialValues,
     gradientDifference: gradientDifferences,
+    ...(supportsJacobian && {
+      jacobianFunction: getJacobian(
+        internalPeaks,
+        optimizationLayout,
+        freeIndices,
+      ),
+    }),
     ...optimizationOptions,
   });
 

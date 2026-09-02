@@ -2,24 +2,18 @@ import type { DoubleArray } from 'cheminfo-types';
 
 import type { InternalPeak } from '../util/internalPeaks/getInternalPeaks.ts';
 
+import { applyShapeParameters } from './applyShapeParameters.ts';
+
 /**
  * This function returns the sumOfShapes function
  * This function gives sumOfShapes access to the peak list and the associated data
- * @param internalPeaks
+ * @param internalPeaks - The peaks being optimized.
+ * @returns A function mapping a parameter vector to the sum of the shapes.
  */
 
 export function getSumOfShapes(internalPeaks: InternalPeak[]) {
   return function sumOfShapes(parameters: DoubleArray) {
-    for (const peak of internalPeaks) {
-      for (let i = 2; i < peak.parameters.length; i++) {
-        type Parameter = (typeof peak.parameters)[number];
-        const shapeFctKey = peak.parameters[i] as Extract<
-          Parameter,
-          keyof typeof peak.shapeFct
-        >;
-        peak.shapeFct[shapeFctKey] = parameters[peak.fromIndex + i];
-      }
-    }
+    applyShapeParameters(internalPeaks, parameters);
     return (x: number) => {
       let totalY = 0;
       for (const peak of internalPeaks) {

@@ -17,6 +17,7 @@ export function selectMethod(optimizationOptions: OptimizationOptions = {}) {
     case 'levenbergMarquardt':
       return {
         algorithm: levenbergMarquardt,
+        supportsJacobian: true,
         optimizationOptions: {
           damping: 1.5,
           maxIterations: 100,
@@ -27,6 +28,7 @@ export function selectMethod(optimizationOptions: OptimizationOptions = {}) {
     case 'direct': {
       return {
         algorithm: directOptimization,
+        supportsJacobian: false,
         optimizationOptions: {
           maxIterations: 20,
           epsilon: 1e-4,
