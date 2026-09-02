@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.3.0](https://github.com/mljs/spectra-fitting/compare/v6.2.2...v6.3.0) (2026-09-02)
+
+
+### Features
+
+* compute the jacobian analytically ([#134](https://github.com/mljs/spectra-fitting/issues/134)) ([063e2af](https://github.com/mljs/spectra-fitting/commit/063e2af4126e6978a95bc78d580d2cb216f24661))
+
 ## [6.2.2](https://github.com/mljs/spectra-fitting/compare/v6.2.1...v6.2.2) (2026-08-03)
 
 
